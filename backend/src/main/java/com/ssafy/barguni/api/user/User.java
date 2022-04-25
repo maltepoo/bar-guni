@@ -22,4 +22,13 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="default_bkt")
     private Basket defaultBasket;
+
+    public User(){
+
+    }
+
+    public User(String email, String name) {
+        this.email = email;
+        this.name = name;
+    }
 }
