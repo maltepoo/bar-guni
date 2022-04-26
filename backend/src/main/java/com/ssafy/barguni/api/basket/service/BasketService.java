@@ -1,7 +1,15 @@
 package com.ssafy.barguni.api.basket.service;
 
+import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.item.ItemRepository;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserAuthority;
+import com.ssafy.barguni.api.user.UserBasket;
+import com.ssafy.barguni.api.user.UserBasketRepository;
+import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,50 +22,90 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class BasketService {
     private final BasketRepository basketRepository;
+    private final UserBasketRepository userBasketRepository;
+    private final PictureRepository pictureRepository;
+    private final ItemRepository itemRepository;
 
     @Transactional
-    public Long createBasket(String name, MultipartFile multipartFile, Long userId) {
+    public Long createBasket(String name, MultipartFile multipartFile, User user) {
         Basket basket = new Basket();
         basket.setName(name);
+
+        // 그림도 넣기
+        if(multipartFile != null
+                && !multipartFile.isEmpty())
+        {
+            Picture picture = ImageUtil.create(multipartFile, "Basket");
+            pictureRepository.save(picture);
+            basket.setPicture(picture);
+        }
+
+        // 참여 코드 생성
         String joinCode = null;
         do {
             joinCode = getJoinCode();
         } while(basketRepository.existsByJoinCode(joinCode));
         basket.setJoinCode(joinCode);
 
-        // 그림도 넣기
-//        if(!multipartFile.isEmpty())
-//            basket.setPicture();
-
-        // UserBasket 중계 테이블에 기록
 
         Basket save = basketRepository.save(basket);
+
+        // UserBasket 중계 테이블에 기록
+        UserBasket userBasket = new UserBasket();
+        userBasket.setBasket(save);
+        userBasket.setUser(user);
+        userBasket.setAuthority(UserAuthority.ADMIN);
+        userBasketRepository.save(userBasket);
+
+
         return save.getId();
     }
 
     public Basket getBasket(Long id){
-//        return basketRepository.getByIdWithPic(id);
-        return basketRepository.getById(id);
+        return basketRepository.getByIdWithPic(id);
     }
 
 
+    @Transactional
     public void updateBasket(Long basketId, String name, MultipartFile multipartFile) {
         Basket basket = basketRepository.getById(basketId);
         basket.setName(name);
         // 그림도 넣기
-//        if(!multipartFile.isEmpty()){
-//            // 있다면 기존 이미지 삭제
-//            basket.setPicture();
-//    }
+        if(multipartFile != null
+                && !multipartFile.isEmpty())
+        {
+            // 있다면 이미지 업데이트
+            basket.setPicture(ImageUtil.update(basket.getPicture(), multipartFile));
+        }
     }
 
-    public void deleteBasket(Long basketId, Long userId) {
-        // 삭제 로직 (사용하는 사람이 오직 한명이고 관리자 인 경우만 가능)
+    public Boolean deleteBasket(Long basketId, Long userId) {
+        // 관리자가 아닌 경우
+        UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
+        if(userBasket.getAuthority() != UserAuthority.ADMIN)
+            return false;
+        // 다른 이가 사용중인 경우
+        if(userBasketRepository.countByBasketId(basketId) != 1)
+            return false;
+        // 아이템이 남아있는 겨웅
+        if(itemRepository.countByBasketId(basketId) != 0)
+            return false;
 
+        Basket basket = basketRepository.getById(basketId);
+        // 관계 삭제
+        userBasketRepository.delete(userBasket);
+        basketRepository.deleteById(basketId);
+        // 이미지 삭제
+        if(basket.getPicture() != null)
+        {
+            ImageUtil.delete(basket.getPicture());
+            pictureRepository.delete(basket.getPicture());
+        }
+        return true;
     }
 
     private String getJoinCode(){
-        byte[] array = new byte[20]; // length is bounded by 7
+        byte[] array = new byte[20]; // length is bounded by 20
         new Random().nextBytes(array);
         String generatedString = new String(array, Charset.forName("UTF-8"));
 
