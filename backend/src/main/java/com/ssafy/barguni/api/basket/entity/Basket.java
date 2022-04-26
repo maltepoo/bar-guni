@@ -1,6 +1,6 @@
 package com.ssafy.barguni.api.basket.entity;
 
-import com.ssafy.barguni.api.common.Picture;
+import com.ssafy.barguni.api.Picture.Picture;
 import lombok.Getter;
 import lombok.Setter;
 
