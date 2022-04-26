@@ -1,6 +1,5 @@
-package com.ssafy.barguni.api.item;
+package com.ssafy.barguni.api.basket.service.item;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.ssafy.barguni.api.basket.service;
 
 import com.ssafy.barguni.api.basket.repository.ItemRepository;
 import com.ssafy.barguni.api.basket.vo.ItemSearch;
-import com.ssafy.barguni.api.item.Item;
+import com.ssafy.barguni.api.basket.service.item.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

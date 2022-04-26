@@ -1,9 +1,9 @@
-package com.ssafy.barguni.api.item;
+package com.ssafy.barguni.api.basket.service.item;
 
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
-import com.ssafy.barguni.api.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.basket.service.item.vo.ItemPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package com.ssafy.barguni.api.basket.vo;
 
-import com.ssafy.barguni.api.item.Item;
+import com.ssafy.barguni.api.basket.service.item.Item;
 import lombok.Data;
 
 @Data

@@ -3,7 +3,7 @@ package com.ssafy.barguni.api.basket.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.barguni.api.basket.vo.ItemSearch;
-import com.ssafy.barguni.api.item.Item;
+import com.ssafy.barguni.api.basket.service.item.Item;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
