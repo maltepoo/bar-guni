@@ -2,7 +2,7 @@ package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.basket.Basket;
 import com.ssafy.barguni.api.basket.Categories;
-import com.ssafy.barguni.api.common.Picture;
+import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

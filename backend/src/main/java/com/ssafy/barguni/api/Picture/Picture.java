@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.common;
+package com.ssafy.barguni.api.Picture;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,14 +2,13 @@ package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.basket.Basket;
 import com.ssafy.barguni.api.basket.Categories;
-import com.ssafy.barguni.api.common.Picture;
+import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter

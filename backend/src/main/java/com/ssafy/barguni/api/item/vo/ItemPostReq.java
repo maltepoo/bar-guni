@@ -1,14 +1,9 @@
 package com.ssafy.barguni.api.item.vo;
 
-import com.ssafy.barguni.api.basket.Basket;
-import com.ssafy.barguni.api.basket.Categories;
-import com.ssafy.barguni.api.common.Picture;
 import com.ssafy.barguni.api.item.AlertBy;
-import com.ssafy.barguni.api.item.Item;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 public class ItemPostReq {
