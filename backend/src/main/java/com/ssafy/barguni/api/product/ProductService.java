@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.product;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.common.util.NaverImgSearchUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,10 @@ public class ProductService {
             return prodRepository.save(newProd);
         }
 
+    }
+
+    public String searchTest(String word) throws Exception {
+        return NaverImgSearchUtil.imageSearch(word);
     }
 
 }
