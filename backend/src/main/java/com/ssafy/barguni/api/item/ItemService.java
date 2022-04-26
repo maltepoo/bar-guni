@@ -3,6 +3,7 @@ package com.ssafy.barguni.api.item;
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
+import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -91,5 +92,13 @@ public class ItemService {
 
     public void deleteById(Long id) {
         itemRepository.deleteById(id);
+    }
+
+    public List<Item> getAllInBasket(Long basketId){
+        return itemRepository.getAllInBasket(basketId == -1 ? null : basketId);
+    }
+
+    public List<Item> getItemsUsingFilter(ItemSearch itemSearch){
+        return itemRepository.getItemsUsingFilter(itemSearch);
     }
 }

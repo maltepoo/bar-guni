@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.basket.vo;
+package com.ssafy.barguni.api.item.vo;
 
 import lombok.Data;
 

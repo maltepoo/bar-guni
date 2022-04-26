@@ -1,9 +1,8 @@
-package com.ssafy.barguni.api.basket.repository;
+package com.ssafy.barguni.api.item;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.barguni.api.basket.vo.ItemSearch;
-import com.ssafy.barguni.api.item.Item;
+import com.ssafy.barguni.api.item.vo.ItemSearch;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -15,11 +14,11 @@ import static com.ssafy.barguni.api.basket.entity.QCategories.categories;
 import static com.ssafy.barguni.api.item.QItem.item;
 
 @Repository
-public class BasketItemRepository {
+public class CustomItemRepositoryImpl implements CustomItemRepository {
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-    public BasketItemRepository(EntityManager em){
+    public CustomItemRepositoryImpl(EntityManager em){
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }

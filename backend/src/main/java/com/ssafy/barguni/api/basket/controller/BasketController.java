@@ -2,7 +2,6 @@ package com.ssafy.barguni.api.basket.controller;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
-import com.ssafy.barguni.api.basket.service.BasketUserService;
 import com.ssafy.barguni.api.basket.vo.BasketRes;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
@@ -24,8 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "basket controller", description = "바구니 관련 컨트롤러")
 public class BasketController {
     private final BasketService basketService;
-    private final BasketUserService userBasketService;
-
 
     @PostMapping("/")
     @Operation(summary = "바구니 생성", description = "바구니를 생성한다.")

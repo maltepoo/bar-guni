@@ -1,5 +1,7 @@
 package com.ssafy.barguni.api.item;
 
+import com.ssafy.barguni.api.item.vo.ItemRes;
+import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -128,5 +133,62 @@ public class ItemController {
         }
 
         return new ResponseEntity<ResVO<Item>>(result, status);
+    }
+
+
+    @GetMapping("/list/{basketId}")
+    @Operation(summary = "바구니 조회", description = "바구니를 조회한다. id가 -1이면 전체 바구니 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<List<ItemRes>>> getItemList(@PathVariable Long basketId){
+        ResVO<List<ItemRes>> result = new ResVO<>();
+        HttpStatus status = null;
+
+        try{
+            result.setData(itemService
+                    .getAllInBasket(basketId)
+                    .stream()
+                    .map(ItemRes::new)
+                    .collect(Collectors.toList()));
+            result.setMessage("바구니 내 아이템 조회 성공");
+            status = HttpStatus.OK;
+        } catch (Exception e){
+            result.setMessage("바구니 내 아이템 조회 실패");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "필터 아이템 조회", description = "필터로 아이템 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<List<ItemRes>>> searchItems(@RequestBody ItemSearch itemSearch){
+        ResVO<List<ItemRes>> result = new ResVO<>();
+        HttpStatus status = null;
+
+        try{
+            result.setData(itemService
+                    .getItemsUsingFilter(itemSearch)
+                    .stream()
+                    .map(ItemRes::new)
+                    .collect(Collectors.toList()));
+            result.setMessage("아이템 필터 조회 성공");
+            status = HttpStatus.OK;
+        } catch (Exception e){
+            result.setMessage("아이템 필터 조회 실패");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
     }
 }

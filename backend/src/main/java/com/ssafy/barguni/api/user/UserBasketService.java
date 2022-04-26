@@ -1,8 +1,6 @@
 package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
-import com.ssafy.barguni.api.basket.entity.UserAuthority;
-import com.ssafy.barguni.api.basket.entity.UserBasket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,5 +37,15 @@ public class UserBasketService {
 
     public void deleteBybktId(User user, Long bkt_id) {
         userBasketRepository.deleteById(user.getId(), bkt_id);
+    }
+
+    public UserBasket findByUserAndBasket(Long userId, Long basketId){
+        return userBasketRepository.findByUserIdAndBasketId(userId, basketId);
+    }
+
+    @Transactional
+    public void modifyAuthority(Long basketId, Long userId, UserAuthority authority) {
+        UserBasket ub = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
+        ub.setAuthority(authority);
     }
 }
