@@ -1,6 +1,5 @@
 package com.ssafy.barguni.api.user;
 
-import com.ssafy.barguni.api.basket.entity.Basket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,8 +17,4 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
     User modifyUser(Long id, String name);
 
     void deleteById(Long id);
-
-    @Modifying
-    @Query("UPDATE User u SET u.defaultBasket = :defaultBasket WHERE u.id = :userId")
-    void modifyDefault(Long userId, Basket defaultBasket);
 }

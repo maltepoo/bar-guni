@@ -1,6 +1,5 @@
 package com.ssafy.barguni.api.user;
 
-import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.user.vo.UserPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,8 +39,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void modifyDefault(Long userId, Basket defaultBasket) {
-        userRepository.modifyDefault(userId,defaultBasket);
-    }
-
+//    public Optional<User> updateUser(Long userId) throws Exception{
+//        Optional<User> user = userRepository.findById(userId);
+//
+//        return user;
+//    }
 }
