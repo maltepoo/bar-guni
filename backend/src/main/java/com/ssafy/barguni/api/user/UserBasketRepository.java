@@ -1,11 +1,11 @@
 package com.ssafy.barguni.api.user;
 
+import com.ssafy.barguni.api.basket.entity.UserBasket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserBasketRepository extends JpaRepository<UserBasket, Long> {
 

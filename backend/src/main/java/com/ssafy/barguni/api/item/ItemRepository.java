@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.basket.service.item;
+package com.ssafy.barguni.api.item;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findById(Long id);
-    List<Item> findAllByBasket(Long bktId);
+    List<Item> findAllByBasketId(Long bktId);
 }

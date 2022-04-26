@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.basket.service.item;
+package com.ssafy.barguni.api.item;
 
 public enum AlertBy {
     D_DAY,

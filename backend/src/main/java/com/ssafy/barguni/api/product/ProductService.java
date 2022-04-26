@@ -17,8 +17,8 @@ public class ProductService {
             return prodRepository.findByBarcode(barcode).get();
         } else {
             //바코드로 사진 이름찾기, 사진 Picture 객체로 만들어 저장하기.
-            Picture pic = new Picture();
             String name = "안녕";
+            Picture pic = new Picture();
 
             Product newProd = Product.createProduct(pic, barcode, name);
 

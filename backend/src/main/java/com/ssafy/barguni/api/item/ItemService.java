@@ -1,9 +1,9 @@
-package com.ssafy.barguni.api.basket.service.item;
+package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
-import com.ssafy.barguni.api.basket.service.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class ItemService {
     }
 
     public List<Item> getListByBktId(Long bktId) {
-        return itemRepository.findAllByBasket(bktId);
+        return itemRepository.findAllByBasketId(bktId);
     }
 
     public Item changeItem(Long id, ItemPostReq req) {

@@ -3,23 +3,23 @@ package com.ssafy.barguni.api.basket.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.barguni.api.basket.vo.ItemSearch;
-import com.ssafy.barguni.api.basket.service.item.Item;
+import com.ssafy.barguni.api.item.Item;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.ssafy.barguni.api.Picture.QPicture.picture;
 import static com.ssafy.barguni.api.basket.entity.QCategories.categories;
-import static com.ssafy.barguni.api.common.QPicture.picture;
 import static com.ssafy.barguni.api.item.QItem.item;
 
 @Repository
-public class ItemRepository {
+public class BasketItemRepository {
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-    public ItemRepository(EntityManager em){
+    public BasketItemRepository(EntityManager em){
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }

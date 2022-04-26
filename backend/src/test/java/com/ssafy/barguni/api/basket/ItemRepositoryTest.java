@@ -1,6 +1,6 @@
 package com.ssafy.barguni.api.basket;
 
-import com.ssafy.barguni.api.basket.repository.ItemRepository;
+import com.ssafy.barguni.api.basket.repository.BasketItemRepository;
 import com.ssafy.barguni.api.basket.vo.ItemSearch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ItemRepositoryTest {
     @Autowired
-    ItemRepository itemRepository;
+    BasketItemRepository itemRepository;
 
     @Test
     public void itemSearchTest() throws Exception {

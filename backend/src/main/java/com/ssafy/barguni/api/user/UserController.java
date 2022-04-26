@@ -2,6 +2,7 @@ package com.ssafy.barguni.api.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.barguni.api.basket.entity.UserBasket;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.user.vo.KakaoProfile;
 import com.ssafy.barguni.api.user.vo.OauthToken;
@@ -237,7 +238,7 @@ public class UserController {
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             User user = userService.findById(userDetails.getUserId());
-            List<UserBasket> bktOfUser = userBasketService.findByUserId(user);
+            List<UserBasket> bktOfUser = userBasketService.findByUserId(user.getId());
 
 
             result.setMessage("바구니 리스트 조회 성공");

@@ -1,7 +1,7 @@
 package com.ssafy.barguni.api.basket.controller;
 
 
-import com.ssafy.barguni.api.basket.service.ItemService;
+import com.ssafy.barguni.api.basket.service.BasketItemService;
 import com.ssafy.barguni.api.basket.vo.ItemRes;
 import com.ssafy.barguni.api.basket.vo.ItemSearch;
 import com.ssafy.barguni.api.common.ResVO;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/basket/items")
 @Tag(name = "basket item controller", description = "바구니 아이템 관련 컨트롤러로 아이템 필터 조회를 담당한다.")
 public class BasketItemController {
-    private final ItemService itemService;
+    private final BasketItemService basketItemService;
 
     @GetMapping("/list/{basketId}")
     @Operation(summary = "바구니 조회", description = "바구니를 조회한다. id가 -1이면 전체 바구니 조회")
@@ -37,7 +37,7 @@ public class BasketItemController {
         HttpStatus status = null;
 
         try{
-            result.setData(itemService
+            result.setData(basketItemService
                     .getAllInBasket(basketId)
                     .stream()
                     .map(ItemRes::new)
@@ -65,7 +65,7 @@ public class BasketItemController {
         HttpStatus status = null;
 
         try{
-            result.setData(itemService
+            result.setData(basketItemService
                     .getItemsUsingFilter(itemSearch)
                     .stream()
                     .map(ItemRes::new)

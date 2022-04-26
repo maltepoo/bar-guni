@@ -1,6 +1,6 @@
-package com.ssafy.barguni.api.basket.service.item.vo;
+package com.ssafy.barguni.api.item.vo;
 
-import com.ssafy.barguni.api.basket.service.item.AlertBy;
+import com.ssafy.barguni.api.item.AlertBy;
 import lombok.Data;
 
 import java.time.LocalDate;

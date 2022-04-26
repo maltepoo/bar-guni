@@ -1,7 +1,7 @@
-package com.ssafy.barguni.api.basket.service.item;
+package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.common.ResVO;
-import com.ssafy.barguni.api.basket.service.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

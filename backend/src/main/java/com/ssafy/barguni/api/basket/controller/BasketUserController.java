@@ -3,7 +3,7 @@ package com.ssafy.barguni.api.basket.controller;
 
 import com.ssafy.barguni.api.basket.entity.UserAuthority;
 import com.ssafy.barguni.api.basket.entity.UserBasket;
-import com.ssafy.barguni.api.basket.service.UserBasketService;
+import com.ssafy.barguni.api.basket.service.BasketUserService;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/basket/user")
 @Tag(name = "user basket controller", description = "유저 바구니 관련 컨트롤러로 바구니 멤버 관리 기능을 한다.")
-public class UserBasketController {
-    private final UserBasketService userBasketService;
+public class BasketUserController {
+    private final BasketUserService userBasketService;
 
     @PutMapping("/{basketId}")
     @Operation(summary = "멤버 권한 수정", description = "해당 바구니에 멤버 권한을 수정한다.")
