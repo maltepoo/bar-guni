@@ -12,15 +12,15 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${profileImg.path}")
-    private String profileUploadFolder;
+    @Value("${images.path}")
+    private String uploadFolder;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
 
         registry
-                .addResourceHandler("/profile_imgs/**")
-                .addResourceLocations("file:///" + profileUploadFolder)
+                .addResourceHandler("/images/**")
+                .addResourceLocations("file:///" + uploadFolder)
                 .setCachePeriod(60*10*6)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
