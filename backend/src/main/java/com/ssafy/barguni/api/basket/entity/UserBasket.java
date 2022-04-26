@@ -1,7 +1,6 @@
-package com.ssafy.barguni.api.basket;
+package com.ssafy.barguni.api.basket.entity;
 
 import com.ssafy.barguni.api.user.User;
-import com.ssafy.barguni.api.user.UserAuthority;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +21,6 @@ public class UserBasket {
     @JoinColumn(name="bkt_id")
     private Basket basket;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     private UserAuthority authority;
 }

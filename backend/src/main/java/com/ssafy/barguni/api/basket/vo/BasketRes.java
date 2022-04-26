@@ -1,6 +1,6 @@
 package com.ssafy.barguni.api.basket.vo;
 
-import com.ssafy.barguni.api.basket.Basket;
+import com.ssafy.barguni.api.basket.entity.Basket;
 import lombok.Data;
 
 @Data

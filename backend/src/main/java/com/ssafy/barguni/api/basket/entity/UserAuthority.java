@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.user;
+package com.ssafy.barguni.api.basket.entity;
 
 public enum UserAuthority {
     ADMIN,

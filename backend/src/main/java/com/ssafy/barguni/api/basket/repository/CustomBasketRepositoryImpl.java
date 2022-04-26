@@ -1,5 +1,6 @@
-package com.ssafy.barguni.api.basket;
+package com.ssafy.barguni.api.basket.repository;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,9 @@
-package com.ssafy.barguni.api.basket;
+package com.ssafy.barguni.api.basket.service;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.entity.Categories;
+import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.basket.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

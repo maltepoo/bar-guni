@@ -1,9 +1,7 @@
 package com.ssafy.barguni.api.basket.vo;
 
-import com.ssafy.barguni.api.basket.Categories;
+import com.ssafy.barguni.api.basket.entity.Categories;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class CategoryRes {
