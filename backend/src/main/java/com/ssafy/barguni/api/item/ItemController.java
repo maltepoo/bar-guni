@@ -33,13 +33,13 @@ public class ItemController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     // ResponseEntity 사용법 찾아보기
-    public ResponseEntity<ResVO<Item>> postItem(@RequestBody @Parameter ItemPostReq req) {
-        ResVO<Item> result = new ResVO<>();
+    public ResponseEntity<ResVO<ItemRes>> postItem(@RequestBody @Parameter ItemPostReq req) {
+        ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
 
         try {
             Item newItem = itemService.saveNewItem(req);
-            result.setData(newItem);
+            result.setData(new ItemRes(newItem));
             result.setMessage("물품 등록에 성공했습니다.");
             status = HttpStatus.CREATED;
 
@@ -49,7 +49,7 @@ public class ItemController {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<ResVO<Item>>(result, status);
+        return new ResponseEntity<ResVO<ItemRes>>(result, status);
     }
 
 
