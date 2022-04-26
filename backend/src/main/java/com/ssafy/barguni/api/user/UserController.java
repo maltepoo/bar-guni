@@ -2,6 +2,7 @@ package com.ssafy.barguni.api.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.user.vo.KakaoProfile;
 import com.ssafy.barguni.api.user.vo.OauthToken;
@@ -310,8 +311,6 @@ public class UserController {
     }
 
 
-
-
     @PutMapping("/basket/{basketId}")
     @Operation(summary = "멤버 권한 수정", description = "해당 바구니에 멤버 권한을 수정한다.")
     @ApiResponses({
@@ -345,6 +344,41 @@ public class UserController {
             e.printStackTrace();
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result.setMessage("권한 변경 실패");
+            result.setData(false);
+        }
+
+        return new ResponseEntity<ResVO<Boolean>>(result, status);
+    }
+
+    @PutMapping("/basket/default/{basketId}")
+    @Operation(summary = "사용자 기본 바구니 변경", description = "사용자의 기본 바구니를 변경한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Boolean>> modifyDefault(
+            @RequestParam Long basketId){
+//            @RequestBody @Parameter(description = "바구니 입력") Basket defaultBasket){
+        ResVO<Boolean> result = new ResVO<>();
+        HttpStatus status = null;
+
+        try {
+            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            Long userId = userDetails.getUserId();
+
+            Basket defaultBasket = userBasketService.findByUserAndBasket(userId, basketId);
+
+            userService.modifyDefault(userId, defaultBasket);
+            status = HttpStatus.OK;
+            result.setMessage("기본 바구니 변경 성공");
+            result.setData(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            result.setMessage("기본 바구니 변경 실패");
             result.setData(false);
         }
 
