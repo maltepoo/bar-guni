@@ -1,8 +1,11 @@
 package com.ssafy.barguni.api.user;
 
+import com.ssafy.barguni.api.user.vo.UserPostReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,4 +30,18 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
+    public User modifyUser(Long userId, UserPostReq userReq ) throws Exception{
+        return userRepository.modifyUser(userId, userReq.getName());
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+//    public Optional<User> updateUser(Long userId) throws Exception{
+//        Optional<User> user = userRepository.findById(userId);
+//
+//        return user;
+//    }
 }

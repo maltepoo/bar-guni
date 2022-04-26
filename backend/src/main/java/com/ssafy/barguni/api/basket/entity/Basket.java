@@ -1,5 +1,6 @@
-package com.ssafy.barguni.api.common;
+package com.ssafy.barguni.api.basket.entity;
 
+import com.ssafy.barguni.api.Picture.Picture;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,16 +8,15 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class Product {
+public class Basket {
     @Id @GeneratedValue
-    @Column(name="prod_id")
+    @Column(name="bkt_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="pic_id")
     private Picture picture;
 
-    private String barcode;
     private String name;
-
+    private String joinCode;
 }

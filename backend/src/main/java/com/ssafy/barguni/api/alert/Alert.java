@@ -1,6 +1,6 @@
 package com.ssafy.barguni.api.alert;
 
-import com.ssafy.barguni.api.basket.Basket;
+import com.ssafy.barguni.api.basket.entity.Basket;
 import lombok.Getter;
 import lombok.Setter;
 

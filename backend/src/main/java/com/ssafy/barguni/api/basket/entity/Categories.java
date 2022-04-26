@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.basket;
+package com.ssafy.barguni.api.basket.entity;
 
 import lombok.Getter;
 import lombok.Setter;
