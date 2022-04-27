@@ -60,6 +60,8 @@ dependencies {
 	// JsonParser
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	// imageIO -> multipartfile
+	implementation 'org.springframework:spring-test:5.3.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
