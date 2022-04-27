@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.Charset;
 import java.util.Random;
 
+import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class BasketService {
@@ -67,7 +68,7 @@ public class BasketService {
     public Basket getBasket(Long id){
         Basket basket = basketRepository.getByIdWithPic(id);
         if(basket == null)
-            throw new BasketException(new ErrorResVO("해당 바구니가 존재하지 않습니다.", "B001", HttpStatus.NOT_FOUND));
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
         return basket;
     }
 
@@ -89,13 +90,13 @@ public class BasketService {
         // 관리자가 아닌 경우
         UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
         if(userBasket.getAuthority() != UserAuthority.ADMIN)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_NOT_DELETED_BY_NON_ADMIN));
         // 다른 이가 사용중인 경우
         if(userBasketRepository.countByBasketId(basketId) != 1)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_USED_BY_OTHERS));
         // 아이템이 남아있는 겨웅
         if(itemRepository.countByBasketId(basketId) != 0)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_NOT_EMPTY));
 
         Basket basket = basketRepository.getById(basketId);
         // 관계 삭제

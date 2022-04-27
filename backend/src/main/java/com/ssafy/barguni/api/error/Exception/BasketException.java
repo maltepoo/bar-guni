@@ -1,5 +1,6 @@
 package com.ssafy.barguni.api.error.Exception;
 
+import com.ssafy.barguni.api.error.ErrorCode;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;

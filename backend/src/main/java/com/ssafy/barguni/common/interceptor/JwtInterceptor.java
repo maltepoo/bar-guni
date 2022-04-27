@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static com.ssafy.barguni.api.error.ErrorCode.JWT_NOT_EXIST;
+
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
     private final Logger logger = LoggerFactory.getLogger(JwtInterceptor.class);
@@ -26,7 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if(jwtToken == null) {
             logger.error("jwt 토큰이 없습니다.");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            throw new JwtException(new ErrorResVO("로그인이 필요합니다.", "J001", HttpStatus.UNAUTHORIZED));
+            throw new JwtException(new ErrorResVO(JWT_NOT_EXIST));
         }
         return true;
 

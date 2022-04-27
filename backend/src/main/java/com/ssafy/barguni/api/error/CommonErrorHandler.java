@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static com.ssafy.barguni.api.error.ErrorCode.SERVER_INTERNAL_ERROR;
+
 
 @RestControllerAdvice
 @Tag(name = "common error handler", description = "공통 오류 관련 핸들러")
@@ -35,7 +37,7 @@ public class CommonErrorHandler {
     protected ResponseEntity<ErrorResVO> handleException(Exception e) {
         logger.error("handleException 핸들", e);
         return new ResponseEntity<>(
-                new ErrorResVO("서버 내부 오류가 발생했습니다.", "S000", HttpStatus.INTERNAL_SERVER_ERROR)
+                new ErrorResVO(SERVER_INTERNAL_ERROR)
                 ,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

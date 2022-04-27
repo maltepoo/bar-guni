@@ -12,4 +12,10 @@ public class ErrorResVO {
     private String message;
     private String code;
     private HttpStatus status;
+
+    public ErrorResVO(ErrorCode errorCode){
+        this.message = errorCode.getMessage();
+        this.code = errorCode.getCode();
+        this.status = errorCode.getStatus();
+    }
 }
