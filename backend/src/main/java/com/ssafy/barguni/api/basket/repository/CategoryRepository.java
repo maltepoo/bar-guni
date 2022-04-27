@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Categories, Long> {
     List<Categories> getAllByBasketId(Long basketId);
+    Boolean existsByBasketIdAndName(Long basketId, String name);
 }

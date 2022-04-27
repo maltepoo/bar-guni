@@ -18,5 +18,7 @@ public class Basket {
     private Picture picture;
 
     private String name;
+
+    @Column(unique = true)
     private String joinCode;
 }

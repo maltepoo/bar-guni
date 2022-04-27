@@ -41,7 +41,7 @@ public class BasketController {
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            Long basketId = basketService.createBasket(name, multipartFile, userDetails.getUserId());
+            Long basketId = basketService.createBasket(name, multipartFile, userDetails.getUser());
             status = HttpStatus.OK;
             result.setData(basketId);
             result.setMessage("바구니 생성 성공");
