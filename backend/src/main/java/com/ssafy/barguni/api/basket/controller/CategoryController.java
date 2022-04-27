@@ -37,7 +37,14 @@ public class CategoryController {
 
 
         try {
-            System.out.println(name);
+            if(categoryService.isDuplicated(basketId, name))
+            {
+                result.setData(-1L);
+                result.setMessage("이미 등록된 카테고리입니다.");
+                status = HttpStatus.NOT_ACCEPTABLE;
+                return new ResponseEntity<ResVO<Long>>(result, status);
+            }
+
             Long categoryId = categoryService.register(basketId, name);
             result.setData(categoryId);
             result.setMessage("카테고리 등록 성공");

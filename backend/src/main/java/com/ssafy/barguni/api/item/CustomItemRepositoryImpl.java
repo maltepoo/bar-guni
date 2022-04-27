@@ -28,7 +28,9 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .select(item)
                 .from(item)
                 .leftJoin(item.category, categories)
+                .fetchJoin()
                 .leftJoin(item.picture, picture)
+                .fetchJoin()
                 .where(basketCheck(basketId))
                 .fetch();
     }
@@ -38,6 +40,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .select(item)
                 .from(item)
                 .leftJoin(item.category, categories)
+                .fetchJoin()
                 .where(nameLike(itemSearch.getWord()).or(contentLike(itemSearch.getWord())).or(categoryLike(itemSearch.getWord())))
                 .where(basketCheck(itemSearch.getBasketId()))
                 .fetch();

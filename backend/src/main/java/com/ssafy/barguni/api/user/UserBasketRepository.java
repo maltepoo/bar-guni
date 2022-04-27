@@ -16,4 +16,6 @@ public interface UserBasketRepository extends JpaRepository<UserBasket, Long> {
     void deleteById(Long user_id, Long bkt_id);
 
     UserBasket findByUserIdAndBasketId(Long userId, Long basketId);
+
+    Integer countByBasketId(Long basketId);
 }
