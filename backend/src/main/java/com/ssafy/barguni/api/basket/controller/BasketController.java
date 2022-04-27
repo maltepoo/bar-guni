@@ -62,20 +62,14 @@ public class BasketController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<BasketRes>> getBasket(@PathVariable Long basketId){
+    public ResponseEntity<ResVO<BasketRes>> getBasket(@PathVariable Long basketId) throws Exception{
         ResVO<BasketRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            Basket basket = basketService.getBasket(basketId);
-            result.setData(new BasketRes(basket));
-            result.setMessage("바구니 조회 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("바구니 조회 실패");
-        }
+        Basket basket = basketService.getBasket(basketId);
+        result.setData(new BasketRes(basket));
+        result.setMessage("바구니 조회 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<BasketRes>>(result, status);
     }

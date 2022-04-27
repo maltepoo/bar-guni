@@ -4,6 +4,8 @@ import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.ItemRepository;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserAuthority;
@@ -11,6 +13,7 @@ import com.ssafy.barguni.api.user.UserBasket;
 import com.ssafy.barguni.api.user.UserBasketRepository;
 import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,7 +65,10 @@ public class BasketService {
     }
 
     public Basket getBasket(Long id){
-        return basketRepository.getByIdWithPic(id);
+        Basket basket = basketRepository.getByIdWithPic(id);
+        if(basket == null)
+            throw new BasketException(new ErrorResVO("해당 바구니가 존재하지 않습니다.", "B001", HttpStatus.NOT_FOUND));
+        return basket;
     }
 
 
