@@ -2,6 +2,8 @@ package com.ssafy.barguni.api.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.user.vo.KakaoProfile;
 import com.ssafy.barguni.api.user.vo.OauthToken;
@@ -31,6 +33,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final UserBasketService userBasketService;
+    private final BasketService basketService;
 
 
     @PostMapping("/login")
@@ -258,18 +261,20 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<Map<String, Object>> joinBasket(
-            @PathVariable @Parameter(description = "바구니 ID") Long bkt_id) {
+//            @PathVariable @Parameter(description = "바구니 ID") Long bkt_id,
+            @RequestParam String joinCode ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
-
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             User user = userService.findById(userDetails.getUserId());
-            if (userBasketService.addMark(user, bkt_id).isPresent()) {
+            Basket basket = basketService.findByJoinCode(joinCode);
+
+            if (userBasketService.addBasket(user, basket.getId()).isPresent()) {
                 resultMap.put("message", "성공");
             } else {
-                resultMap.put("message", "이미 즐겨찾기된 병원입니다.");
+                resultMap.put("message", "이미 참여한 바구니입니다.");
             }
             status = HttpStatus.OK;
 
@@ -345,6 +350,39 @@ public class UserController {
             e.printStackTrace();
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result.setMessage("권한 변경 실패");
+            result.setData(false);
+        }
+
+        return new ResponseEntity<ResVO<Boolean>>(result, status);
+    }
+
+    @PutMapping("/basket/default/{basketId}")
+    @Operation(summary = "사용자 기본 바구니 변경", description = "사용자의 기본 바구니를 변경한다.(로그인필요)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Boolean>> modifyDefault(@RequestParam Long basketId){
+        ResVO<Boolean> result = new ResVO<>();
+        HttpStatus status = null;
+
+        try {
+            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            Long userId = userDetails.getUserId();
+
+            Basket defaultBasket = basketService.getBasket(basketId);
+
+            userService.modifyDefault(userId, defaultBasket);
+            status = HttpStatus.OK;
+            result.setMessage("기본 바구니 변경 성공");
+            result.setData(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            result.setMessage("기본 바구니 변경 실패");
             result.setData(false);
         }
 
