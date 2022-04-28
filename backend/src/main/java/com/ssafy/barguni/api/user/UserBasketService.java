@@ -22,7 +22,7 @@ public class UserBasketService {
         return userBasketRepository.findByUserId(userId);
     }
 
-    public Optional<UserBasket> addMark(User user, Long bkt_id) {
+    public Optional<UserBasket> addBasket(User user, Long bkt_id) {
         UserBasket userBasket = new UserBasket();
         Basket basket = basketService.getBasket(bkt_id);
 

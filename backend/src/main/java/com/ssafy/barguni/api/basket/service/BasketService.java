@@ -4,6 +4,8 @@ import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.ItemRepository;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserAuthority;
@@ -11,6 +13,7 @@ import com.ssafy.barguni.api.user.UserBasket;
 import com.ssafy.barguni.api.user.UserBasketRepository;
 import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.charset.Charset;
 import java.util.Random;
 
+import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class BasketService {
@@ -62,7 +66,10 @@ public class BasketService {
     }
 
     public Basket getBasket(Long id){
-        return basketRepository.getByIdWithPic(id);
+        Basket basket = basketRepository.getByIdWithPic(id);
+        if(basket == null)
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
+        return basket;
     }
 
 
@@ -83,13 +90,13 @@ public class BasketService {
         // 관리자가 아닌 경우
         UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
         if(userBasket.getAuthority() != UserAuthority.ADMIN)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_NOT_DELETED_BY_NON_ADMIN));
         // 다른 이가 사용중인 경우
         if(userBasketRepository.countByBasketId(basketId) != 1)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_USED_BY_OTHERS));
         // 아이템이 남아있는 겨웅
         if(itemRepository.countByBasketId(basketId) != 0)
-            return false;
+            throw new BasketException(new ErrorResVO(BASKET_NOT_EMPTY));
 
         Basket basket = basketRepository.getById(basketId);
         // 관계 삭제
@@ -112,5 +119,8 @@ public class BasketService {
         return generatedString;
     }
 
+    public Basket findByJoinCode(String joinCode){
+        return basketRepository.findByJoinCode(joinCode).get();
+    }
 
 }

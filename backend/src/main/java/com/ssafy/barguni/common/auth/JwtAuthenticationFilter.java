@@ -2,9 +2,14 @@ package com.ssafy.barguni.common.auth;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.error.Exception.JwtException;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.util.JwtTokenUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.ssafy.barguni.api.error.ErrorCode.JWT_INVALID;
 
 /**
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
@@ -45,8 +52,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             Authentication authentication = getAuthentication(request);
             // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception ex) {
-//            ResponseBodyWriteUtil.sendError(request, response, ex);
+        } catch (Exception ex) { // jwt 토큰이 유효하지 않음
+            // interceptor에서 발생한 예외를 controller advice에서 처리 못하는 경우
+            // 포워딩으로 처리한다.
+            request.setAttribute("data", new ErrorResVO(JWT_INVALID));
+            request.getRequestDispatcher("/error").forward(request,response);
             return;
         }
         
