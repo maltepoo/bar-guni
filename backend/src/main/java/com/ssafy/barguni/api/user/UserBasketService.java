@@ -48,4 +48,8 @@ public class UserBasketService {
         UserBasket ub = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
         ub.setAuthority(authority);
     }
+
+    public void deleteById(Long u_b_id) {
+        userBasketRepository.deleteById(u_b_id);
+    }
 }
