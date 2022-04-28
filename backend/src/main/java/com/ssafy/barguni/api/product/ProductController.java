@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,27 @@ public class ProductController {
         }
 
         return new ResponseEntity<ResVO<String>>(result, status);
+    }
+
+    @GetMapping("image")
+    // ResponseEntity 사용법 찾아보기
+    public ResponseEntity<ResVO<MultipartFile>> multipartconvert(@RequestParam @Parameter String word) {
+        ResVO<MultipartFile> result = new ResVO<>();
+        HttpStatus status;
+
+        try {
+            MultipartFile m = prodService.searchImg(word);
+            result.setData(m);
+            result.setMessage("물품 등록에 성공했습니다.");
+            status = HttpStatus.CREATED;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setMessage("서버 오류");
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<ResVO<MultipartFile>>(result, status);
     }
 
 }
