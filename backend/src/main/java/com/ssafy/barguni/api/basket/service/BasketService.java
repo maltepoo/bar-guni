@@ -119,5 +119,8 @@ public class BasketService {
         return generatedString;
     }
 
+    public Basket findByJoinCode(String joinCode){
+        return basketRepository.findByJoinCode(joinCode).get();
+    }
 
 }
