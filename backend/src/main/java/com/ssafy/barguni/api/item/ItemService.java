@@ -1,10 +1,18 @@
 package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureService;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
+import com.ssafy.barguni.api.basket.service.BasketService;
+import com.ssafy.barguni.api.basket.service.CategoryService;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserBasketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,24 +26,27 @@ import java.util.Optional;
 @Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final BasketService basketService;
+    private final PictureService pictureService;
+    private final CategoryService categoryService;
+    private final UserBasketService userBasketService;
 
-    public Item saveNewItem(ItemPostReq req) {
-//        Basket bkt = basketRepository.findById(req.getBkt_id()).get();
-//        Picture pic = pictureRepository.findById(req.getPic_id()).get();
-//        Categories cate = categoriesRepository.findById(req.getCate_id()).get();
-        Basket bkt = new Basket();
-        Picture pic = new Picture();
-        Categories cate = new Categories();
+    public Item saveNewItem(User user, ItemPostReq req) {
+        Basket bkt = basketService.getBasket(req.getBktId());
+        if (userBasketService.findByUserAndBasket(user.getId(), bkt.getId()) == null){
+            throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
+        }
+
+        Picture pic = pictureService.getById(req.getPicId());
+        Categories cate = categoryService.getById(req.getCateId());
 
         Item item = Item.createItem(bkt, pic, cate, req);
-        itemRepository.save(item);
-
-        return item;
+        return itemRepository.save(item);
     }
 
     public Item getById(Long id) {
-        Optional<Item> optItem = itemRepository.findById(id);
-        return optItem.get();
+        Item item = itemRepository.findById(id).get();
+        return item;
     }
 
     public List<Item> getListByBktId(Long bktId) {
