@@ -253,7 +253,7 @@ public class UserController {
         return new ResponseEntity<ResVO<List<UserBasketRes>>>(result, status);
     }
 
-    @PostMapping("/basket/{bkt_id}")
+    @PostMapping("/basket/{joinCode}")
     @Operation(summary = "바구니 참여", description = "다른 바구니에 참여한다. (로그인필요)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -270,8 +270,11 @@ public class UserController {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             User user = userService.findById(userDetails.getUserId());
             Basket basket = basketService.findByJoinCode(joinCode);
+            System.out.println("~~~~~");
+            boolean check = userBasketService.existsBybktId(user.getId(), basket.getId());
+            System.out.println("~~~~~" + check);
 
-            if (userBasketService.addBasket(user, basket.getId()).isPresent()) {
+            if ( !userBasketService.existsBybktId(user.getId(), basket.getId()) && userBasketService.addBasket(user, basket.getId()).isPresent()) {
                 resultMap.put("message", "성공");
             } else {
                 resultMap.put("message", "이미 참여한 바구니입니다.");
