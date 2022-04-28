@@ -39,17 +39,11 @@ public class BasketController {
         ResVO<Long> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            Long basketId = basketService.createBasket(name, multipartFile, userDetails.getUser());
-            status = HttpStatus.OK;
-            result.setData(basketId);
-            result.setMessage("바구니 생성 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("바구니 생성 실패");
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Long basketId = basketService.createBasket(name, multipartFile, userDetails.getUser());
+        status = HttpStatus.OK;
+        result.setData(basketId);
+        result.setMessage("바구니 생성 성공");
 
         return new ResponseEntity<ResVO<Long>>(result, status);
     }
@@ -62,20 +56,14 @@ public class BasketController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<BasketRes>> getBasket(@PathVariable Long basketId){
+    public ResponseEntity<ResVO<BasketRes>> getBasket(@PathVariable Long basketId) throws Exception{
         ResVO<BasketRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            Basket basket = basketService.getBasket(basketId);
-            result.setData(new BasketRes(basket));
-            result.setMessage("바구니 조회 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("바구니 조회 실패");
-        }
+        Basket basket = basketService.getBasket(basketId);
+        result.setData(new BasketRes(basket));
+        result.setMessage("바구니 조회 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<BasketRes>>(result, status);
     }
@@ -96,17 +84,10 @@ public class BasketController {
         ResVO<Long> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            basketService.updateBasket(basketId, name, multipartFile);
-            status = HttpStatus.OK;
-            result.setData(basketId);
-            result.setMessage("바구니 수정 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("바구니 수정 실패");
-            result.setData(basketId);
-        }
+        basketService.updateBasket(basketId, name, multipartFile);
+        status = HttpStatus.OK;
+        result.setData(basketId);
+        result.setMessage("바구니 수정 성공");
 
         return new ResponseEntity<ResVO<Long>>(result, status);
     }
@@ -123,18 +104,11 @@ public class BasketController {
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            basketService.deleteBasket(basketId, userDetails.getUserId());
-            result.setMessage("바구니 삭제 성공");
-            result.setData(true);
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("바구니 삭제 실패");
-            result.setData(false);
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        basketService.deleteBasket(basketId, userDetails.getUserId());
+        result.setMessage("바구니 삭제 성공");
+        result.setData(true);
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);
     }
