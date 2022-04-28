@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.alert;
 
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.item.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,5 +32,15 @@ public class AlertService {
     @Transactional
     public void deleteById(Long alertId) {
         alertRepository.deleteById(alertId);
+    }
+
+    @Transactional
+    public void createAlertBeforeExpiry(Item item) {
+        alertRepository.save(new Alert(item, "의 유통기한이 임박했습니다."));
+    }
+
+    @Transactional
+    public void createAlertAfterExpiry(Item item) {
+        alertRepository.save(new Alert(item, "의 유통기한이 지났습니다."));
     }
 }
