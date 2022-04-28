@@ -1,18 +1,24 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {ParamListBase} from '@react-navigation/native';
 import {Text, TouchableHighlight, View} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Home from './src/pages/Home';
+import Register from './src/pages/Register';
+import Settings from './src/pages/Settings';
 
 function AppInner(props) {
+  const [isLogin, setIsLogin] = useState([]);
+  const [test, setTest] = useState(true);
   type RootStackParamList = {
     SignIn: undefined;
     Login: undefined;
-    Home: undefined; // isLoggined ?  login, register, home
-    Details: undefined;
+    Home: undefined;
     Search: undefined;
+    Register: undefined;
     Settings: undefined;
   };
 
@@ -48,8 +54,36 @@ function AppInner(props) {
   }
 
   const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
 
-  return (
+  return isLogin ? (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: '홈',
+          tabBarActiveTintColor: 'blue',
+        }}
+      />
+      <Tab.Screen
+        name="Register"
+        component={Register}
+        options={{
+          title: '등록',
+          tabBarActiveTintColor: 'blue',
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          title: '설정',
+          tabBarActiveTintColor: 'blue',
+        }}
+      />
+    </Tab.Navigator>
+  ) : (
     <Stack.Navigator initialRouteName="Details">
       <Stack.Screen
         name="Home"
