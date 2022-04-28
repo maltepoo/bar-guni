@@ -65,6 +65,9 @@ public class ProductController {
             Product p = prodService.register(word);
             result.setData(p);
             result.setMessage("물품 등록에 성공했습니다.");
+            if (p==null) {
+                result.setMessage("널값 반환");
+            }
             status = HttpStatus.CREATED;
 
         } catch (Exception e) {
