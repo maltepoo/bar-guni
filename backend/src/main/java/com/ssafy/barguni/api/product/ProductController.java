@@ -1,5 +1,6 @@
 package com.ssafy.barguni.api.product;
 
+import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.item.Item;
 import com.ssafy.barguni.api.item.ItemService;
@@ -56,13 +57,13 @@ public class ProductController {
 
     @GetMapping("image")
     // ResponseEntity 사용법 찾아보기
-    public ResponseEntity<ResVO<MultipartFile>> multipartconvert(@RequestParam @Parameter String word) {
-        ResVO<MultipartFile> result = new ResVO<>();
+    public ResponseEntity<ResVO<Product>> multipartconvert(@RequestParam @Parameter String word) {
+        ResVO<Product> result = new ResVO<>();
         HttpStatus status;
 
         try {
-            MultipartFile m = prodService.searchImg(word);
-            result.setData(m);
+            Product p = prodService.register(word);
+            result.setData(p);
             result.setMessage("물품 등록에 성공했습니다.");
             status = HttpStatus.CREATED;
 
@@ -72,7 +73,7 @@ public class ProductController {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<ResVO<MultipartFile>>(result, status);
+        return new ResponseEntity<ResVO<Product>>(result, status);
     }
 
 }

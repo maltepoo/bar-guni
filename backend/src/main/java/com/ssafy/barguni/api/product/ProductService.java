@@ -30,7 +30,7 @@ public class ProductService {
     private final ProductRepository prodRepository;
     private final PictureService pictureService;
 
-    public Product register(String barcode) {
+    public Product register(String barcode) throws Exception{
         // 바코드 읽어주는 함수 Or api 갔다와서 읽은 바코드를 이 함수로 보냄
         if (prodRepository.existsProductByBarcode(barcode)) {
             return prodRepository.findByBarcode(barcode).get();
@@ -49,7 +49,7 @@ public class ProductService {
             String name = barcodeData.getBarcodeData().getRow().get(0).getPrdlstNm();
 
             //바코드로 사진 이름찾기, 사진 Picture 객체로 만들어 저장하기.
-            Picture pic = new Picture();
+            Picture pic = searchImg(name);
 
             Product newProd = Product.createProduct(pic, barcode, name);
             return prodRepository.save(newProd);
@@ -86,9 +86,9 @@ public class ProductService {
         return tokens;
     }
 
-    public MultipartFile searchImg(String word) throws Exception {
+    public Picture searchImg(String prodName) throws Exception {
         // 네이버 이미지 검색으로 이미지 url을 따옴
-        String imgUrl = NaverImgSearchUtil.imageSearch(word);
+        String imgUrl = NaverImgSearchUtil.imageSearch(prodName);
         System.out.println(imgUrl);
         // url에 가서 이미지를 bufferedImage로 읽어오고, 확장자를 가져옴
         URL url = new URL(imgUrl);
@@ -100,11 +100,10 @@ public class ProductService {
         // 이미지를 multipartFile로 변환
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, imgExtension, baos);
-        MultipartFile multipartFile = new MockMultipartFile(word, word+"."+imgExtension,"image/"+imgExtension, baos.toByteArray());
+        MultipartFile multipartFile = new MockMultipartFile(prodName, prodName+"."+imgExtension,"image/"+imgExtension, baos.toByteArray());
 
         // PictureService를 통해 객체를 만들고 저장.
-        pictureService.create(multipartFile, "Item", Long.parseLong("3"));
-        return multipartFile;
+        return pictureService.create(multipartFile, "Item");
     }
 
 }
