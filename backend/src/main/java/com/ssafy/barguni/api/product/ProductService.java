@@ -42,7 +42,7 @@ public class ProductService {
                     e.printStackTrace();
                 }
             }
-
+            System.out.println("제품명" + name);
             Picture pic = searchImg(name);
             Product newProd = Product.createProduct(pic, barcode, name);
             return prodRepository.save(newProd);
