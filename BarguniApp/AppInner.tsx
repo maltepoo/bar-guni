@@ -20,17 +20,25 @@ import Settings from './src/pages/Settings';
 import * as RootNavigation from './RootNavigation';
 import SignUp from './src/pages/SignUp';
 import Search from './src/pages/Search';
+import AlarmSetting from './src/pages/AlarmSetting';
+import MyPage from './src/pages/MyPage';
+import BasketSetting from './src/pages/BasketSetting';
+import TrashCan from './src/pages/TrashCan';
+export type RootStackParamList = {
+  SignIn: undefined;
+  Login: undefined;
+  Home: undefined;
+  Search: undefined;
+  Register: undefined;
+  Settings: undefined;
+  SignUp: undefined;
+  AlarmSetting: undefined;
+  MyPage: undefined;
+  TrashCan: undefined;
+  BasketSetting: undefined;
+};
 function AppInner(props) {
   const [isLogin, setIsLogin] = useState(true);
-  type RootStackParamList = {
-    SignIn: undefined;
-    Login: undefined;
-    Home: undefined;
-    Search: undefined;
-    Register: undefined;
-    Settings: undefined;
-    SignUp: undefined;
-  };
 
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -105,6 +113,26 @@ function AppInner(props) {
         <Stack.Screen
           name="Search"
           component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AlarmSetting"
+          component={AlarmSetting}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyPage"
+          component={MyPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BasketSetting"
+          component={BasketSetting}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TrashCan"
+          component={TrashCan}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
