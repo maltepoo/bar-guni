@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.product.vo;
+package com.ssafy.barguni.common.util.barcodeSearch.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ProductData {
+public class ProductFromC005Data {
     @JsonProperty("CLSBIZ_DT")
     private String clsbizDt;
     @JsonProperty("SITE_ADDR")

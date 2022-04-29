@@ -22,8 +22,8 @@ public class Product {
 
     public static Product createProduct(Picture pic, String barcode, String name) {
         Product product = new Product();
-        // 아직 안 만들어져서 걍 주석처리
-//        item.setPicture(pic);
+
+        product.setPicture(pic);
         product.barcode = barcode;
         product.name = name;
 
