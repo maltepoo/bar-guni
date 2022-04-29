@@ -18,4 +18,8 @@ public interface UserBasketRepository extends JpaRepository<UserBasket, Long> {
     UserBasket findByUserIdAndBasketId(Long userId, Long basketId);
 
     Integer countByBasketId(Long basketId);
+
+    @Query("select count(ub) > 0 from UserBasket ub where ub.user.id = :user_id and ub.basket.id = :bkt_id")
+    boolean existsBybktId(Long user_id, Long bkt_id);
+
 }
