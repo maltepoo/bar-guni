@@ -16,6 +16,10 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final BasketRepository basketRepository;
 
+    public Categories getById(Long id){
+        return categoryRepository.getById(id);
+    }
+
     public Boolean isDuplicated(Long basketId, String name){
         return categoryRepository.existsByBasketIdAndName(basketId, name);
     }

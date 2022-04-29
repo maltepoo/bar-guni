@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Categories, Long> {
+    Categories getById(Long id);
     List<Categories> getAllByBasketId(Long basketId);
     Boolean existsByBasketIdAndName(Long basketId, String name);
 }
