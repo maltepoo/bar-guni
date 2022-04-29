@@ -8,12 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
+@Transactional // 모든 알림이 다 등록하고 insert 일괄로 처리
 public class AlertScheduler {
     private final static Integer EXPIRATION_ALERT_PERIOD = 7;
     private final AlertService alertService;
@@ -23,6 +25,8 @@ public class AlertScheduler {
     // (초 분 시 일 월)
     @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
     public void test(){
+        long start = System.currentTimeMillis();
+
         itemService.findAll().forEach((item)->{
             // 이미 사용한 경우는 제외
             if(item.getUsed())
@@ -51,6 +55,8 @@ public class AlertScheduler {
             ) alertService.createAlertBeforeExpiry(item);
 
         });
-        logger.debug(LocalDateTime.now().toString());
+
+        long end = System.currentTimeMillis();
+        logger.debug("총 걸린 시간: " + (end - start) + " ms");
     }
 }
