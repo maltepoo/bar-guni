@@ -101,4 +101,8 @@ public class ItemService {
     public List<Item> getItemsUsingFilter(ItemSearch itemSearch){
         return itemRepository.getItemsUsingFilter(itemSearch);
     }
+
+    public List<Item> findAll(){
+        return itemRepository.findAllWithBasket();
+    }
 }

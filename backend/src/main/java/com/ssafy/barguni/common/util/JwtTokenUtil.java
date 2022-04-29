@@ -19,22 +19,28 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
     private static String secretKey;
-    private static Integer expirationTime;
+    private static Long accessExpirationTime;
+    private static Long refreshExpirationTime;
 
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "ssafy.com";
     
     @Autowired
-	public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
+	public JwtTokenUtil(@Value("${jwt.secret}") String secretKey
+            , @Value("${jwt.access-expiration}") Long accessExpirationTime
+            , @Value("${jwt.refresh-expiration}") Long refreshExpirationTime) {
 		this.secretKey = secretKey;
-		this.expirationTime = expirationTime;
+		this.accessExpirationTime = accessExpirationTime;
+        this.refreshExpirationTime = refreshExpirationTime;
 	}
     
-	public void setExpirationTime() {
-    		//JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-    		JwtTokenUtil.expirationTime = expirationTime;
+	public void setAccessExpirationTime() {
+    		JwtTokenUtil.accessExpirationTime = accessExpirationTime;
 	}
+    public void setRefreshExpirationTime() {
+        JwtTokenUtil.refreshExpirationTime = refreshExpirationTime;
+    }
 
 	public static JWTVerifier getVerifier() {
         return JWT
@@ -42,8 +48,10 @@ public class JwtTokenUtil {
                 .withIssuer(ISSUER)
                 .build();
     }
-    
-    public static String getToken(String userId) {
+
+
+    public static String getToken(String userId, TokenType tokenType) {
+        Long expirationTime = tokenType == TokenType.ACCESS ? accessExpirationTime : refreshExpirationTime;
         Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
                 .withSubject(userId)
@@ -62,7 +70,7 @@ public class JwtTokenUtil {
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
     
-    public static Date getTokenExpiration(int expirationTime) {
+    public static Date getTokenExpiration(long expirationTime) {
     		Date now = new Date();
     		return new Date(now.getTime() + expirationTime);
     }

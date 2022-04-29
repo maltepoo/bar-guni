@@ -11,6 +11,8 @@ import com.ssafy.barguni.api.user.vo.UserPostReq;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import com.ssafy.barguni.common.util.JwtTokenUtil;
 import com.ssafy.barguni.common.util.KakaoOauthUtil;
+import com.ssafy.barguni.common.util.TokenType;
+import com.ssafy.barguni.common.util.vo.TokenRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,8 +46,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<String>> login(@RequestParam String email) {
-        ResVO<String> result = new ResVO<>();
+    public ResponseEntity<ResVO<TokenRes>> login(@RequestParam String email) {
+        ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
 
         // 로그인 확인
@@ -53,17 +55,20 @@ public class UserController {
         if(!duplicated) {
             result.setMessage("회원이 아닙니다.");
             status = HttpStatus.NOT_ACCEPTABLE;
-            return new ResponseEntity<ResVO<String>>(result, status);
+            return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
         //
         User user = userService.findByEmail(email);
         status = HttpStatus.OK;
-        String accessToken = JwtTokenUtil.getToken(user.getId().toString());
-        result.setData(accessToken);
+        String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
+        String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
+
+        TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
+        result.setData(tokenRes);
         result.setMessage("성공");
 
-        return new ResponseEntity<ResVO<String>>(result, status);
+        return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
 
 
@@ -75,8 +80,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<String>> kakaoLogin (@RequestParam String code) {
-        ResVO<String> result = new ResVO<>();
+    public ResponseEntity<ResVO<TokenRes>> kakaoLogin (@RequestParam String code) {
+        ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
 
         //------------ 통신 ---------------//
@@ -85,7 +90,7 @@ public class UserController {
         if(responseToken == null){
             result.setMessage("유효하지 않은 카카오 인증 코드 입니다.");
             status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<String>>(result, status);
+            return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
         // 토큰 정보 추출
@@ -97,7 +102,7 @@ public class UserController {
             e.printStackTrace();
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<String>>(result, status);
+            return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
 
@@ -107,7 +112,7 @@ public class UserController {
         if(responseProfile == null){
             result.setMessage("유효하지 않은 토큰 입니다.");
             status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<String>>(result, status);
+            return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
         // 프로필 정보 추출
@@ -118,7 +123,7 @@ public class UserController {
             e.printStackTrace();
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<String>>(result, status);
+            return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
 
@@ -138,11 +143,14 @@ public class UserController {
         }
 
         status = HttpStatus.OK;
-        String accessToken = JwtTokenUtil.getToken(user.getId().toString());
-        result.setData(accessToken);
+        String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
+        String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
+
+        TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
+        result.setData(tokenRes);
         result.setMessage("카카오 로그인 성공");
 
-        return new ResponseEntity<ResVO<String>>(result, status);
+        return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
 
 
