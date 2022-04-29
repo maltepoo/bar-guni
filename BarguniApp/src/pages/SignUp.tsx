@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-function SignUp(props) {
+function SignUp() {
   return <Text>SignUp Screen</Text>;
 }
 

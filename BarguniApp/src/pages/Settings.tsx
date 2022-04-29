@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-function Settings(props) {
+function Settings() {
   return <Text>Settings Screen</Text>;
 }
 

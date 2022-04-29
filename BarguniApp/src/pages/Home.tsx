@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-function Home(props) {
+function Home() {
   return <Text>Home Screen</Text>;
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 
-function Register(props) {
+function Register() {
   return <Text>Register Screen</Text>;
 }
 
