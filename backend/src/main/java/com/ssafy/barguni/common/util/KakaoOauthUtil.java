@@ -32,7 +32,7 @@ public class KakaoOauthUtil implements SocialOauth {
     @Override
     public String getOauthRedirectURL() {
         Map<String, Object> params = new HashMap<>();
-        params.put("scope", "account_email");
+        params.put("scope", "account_email profile_nickname");
         params.put("response_type", "code");
         params.put("client_id", KAKAO_SNS_CLIENT_ID);
         params.put("redirect_uri", KAKAO_SNS_CALLBACK_URL);

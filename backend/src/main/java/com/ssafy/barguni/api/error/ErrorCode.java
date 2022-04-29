@@ -21,7 +21,8 @@ public enum ErrorCode {
     JWT_REFRESH_TOKEN_EXPIRED("REFRESH TOKEN 기한이 만료되었습니다.","J004",HttpStatus.UNAUTHORIZED),
 
     OAUTH_INVALID_AUTHORIZATION_CODE("AUTHORIZATION CODE 가 유효하지 않습니다.", "O001", HttpStatus.UNAUTHORIZED),
-    OAUTH_INVALID_ACCESS_TOKEN("ACCESS TOKEN 이 유효하지 않습니다.", "O002", HttpStatus.UNAUTHORIZED)
+    OAUTH_INVALID_ACCESS_TOKEN("ACCESS TOKEN 이 유효하지 않습니다.", "O002", HttpStatus.UNAUTHORIZED),
+    OAUTH_EMAIL_NOT_ALLOWED("이메일 정보 제공 동의가 필요합니다.","O003", HttpStatus.NOT_ACCEPTABLE)
     ;
 
     private final String message;

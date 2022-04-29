@@ -124,6 +124,13 @@ public class UserController {
         OauthToken oauthToken = null;
         oauthToken = objectMapper.readValue(responseToken.getBody(), OauthToken.class);
 
+        // 이메일 정보 제공을 동의할 때까지 리다이렉트한다.
+        if(!oauthToken.getScope().contains("email")) {
+            // 필요하면 연결끊기 시도 (다시 정보제공 동의 받는 법)
+            oauthService.request(socialLoginType);
+            throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_EMAIL_NOT_ALLOWED));
+        }
+
         //------------ 통신 ---------------//
         // 토큰으로 프로필 정보 가져오기
         ResponseEntity<String> responseProfile = oauthService.getProfile(socialLoginType, oauthToken);
