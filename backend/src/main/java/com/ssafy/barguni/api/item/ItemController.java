@@ -4,6 +4,9 @@ import com.ssafy.barguni.api.item.vo.ItemRes;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserService;
+import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 @Tag(name = "item controller", description = "물품 관련 컨트롤러")
 public class ItemController {
     private final ItemService itemService;
+    private final UserService userService;
 
     @PostMapping("")
     @Operation(summary = "물품 등록", description = "새로운 물품을 등록한다.")
@@ -38,7 +43,9 @@ public class ItemController {
         HttpStatus status;
 
         try {
-            Item newItem = itemService.saveNewItem(req);
+            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            User nowUser = userService.findById(userDetails.getUserId());
+            Item newItem = itemService.saveNewItem(nowUser, req);
             result.setData(new ItemRes(newItem));
             result.setMessage("물품 등록에 성공했습니다.");
             status = HttpStatus.CREATED;
@@ -66,6 +73,8 @@ public class ItemController {
         HttpStatus status;
 
         try {
+            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            User nowUser = userService.findById(userDetails.getUserId());
             Item findItem = itemService.getById(itemId);
             result.setData(findItem);
             result.setMessage("물품 조회에 성공했습니다.");

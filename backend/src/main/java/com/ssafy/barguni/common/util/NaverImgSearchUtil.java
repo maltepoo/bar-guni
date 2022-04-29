@@ -3,6 +3,8 @@ package com.ssafy.barguni.common.util;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,13 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Component
 public class NaverImgSearchUtil {
+    @Value("${naver.api.search.id}")
+    private String clientId;
+    @Value("${naver.api.search.key}")
+    private String clientSecret;
 
+    public String imageSearch(String word) throws ParseException {
 
-    public static String imageSearch(String word) throws ParseException {
-        String clientId = "0MDKYic30R83dnpw15pT"; //애플리케이션 클라이언트 아이디값"
-        String clientSecret = "P8XIMTkZ43"; //애플리케이션 클라이언트 시크릿값"
 
         try {
             word = URLEncoder.encode(word, "UTF-8");

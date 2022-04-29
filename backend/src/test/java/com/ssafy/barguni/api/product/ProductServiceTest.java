@@ -12,7 +12,7 @@ class ProductServiceTest {
     ProductService productService;
 
     @Test
-    public void 바코드_통신_테스트(){
+    public void 바코드_통신_테스트() throws Exception{
         productService.register("8809332393536");
     }
 }

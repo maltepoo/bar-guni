@@ -38,7 +38,7 @@ public class ImageUtil {
                 e.printStackTrace();
             }
             picture.setTitle(multipartFile.getOriginalFilename());
-            picture.setPicUrl(imageFileName);
+            picture.setPicUrl(imageFilePath.toString());
             picture.setCreatedAt(LocalDateTime.now());
         } else {
             System.out.println("getsize 실패");   //이거는 있어도 될 것 같아서 남겨둡니다
