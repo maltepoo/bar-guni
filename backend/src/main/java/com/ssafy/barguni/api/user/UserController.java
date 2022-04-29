@@ -1,10 +1,12 @@
 package com.ssafy.barguni.api.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.common.ResVO;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.OauthException;
 import com.ssafy.barguni.api.user.vo.*;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import com.ssafy.barguni.common.util.*;
@@ -90,23 +92,22 @@ public class UserController {
 
     /**
      * Social Login API Server 요청에 의한 callback 을 처리
-     * @param socialLoginType (GOOGLE, KAKAO(합칠까....)
+     * @param socialLoginType (GOOGLE, KAKAO)
      * @param code API Server 로부터 넘어노는 code
      * @return SNS Login 요청 결과로 받은 Json 형태의 String 문자열 (access_token, refresh_token 등)
      */
     @GetMapping("/oauth-login/{socialLoginType}/callback")
-    @Operation(summary = "구글 로그인", description = "구글 인증 코드로 구글 토큰을 얻고 정보로 로그인한다.")
+    @Operation(summary = "SNS 로그인", description = "인증 코드로 엑세스 토큰을 얻고 정보로 로그인한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<TokenRes>> googleLogin(
+    public ResponseEntity<ResVO<TokenRes>> googleLogin (
             @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
-            @RequestParam(name = "code") String code) {
+            @RequestParam(name = "code") String code) throws Exception {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
-//        return oauthService.requestAccessToken(socialLoginType, code);
 
         ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
@@ -115,149 +116,42 @@ public class UserController {
         // 토큰 관련 정보 얻기
         ResponseEntity<String> responseToken = oauthService.requestAccessToken(socialLoginType, code);
 
-        if(responseToken == null){
-            result.setMessage("유효하지 않은 카카오 인증 코드 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
-
-        // 토큰 정보 추출
-        ObjectMapper objectMapper = new ObjectMapper();
-        GoogleToken googleToken = null;
-        try {
-            googleToken = objectMapper.readValue(responseToken.getBody(), GoogleToken.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
-
-        //------------ 통신 ---------------//
-        // 토큰으로 프로필 정보 가져오기
-        ResponseEntity<String> responseProfile = GoogleOauthUtil.getGoogleProfile(googleToken);
-        if(responseProfile == null){
-            result.setMessage("유효하지 않은 토큰 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
-
-        // 프로필 정보 추출
-        GoogleProfile googleProfile = null;
-        try {
-            googleProfile = objectMapper.readValue(responseProfile.getBody(), GoogleProfile.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
-
-        // 이메일 중복 확인 및 토큰 반환
-        String email = googleProfile.getEmail();
-        String name = googleProfile.getName();
-        Boolean duplicated = userService.isDuplicated(email);
-        User user = null;
-        if(!duplicated) {
-            user = userService.oauthSignup(email, name);
-        }
-        else{
-            user = userService.findByEmail(email);
-        }
-
-        status = HttpStatus.OK;
-        String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
-        String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
-        TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
-        result.setData(tokenRes);
-
-        result.setMessage("구글 로그인 성공");
-
-        return new ResponseEntity<ResVO<TokenRes>>(result, status);
-    }
-
-
-    @PostMapping("/oauth-login/kakao")
-    @Operation(summary = "카카오 로그인", description = "카카오 인증 코드로 카카오 토큰을 얻고 정보로 로그인한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
-    public ResponseEntity<ResVO<TokenRes>> kakaoLogin (@RequestParam String code) {
-        ResVO<TokenRes> result = new ResVO<>();
-        HttpStatus status = null;
-
-        //------------ 통신 ---------------//
-        // 토큰 관련 정보 얻기
-        ResponseEntity<String> responseToken = KakaoOauthUtil.getKakaoToken(code);
-        if(responseToken == null){
-            result.setMessage("유효하지 않은 카카오 인증 코드 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        // 유효하지 않은 인가코드
+        if(responseToken == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_AUTHORIZATION_CODE));
 
         // 토큰 정보 추출
         ObjectMapper objectMapper = new ObjectMapper();
         OauthToken oauthToken = null;
-        try {
-            oauthToken = objectMapper.readValue(responseToken.getBody(), OauthToken.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
-
+        oauthToken = objectMapper.readValue(responseToken.getBody(), OauthToken.class);
 
         //------------ 통신 ---------------//
         // 토큰으로 프로필 정보 가져오기
-        ResponseEntity<String> responseProfile = KakaoOauthUtil.getKakaoProfile(oauthToken);
-        if(responseProfile == null){
-            result.setMessage("유효하지 않은 토큰 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        ResponseEntity<String> responseProfile = oauthService.getProfile(socialLoginType, oauthToken);
+        // 유효하지 않은 엑세스 토큰
+        if(responseToken == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_ACCESS_TOKEN));
 
         // 프로필 정보 추출
-        KakaoProfile kakaoProfile = null;
-        try {
-            kakaoProfile = objectMapper.readValue(responseProfile.getBody(), KakaoProfile.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        OauthProfileinfo emailAndName = oauthService.getEmailAndName(socialLoginType, responseProfile.getBody());
 
-
-
-        // 이메일 중복 확인 및 토큰 반환
-        String email = kakaoProfile.getKakao_account().getEmail();
-        String nickname = kakaoProfile.getProperties().getNickname();
-        Boolean duplicated = userService.isDuplicated(email);
+        Boolean duplicated = userService.isDuplicated(emailAndName.getEmail());
         User user = null;
         if(!duplicated) {
-            user = userService.oauthSignup(email, nickname);
-//            System.out.println("소셜 회원가입");
+            user = userService.oauthSignup(emailAndName);
         }
         else{
-            user = userService.findByEmail(email);
-//            System.out.println("소셜 로그인");
+            user = userService.findByEmail(emailAndName.getEmail());
         }
 
         status = HttpStatus.OK;
         String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
         String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
-
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
         result.setData(tokenRes);
-        result.setMessage("카카오 로그인 성공");
+
+        result.setMessage("SNS 로그인 성공");
 
         return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
-
 
     @GetMapping
     @Operation(summary = "사용자 조회", description = "테스트 조회한다.")

@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             // refresh 토큰이 없는 경우 access token 만료 됐다고 에러 보냄
             if (refresh == null || !refresh.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
                 request.setAttribute("data", new ErrorResVO(JWT_ACCESS_TOKEN_EXPIRED));
-                request.getRequestDispatcher("/error").forward(request,response);
+                request.getRequestDispatcher("/error/jwt").forward(request,response);
                 return;
             }
 
@@ -73,11 +73,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             } catch (TokenExpiredException tokenExpiredException2){ // refresh 토큰이 만료된 경우 경우 로그인 필요
                 request.setAttribute("data", new ErrorResVO(JWT_REFRESH_TOKEN_EXPIRED));
-                request.getRequestDispatcher("/error").forward(request,response);
+                request.getRequestDispatcher("/error/jwt").forward(request,response);
 
             } catch (Exception ex2){ // refresh 토큰이 유효하지 않은 경우 로그인 필요
                 request.setAttribute("data", new ErrorResVO(JWT_INVALID));
-                request.getRequestDispatcher("/error").forward(request,response);
+                request.getRequestDispatcher("/error/jwt").forward(request,response);
             }
 
             return;
@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             // interceptor에서 발생한 예외를 controller advice에서 처리 못하는 경우
             // 포워딩으로 처리한다.
             request.setAttribute("data", new ErrorResVO(JWT_INVALID));
-            request.getRequestDispatcher("/error").forward(request,response);
+            request.getRequestDispatcher("/error/jwt").forward(request,response);
             return;
         }
         
