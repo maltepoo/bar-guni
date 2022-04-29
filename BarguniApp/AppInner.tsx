@@ -9,18 +9,24 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
+import Search from './src/pages/Search';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
-function AppInner(props) {
+export type RootStackParamList = {
+  SignIn: undefined;
+  Login: undefined;
+  Home: undefined;
+  Search: undefined;
+  Register: undefined;
+  Settings: undefined;
+};
+
+function AppInner() {
   const [isLogin, setIsLogin] = useState([]);
   const [test, setTest] = useState(true);
-  type RootStackParamList = {
-    SignIn: undefined;
-    Login: undefined;
-    Home: undefined;
-    Search: undefined;
-    Register: undefined;
-    Settings: undefined;
-  };
 
   type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
   type DetailsScreenProps = NativeStackScreenProps<ParamListBase, 'Details'>;
@@ -31,23 +37,15 @@ function AppInner(props) {
     }, [navigation]);
 
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'yellow',
+        }}>
         <TouchableHighlight onPress={onClick}>
           <Text>Home Screen</Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-
-  function DetailsScreen({navigation}: DetailsScreenProps) {
-    const onClick = useCallback(() => {
-      navigation.navigate('Home');
-    }, [navigation]);
-
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <TouchableHighlight onPress={onClick}>
-          <Text>Details Screen</Text>
         </TouchableHighlight>
       </View>
     );
@@ -63,6 +61,7 @@ function AppInner(props) {
         component={Home}
         options={{
           title: '홈',
+          tabBarIcon: () => <Entypo name="home" size={20} />,
           tabBarActiveTintColor: 'blue',
         }}
       />
@@ -71,6 +70,7 @@ function AppInner(props) {
         component={Register}
         options={{
           title: '등록',
+          tabBarIcon: () => <Ionicons name="barcode" size={22} />,
           tabBarActiveTintColor: 'blue',
         }}
       />
@@ -79,20 +79,28 @@ function AppInner(props) {
         component={Settings}
         options={{
           title: '설정',
+          tabBarIcon: () => <FontAwesome name="gear" size={20} />,
+          tabBarActiveTintColor: 'blue',
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          title: '검색',
+          headerShown: false,
+          tabBarIcon: () => <FontAwesomeIcon name="search" size={18} />,
           tabBarActiveTintColor: 'blue',
         }}
       />
     </Tab.Navigator>
   ) : (
-    <Stack.Navigator initialRouteName="Details">
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{title: 'Overview'}}
       />
-      <Stack.Screen name="Details">
-        {props => <DetailsScreen {...props} />}
-      </Stack.Screen>
     </Stack.Navigator>
   );
 }
