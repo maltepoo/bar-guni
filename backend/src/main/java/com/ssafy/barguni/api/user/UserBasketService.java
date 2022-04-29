@@ -52,4 +52,8 @@ public class UserBasketService {
     public boolean existsBybktId(Long user_id, Long bkt_id) {
         return userBasketRepository.existsBybktId(user_id, bkt_id);
     }
+
+    public void deleteById(Long u_b_id) {
+        userBasketRepository.deleteById(u_b_id);
+    }
 }

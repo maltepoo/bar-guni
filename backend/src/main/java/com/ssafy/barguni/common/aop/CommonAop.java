@@ -19,13 +19,15 @@ public class CommonAop {
     @Pointcut("execution(* com.ssafy.barguni.api..controller..*(..))")
     private void cut(){}
 
+    @Pointcut("execution(* com.ssafy.barguni.api..*Controller..*(..))")
+    private void cut2(){}
 //    @Pointcut("execution(* com.ssafy.barguni.api.basket.controller.BasketController.createBasketUser(..))")
 //    private void cut1(){}
 //    @Pointcut("execution(* com.ssafy.barguni.api.basket.controller.BasketController.deleteBasketUser(..))")
 //    private void cut2(){}
 
-//    @Before("cut1() || cut2()") //cut()메서드가 실행되기 이전
-    @Before("cut()") //cut()메서드가 실행되기 이전
+    @Before("cut() || cut2()") //cut()메서드가 실행되기 이전
+//    @Before("cut()") //cut()메서드가 실행되기 이전
     public void before(JoinPoint joinPoint) {
         //JoinPoint = 들어가는 지점에 대한 객체를 가진 메서드
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
