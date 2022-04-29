@@ -1,5 +1,13 @@
 import React from 'react';
-import {Text, View, Image, StyleSheet, TextInput, Button} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 // @ts-ignore
 import logo from '../assets/loginlogo.png';
 
@@ -17,10 +25,12 @@ function Login() {
       <View style={{marginTop: 10, marginBottom: 10}}>
         <Text>회원가입</Text>
       </View>
-      <View style={styles.button}>
-        <Button title="로그인"></Button>
-        <Button title="카카오 로그인" color="#FEE500"></Button>
-      </View>
+      <TouchableOpacity style={styles.button}>
+        <Text style={{color: '#FFFFFF'}}>로그인</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.kakaobutton}>
+        <Text>카카오로 로그인</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -44,6 +54,19 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     width: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#32A3F5',
+    marginBottom: 5,
+    height: 25,
+  },
+  kakaobutton: {
+    borderRadius: 10,
+    width: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FEE500',
+    height: 25,
   },
 });
 
