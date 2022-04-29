@@ -6,6 +6,7 @@ import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -21,9 +22,9 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BasketAop {
     private final UserBasketService userBasketService;
-    private final Logger logger = LoggerFactory.getLogger(CommonAop.class);
 
     @Pointcut("execution(* com.ssafy.barguni.api..BasketController..*(..))")
     private void cutBasket(){}
@@ -35,7 +36,7 @@ public class BasketAop {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
 
-        logger.debug("basket aop 출력");
+        log.debug("basket aop 출력");
 
         // 바구니 생성일 땐, 접근성 검사 제외
         if(method.equals("createBasket"))

@@ -2,8 +2,8 @@ package com.ssafy.barguni.api.alert;
 
 import com.ssafy.barguni.api.item.AlertBy;
 import com.ssafy.barguni.api.item.ItemService;
-import com.ssafy.barguni.common.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,16 +11,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
 @Transactional // 모든 알림이 다 등록하고 insert 일괄로 처리
+@Slf4j
 public class AlertScheduler {
     private final static Integer EXPIRATION_ALERT_PERIOD = 7;
     private final AlertService alertService;
     private final ItemService itemService;
-    private final Logger logger = LoggerFactory.getLogger(AlertScheduler.class);
 
     // (초 분 시 일 월)
     @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
@@ -57,6 +56,6 @@ public class AlertScheduler {
         });
 
         long end = System.currentTimeMillis();
-        logger.debug("총 걸린 시간: " + (end - start) + " ms");
+        log.debug("총 걸린 시간: " + (end - start) + " ms");
     }
 }

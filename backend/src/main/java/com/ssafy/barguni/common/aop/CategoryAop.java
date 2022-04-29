@@ -6,6 +6,7 @@ import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -21,9 +22,9 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryAop {
     private final UserBasketService userBasketService;
-    private final Logger logger = LoggerFactory.getLogger(CommonAop.class);
 
     @Pointcut("execution(* com.ssafy.barguni.api..CategoryController..*(..))")
     private void cutCatetory(){}
@@ -35,7 +36,7 @@ public class CategoryAop {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
 
-        logger.debug("category aop 출력");
+        log.debug("category aop 출력");
 
         Object[] args = joinPoint.getArgs();
         for(Object obj : args) {

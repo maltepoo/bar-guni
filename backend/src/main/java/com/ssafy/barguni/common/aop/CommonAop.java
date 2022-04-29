@@ -7,6 +7,7 @@ import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import com.ssafy.barguni.common.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -22,9 +23,9 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CommonAop {
     private final UserBasketService userBasketService;
-    private final Logger logger = LoggerFactory.getLogger(CommonAop.class);
 
     @Pointcut("execution(* com.ssafy.barguni.api..controller..*(..))")
     private void controllerCut1(){}
@@ -38,17 +39,17 @@ public class CommonAop {
         //JoinPoint = 들어가는 지점에 대한 객체를 가진 메서드
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        logger.debug("common aop 출력");
-        logger.debug(joinPoint.getTarget().toString());
-        logger.debug(method.getName());
+        log.debug("common aop 출력");
+        log.debug(joinPoint.getTarget().toString());
+        log.debug(method.getName());
 
         Object[] args = joinPoint.getArgs();
         //메서드에 들어가는 매개변수들에 대한 배열
 
         for(Object obj : args) {
-            logger.debug(obj.toString());
-            logger.debug("type : "+obj.getClass().getSimpleName());
-            logger.debug("value : "+obj);
+            log.debug(obj.toString());
+            log.debug("type : "+obj.getClass().getSimpleName());
+            log.debug("value : "+obj);
         }
     }
 
