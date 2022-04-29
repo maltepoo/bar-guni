@@ -31,11 +31,22 @@ function Search() {
               style={styles.hideButton}
               onPress={handleModal}></Pressable>
             <Text
+              style={{
+                color: 'white',
+                backgroundColor: 'black',
+                padding: 10,
+                width: 120,
+                marginLeft: 10,
+              }}
               onPress={() => {
                 setModalVisible(!modalVisible);
               }}>
               모달
             </Text>
+            <View style={styles.category}>
+              <Text>바구니선택</Text>
+              <Text>카테고리 선택</Text>
+            </View>
           </View>
         </Modal>
       </SafeAreaView>
@@ -60,6 +71,11 @@ const styles = StyleSheet.create({
     marginTop: 200,
     width: '100%',
     height: '100%',
+    borderRadius: 10,
+  },
+  category: {
+    marginVertical: 20,
+    marginHorizontal: 30,
   },
   hideButton: {
     marginTop: 10,

@@ -1,6 +1,7 @@
 import React, {useCallback} from 'react';
 import {Alert, Pressable, StyleSheet, TextInput, View} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function SearchBar() {
   const handleSearch = useCallback(() => {
@@ -17,6 +18,9 @@ function SearchBar() {
           style={styles.searchInput}
           placeholder="검색어를 입력해주세요"
         />
+        <Pressable style={styles.filterIcon}>
+          <Ionicons name="options-outline" size={18} color="rgba(0,0,0,0.4)" />
+        </Pressable>
       </View>
     </View>
   );
@@ -33,6 +37,15 @@ const styles = StyleSheet.create({
     zIndex: 2,
     left: 12,
     top: 10,
+  },
+  filterIcon: {
+    position: 'absolute',
+    zIndex: 2,
+    right: 12,
+    top: 7,
+    backgroundColor: 'yellow',
+    borderRadius: 5,
+    padding: 3,
   },
   searchInput: {
     height: 40,
