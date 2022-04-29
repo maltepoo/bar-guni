@@ -1,15 +1,25 @@
 package com.ssafy.barguni.common.util;
 
 import com.ssafy.barguni.api.user.vo.OauthToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class KakaoOauthUtil {
+
+    public static String clientId;
+    @Value("${sns.kakao.client.id}")
+    public void setClientId(String id){
+        clientId = id;
+    }
+
     public static ResponseEntity<String> getKakaoToken(String code) {
         ResponseEntity<String> tokens = null;
         // 카카오 토큰 요청
@@ -19,8 +29,8 @@ public class KakaoOauthUtil {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", "17e88fdcd4825e84145e1f5676bf6007");
-        params.add("redirect_uri","https://i6b209.p.ssafy.io/petodoctor/kakaooauth");
+        params.add("client_id", clientId);
+        params.add("redirect_uri","https://k6b202.p.ssafy.io/petodoctor/kakaooauth");
 //        params.add("redirect_uri","http://localhost:3000/petodoctor/kakaooauth");
 //        params.add("redirect_uri","http://localhost:3000/kakaooauth");
         params.add("code", code);

@@ -62,6 +62,8 @@ dependencies {
 
 	// imageIO -> multipartfile
 	implementation 'org.springframework:spring-test:5.3.2'
+    // google login api
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

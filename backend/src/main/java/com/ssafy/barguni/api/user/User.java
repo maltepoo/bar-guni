@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,12 +24,12 @@ public class User {
     @JoinColumn(name="default_bkt")
     private Basket defaultBasket;
 
-    public User(){
+    public User(){}
 
-    }
-
+    @Builder
     public User(String email, String name) {
         this.email = email;
         this.name = name;
     }
+
 }

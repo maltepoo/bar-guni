@@ -3,18 +3,29 @@ package com.ssafy.barguni.common.util.barcodeSearch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.barguni.common.util.barcodeSearch.vo.BarcodeDataFromC005Res;
 import com.ssafy.barguni.common.util.barcodeSearch.vo.BarcodeDataFromI2570Res;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Component
 public class BarcodeSearchUtil {
+
+    @Value("${barcode.api.key}")
+    private String apiKey;
+
+//    public void setApiKey(String key){
+//        apiKey = key;
+//    }
+
     public String getProdNameFromC005(String barcode) throws Exception{
         // 바코드 읽어주는 함수 Or api 갔다와서 읽은 바코드를 이 함수로 보냄
-
+        System.out.println("키 " + apiKey);
         BarcodeDataFromC005Res barcodeData = null;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -59,7 +70,7 @@ public class BarcodeSearchUtil {
                 new HttpEntity<>(params, headers);
         try {
             tokens = rt.exchange(
-                    "http://openapi.foodsafetykorea.go.kr/api/8098e732d9f3451e9955/C005/json/1/1/BAR_CD="+barcode,
+                    "http://openapi.foodsafetykorea.go.kr/api/"+apiKey+"/C005/json/1/1/BAR_CD="+barcode,
                     HttpMethod.GET,
                     barcodeDataRequest,
                     String.class
@@ -83,7 +94,7 @@ public class BarcodeSearchUtil {
                 new HttpEntity<>(params, headers);
         try {
             tokens = rt.exchange(
-                    "http://openapi.foodsafetykorea.go.kr/api/8098e732d9f3451e9955/I2570/json/1/1/BRCD_NO="+barcode,
+                    "http://openapi.foodsafetykorea.go.kr/api/"+apiKey+"/I2570/json/1/1/BRCD_NO="+barcode,
                     HttpMethod.GET,
                     barcodeDataRequest,
                     String.class
