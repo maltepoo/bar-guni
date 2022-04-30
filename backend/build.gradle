@@ -27,7 +27,7 @@ repositories {
 	mavenCentral()
 }
 
-bootWar.enabled = false
+bootWar.enabled = true
 war.enabled = true
 
 dependencies {
