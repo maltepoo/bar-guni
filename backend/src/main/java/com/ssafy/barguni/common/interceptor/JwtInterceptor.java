@@ -2,6 +2,7 @@ package com.ssafy.barguni.common.interceptor;
 
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,17 +17,17 @@ import javax.servlet.http.HttpSession;
 import static com.ssafy.barguni.api.error.ErrorCode.JWT_NOT_EXIST;
 
 @Component
+@Slf4j
 public class JwtInterceptor implements HandlerInterceptor {
-    private final Logger logger = LoggerFactory.getLogger(JwtInterceptor.class);
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        logger.debug("jwt 토큰 유무 확인 인터셉터");
+        log.debug("jwt 토큰 유무 확인 인터셉터");
         HttpSession session = request.getSession();
         String jwtToken = request.getHeader("Authorization");
 
         if(jwtToken == null) {
-            logger.error("jwt 토큰이 없습니다.");
+            log.error("jwt 토큰이 없습니다.");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             throw new JwtException(new ErrorResVO(JWT_NOT_EXIST));
         }

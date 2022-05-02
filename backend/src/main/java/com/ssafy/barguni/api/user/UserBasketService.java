@@ -43,6 +43,10 @@ public class UserBasketService {
         return userBasketRepository.findByUserIdAndBasketId(userId, basketId);
     }
 
+    public Boolean existsByUserAndBasket(Long userId, Long basketId){
+        return userBasketRepository.existsByUserIdAndBasketId(userId, basketId);
+    }
+
     @Transactional
     public void modifyAuthority(Long basketId, Long userId, UserAuthority authority) {
         UserBasket ub = userBasketRepository.findByUserIdAndBasketId(userId, basketId);

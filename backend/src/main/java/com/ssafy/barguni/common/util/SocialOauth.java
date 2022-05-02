@@ -1,5 +1,8 @@
 package com.ssafy.barguni.common.util;
 
+import com.ssafy.barguni.api.user.vo.OauthToken;
+import org.springframework.http.ResponseEntity;
+
 public interface SocialOauth {
     /**
      * 각 Social Login 페이지로 Redirect 처리할 URL Build
@@ -17,8 +20,11 @@ public interface SocialOauth {
     default SocialLoginType type() {
         if (this instanceof GoogleOauthUtil) {
             return SocialLoginType.GOOGLE;
-        } else {
+        } else if(this instanceof KakaoOauthUtil) {
+            return SocialLoginType.KAKAO;
+        } else
             return null;
-        }
     }
+
+    ResponseEntity<String> getProfile(OauthToken oauthToken);
 }
