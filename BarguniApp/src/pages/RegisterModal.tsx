@@ -5,7 +5,7 @@ import {RootStackParamList} from '../../AppInner';
 
 type RegisterModalScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'Login'
+  'RegisterModal'
 >;
 
 function RegisterModal({navigation}: RegisterModalScreenProps) {
