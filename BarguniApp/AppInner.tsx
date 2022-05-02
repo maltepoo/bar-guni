@@ -3,7 +3,11 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {ParamListBase} from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   Alert,
   Image,
@@ -23,7 +27,7 @@ import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
 import Alarm from './src/pages/Alarm';
-
+import * as RootNavigation from './RootNavigation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -49,7 +53,6 @@ export type RootStackParamList = {
 };
 function AppInner(props) {
   const [isLogin, setIsLogin] = useState(true);
-
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
@@ -123,6 +126,7 @@ function AppInner(props) {
             source={require('./src/assets/bell.png')}></Image>
         </Pressable>
       </View>
+
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../../AppInner';
 
 function Search2() {
   const [searchResult, setSearchResult] = useState([

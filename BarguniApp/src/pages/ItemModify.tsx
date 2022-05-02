@@ -16,7 +16,6 @@ import {
 } from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 import {Button, TextInput} from 'react-native-paper';
-import DatePicker from 'react-';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 function ItemModify() {
