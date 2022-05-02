@@ -10,6 +10,7 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 // @ts-ignore
 import logo from '../assets/loginlogo.png';
+import {RootStackParamList} from '../../AppInner';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
