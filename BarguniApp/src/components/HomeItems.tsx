@@ -1,12 +1,19 @@
 import React, {useCallback} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {RootStackParamList} from '../../AppInner';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 function HomeItems(props) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const test = {id: 1};
   const deleteItem = useCallback(() => {
     // Todo : 삭제 할 아이템
   }, []);
+  const onClick = useCallback(() => {
+    navigation.navigate('ItemDetail', test);
+  }, [navigation, test]);
   return (
-    <View>
+    <Pressable onPress={onClick}>
       <View style={Style.container}>
         <View style={Style.row}>
           <Image
@@ -33,7 +40,7 @@ function HomeItems(props) {
         <Text style={Style.title}>타이레놀</Text>
       </View>
       <View style={Style.line}></View>
-    </View>
+    </Pressable>
   );
 }
 const Style = StyleSheet.create({
