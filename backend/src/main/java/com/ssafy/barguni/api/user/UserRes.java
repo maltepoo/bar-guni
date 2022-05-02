@@ -16,7 +16,7 @@ public class UserRes {
         this.userId = userId;
         this.email = email;
         this.name = name;
-        this.defaultBasket = defaultBasket;
+        this.defaultBasket = defaultBasket instanceof Basket? null : defaultBasket;
     }
 
     public static UserRes convertTo(User user) {

@@ -5,7 +5,6 @@ import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
-import com.ssafy.barguni.common.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -24,33 +23,36 @@ import java.lang.reflect.Method;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CommonAop {
+public class BasketAop {
     private final UserBasketService userBasketService;
 
-    @Pointcut("execution(* com.ssafy.barguni.api..controller..*(..))")
-    private void controllerCut1(){}
+    @Pointcut("execution(* com.ssafy.barguni.api..BasketController..*(..))")
+    private void cutBasket(){}
 
-    @Pointcut("execution(* com.ssafy.barguni.api..*Controller..*(..))")
-    private void controllerCut2(){}
-
-    // 모든 Controller가 실행되기 전에 수행
-    @Before("controllerCut1() || controllerCut2()")
-    public void controllerBefore(JoinPoint joinPoint) {
+    // Basket Controller가 실행되기 전에 수행
+    @Before("cutBasket()")
+    public void beforeBasket(JoinPoint joinPoint) {
         //JoinPoint = 들어가는 지점에 대한 객체를 가진 메서드
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        log.debug("common aop 출력");
-        log.debug(joinPoint.getTarget().toString());
-        log.debug(method.getName());
+
+        log.debug("basket aop 출력");
+
+        // 바구니 생성일 땐, 접근성 검사 제외
+        if(method.equals("createBasket"))
+            return;
 
         Object[] args = joinPoint.getArgs();
-        //메서드에 들어가는 매개변수들에 대한 배열
-
         for(Object obj : args) {
-            log.debug(obj.toString());
-            log.debug("type : "+obj.getClass().getSimpleName());
-            log.debug("value : "+obj);
+            if("Long".equals(obj.getClass().getSimpleName())){
+                Long basketId = (Long)obj;
+                AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+                Long userId = userDetails.getUserId();
+                if(!userBasketService.existsByUserAndBasket(userId, basketId))
+                    throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
+
+                break;
+            }
         }
     }
-
 }

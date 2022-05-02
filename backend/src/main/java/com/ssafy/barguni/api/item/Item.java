@@ -45,9 +45,9 @@ public class Item {
     public static Item createItem(Basket bkt, Picture pic, Categories cate, ItemPostReq req) {
         Item item = new Item();
         // 아직 안 만들어져서 걍 주석처리
-//        item.setBasket(bkt);
-//        item.setPicture(pic);
-//        item.setCategory(cate);
+        item.setBasket(bkt);
+        item.setPicture(pic);
+        item.setCategory(cate);
         item.setName(req.getName());
         item.setRegDate(LocalDate.now());
         item.setAlertBy(req.getAlertBy());
@@ -55,6 +55,7 @@ public class Item {
         item.setDDAY(req.getDDAY());
         item.setShelfLife(req.getShelfLife());
         item.setContent(req.getContent());
+        item.setUsed(false);
 
         return item;
     }

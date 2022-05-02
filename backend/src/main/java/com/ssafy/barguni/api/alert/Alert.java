@@ -14,7 +14,10 @@ import java.time.LocalDate;
 @Entity
 @Getter @Setter
 public class Alert {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ALTER_SEQUENCE")
+    @SequenceGenerator(name = "ALTER_SEQUENCE", sequenceName = "ALTER_SEQ")
+//    @Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "ALERT_NATIVE")
+//    @GenericGenerator(name = "ALERT_NATIVE", strategy = "native")
     @Column(name="alert_id")
     private Long id;
 

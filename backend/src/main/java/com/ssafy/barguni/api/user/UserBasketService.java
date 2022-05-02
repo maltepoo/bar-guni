@@ -43,6 +43,10 @@ public class UserBasketService {
         return userBasketRepository.findByUserIdAndBasketId(userId, basketId);
     }
 
+    public Boolean existsByUserAndBasket(Long userId, Long basketId){
+        return userBasketRepository.existsByUserIdAndBasketId(userId, basketId);
+    }
+
     @Transactional
     public void modifyAuthority(Long basketId, Long userId, UserAuthority authority) {
         UserBasket ub = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
@@ -51,5 +55,9 @@ public class UserBasketService {
 
     public boolean existsBybktId(Long user_id, Long bkt_id) {
         return userBasketRepository.existsBybktId(user_id, bkt_id);
+    }
+
+    public void deleteById(Long u_b_id) {
+        userBasketRepository.deleteById(u_b_id);
     }
 }

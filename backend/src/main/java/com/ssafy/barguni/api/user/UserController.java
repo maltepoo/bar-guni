@@ -1,17 +1,16 @@
 package com.ssafy.barguni.api.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.common.ResVO;
-import com.ssafy.barguni.api.user.vo.KakaoProfile;
-import com.ssafy.barguni.api.user.vo.OauthToken;
-import com.ssafy.barguni.api.user.vo.UserPostReq;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.OauthException;
+import com.ssafy.barguni.api.user.vo.*;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
-import com.ssafy.barguni.common.util.JwtTokenUtil;
-import com.ssafy.barguni.common.util.KakaoOauthUtil;
-import com.ssafy.barguni.common.util.TokenType;
+import com.ssafy.barguni.common.util.*;
+
 import com.ssafy.barguni.common.util.vo.TokenRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,12 +31,13 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user/")
+@Slf4j
 @Tag(name = "user controller", description = "회원 관련 컨트롤러")
 public class UserController {
     private final UserService userService;
     private final UserBasketService userBasketService;
     private final BasketService basketService;
-
+    private final OauthService oauthService;
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "테스트 로그인한다.")
@@ -71,88 +72,93 @@ public class UserController {
         return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
 
-
-    @PostMapping("/oauth-login/kakao")
-    @Operation(summary = "카카오 로그인", description = "카카오 인증 코드로 카카오 토큰을 얻고 정보로 로그인한다.")
+    /**
+     * 사용자로부터 SNS 로그인 요청을 Social Login Type 을 받아 처리
+     * @param socialLoginType (GOOGLE, FACEBOOK, NAVER, KAKAO)
+     */
+    @GetMapping("/oauth-login/{socialLoginType}")
+    @Operation(summary = "구글 로그인", description = "구글 로그인을 요쳥한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<TokenRes>> kakaoLogin (@RequestParam String code) {
+    public void socialLoginType(
+            @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType) {
+        log.info(">> 사용자로부터 SNS 로그인 요청을 받음 :: {} Social Login", socialLoginType);
+        oauthService.request(socialLoginType);
+    }
+
+    /**
+     * Social Login API Server 요청에 의한 callback 을 처리
+     * @param socialLoginType (GOOGLE, KAKAO)
+     * @param code API Server 로부터 넘어노는 code
+     * @return SNS Login 요청 결과로 받은 Json 형태의 String 문자열 (access_token, refresh_token 등)
+     */
+    @GetMapping("/oauth-login/{socialLoginType}/callback")
+    @Operation(summary = "SNS 로그인", description = "인증 코드로 엑세스 토큰을 얻고 정보로 로그인한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<TokenRes>> googleLogin (
+            @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
+            @RequestParam(name = "code") String code) throws Exception {
+        log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
+
         ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
 
         //------------ 통신 ---------------//
         // 토큰 관련 정보 얻기
-        ResponseEntity<String> responseToken = KakaoOauthUtil.getKakaoToken(code);
-        if(responseToken == null){
-            result.setMessage("유효하지 않은 카카오 인증 코드 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        ResponseEntity<String> responseToken = oauthService.requestAccessToken(socialLoginType, code);
+
+        // 유효하지 않은 인가코드
+        if(responseToken == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_AUTHORIZATION_CODE));
 
         // 토큰 정보 추출
         ObjectMapper objectMapper = new ObjectMapper();
         OauthToken oauthToken = null;
-        try {
-            oauthToken = objectMapper.readValue(responseToken.getBody(), OauthToken.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        oauthToken = objectMapper.readValue(responseToken.getBody(), OauthToken.class);
 
+        // 이메일 정보 제공을 동의할 때까지 리다이렉트한다.
+        if(!oauthToken.getScope().contains("email")) {
+            // 필요하면 연결끊기 시도 (다시 정보제공 동의 받는 법)
+            oauthService.request(socialLoginType);
+            throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_EMAIL_NOT_ALLOWED));
+        }
 
         //------------ 통신 ---------------//
         // 토큰으로 프로필 정보 가져오기
-        ResponseEntity<String> responseProfile = KakaoOauthUtil.getKakaoProfile(oauthToken);
-        if(responseProfile == null){
-            result.setMessage("유효하지 않은 토큰 입니다.");
-            status = HttpStatus.BAD_REQUEST;
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        ResponseEntity<String> responseProfile = oauthService.getProfile(socialLoginType, oauthToken);
+        // 유효하지 않은 엑세스 토큰
+        if(responseToken == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_ACCESS_TOKEN));
 
         // 프로필 정보 추출
-        KakaoProfile kakaoProfile = null;
-        try {
-            kakaoProfile = objectMapper.readValue(responseProfile.getBody(), KakaoProfile.class);
-        } catch (JsonProcessingException e) { // 파싱 에러
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-            return new ResponseEntity<ResVO<TokenRes>>(result, status);
-        }
+        OauthProfileinfo emailAndName = oauthService.getEmailAndName(socialLoginType, responseProfile.getBody());
 
-
-
-        // 이메일 중복 확인 및 토큰 반환
-        String email = kakaoProfile.getKakao_account().getEmail();
-        String nickname = kakaoProfile.getProperties().getNickname();
-        Boolean duplicated = userService.isDuplicated(email);
+        Boolean duplicated = userService.isDuplicated(emailAndName.getEmail());
         User user = null;
         if(!duplicated) {
-            user = userService.oauthSignup(email, nickname);
-//            System.out.println("소셜 회원가입");
+            user = userService.oauthSignup(emailAndName);
         }
         else{
-            user = userService.findByEmail(email);
-//            System.out.println("소셜 로그인");
+            user = userService.findByEmail(emailAndName.getEmail());
         }
 
         status = HttpStatus.OK;
         String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
         String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
-
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
         result.setData(tokenRes);
-        result.setMessage("카카오 로그인 성공");
+
+        result.setMessage("SNS 로그인 성공");
 
         return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
-
 
     @GetMapping
     @Operation(summary = "사용자 조회", description = "테스트 조회한다.")
@@ -181,8 +187,8 @@ public class UserController {
         return new ResponseEntity<ResVO<String>>(result, status);
     }
 
-    @PutMapping("/{userId}")
-    @Operation(summary = "사용자 정보 수정", description = "사용자 정보 수정한다.")
+    @PutMapping
+    @Operation(summary = "사용자 정보(이름만) 수정", description = "사용자 정보 수정한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
@@ -190,14 +196,16 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<ResVO<UserRes>> updateUser(
-            @PathVariable("userId") @Parameter(description = "유저 ID") Long userId,
-            @RequestBody @Parameter(description = "유저 입력 폼") UserPostReq userReq) {
+            @RequestParam @Parameter(description = "유저 입력 폼") String name) {
 
         ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
         try{
-            User user = userService.modifyUser(userId,userReq);
+            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+            User user = userService.changeUser(userDetails.getUserId(), name).get();
+//            User user = userService.modifyUser(userDetails.getUserId(), name);
             result.setData(UserRes.convertTo(user));
             result.setMessage("유저 정보 수정 성공");
             status = HttpStatus.OK;
@@ -298,22 +306,23 @@ public class UserController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @DeleteMapping("/basket/{bkt_id}")
-    @Operation(summary = "바구니 ID로 바구니 탈퇴", description = "사용자가 참여중인 바구니를 바구니 Id를 통해 탈퇴한다.(로그인필요)")
+    @DeleteMapping("/basket/{u_b_id}")
+    @Operation(summary = "유저_바구니 ID로 바구니 탈퇴", description = "사용자가 참여중인 바구니를 유저_바구니 Id를 통해 탈퇴한다.(로그인필요)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "사용자 또는 병원 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<Map<String, Object>> leaveBasket(
-            @PathVariable @Parameter(description = "바구니 ID") Long bkt_id) {
+            @PathVariable @Parameter(description = "유저_바구니 ID") Long u_b_id) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             User user = userService.findById(userDetails.getUserId());
-            userBasketService.deleteBybktId(user, bkt_id);
+            userBasketService.deleteById(u_b_id);
+//            userBasketService.deleteBybktId(user, bkt_id);
             resultMap.put("message", "성공");
             status = HttpStatus.OK;
 
@@ -324,8 +333,6 @@ public class UserController {
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
-
 
 
     @PutMapping("/basket/{basketId}")

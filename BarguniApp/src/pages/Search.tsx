@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useCallback, useState} from 'react';
 import {
   Modal,
@@ -53,6 +54,18 @@ function Search() {
       {modalVisible ? (
         <TouchableOpacity style={styles.background}></TouchableOpacity>
       ) : null}
+=======
+import React from 'react';
+import {Text} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BottomTab from '../components/BottomTab';
+
+function Search() {
+  const Stack = createNativeStackNavigator();
+  return (
+    <>
+      <Text>Search Screen</Text>
+>>>>>>> develop
     </>
   );
 }

@@ -21,12 +21,13 @@ import java.net.URLConnection;
 public class ProductService {
     private final ProductRepository prodRepository;
     private final PictureService pictureService;
+    private final NaverImgSearchUtil naverImgSearchUtil;
+    private final BarcodeSearchUtil barcodeSearchUtil;
 
     public Product register(String barcode) throws Exception {
         if (prodRepository.existsProductByBarcode(barcode)) {
             return prodRepository.findByBarcode(barcode).get();
         } else {
-            BarcodeSearchUtil barcodeSearchUtil = new BarcodeSearchUtil();
             String name = null;
 
             try{
@@ -51,13 +52,13 @@ public class ProductService {
 
 
     public String searchTest(String word) throws Exception {
-        return NaverImgSearchUtil.imageSearch(word);
+        return naverImgSearchUtil.imageSearch(word);
     }
 
 
     public Picture searchImg(String prodName) throws Exception {
         // 네이버 이미지 검색으로 이미지 url을 따옴
-        String imgUrl = NaverImgSearchUtil.imageSearch(prodName);
+        String imgUrl = naverImgSearchUtil.imageSearch(prodName);
         System.out.println(imgUrl);
         // url에 가서 이미지를 bufferedImage로 읽어오고, 확장자를 가져옴
         URL url = new URL(imgUrl);
