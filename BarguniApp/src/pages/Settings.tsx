@@ -2,10 +2,12 @@ import React, {useCallback, useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../AppInner';
+import {ParamListBase} from '@react-navigation/native';
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'Settings'
+  'Settings',
+  ParamListBase
 >;
 function Settings({navigation}: SettingsScreenProps) {
   const [on, setOn] = useState(true);
