@@ -12,7 +12,6 @@ function Alarm() {
     {message: '유통기한이 10일 남았습니다.'},
   ];
   const renderItem = useCallback(({item}: {item: Object}) => {
-    console.log(item);
     return <AlarmItem message={item.message}></AlarmItem>;
   }, []);
   // Todo: 해당 바구니로 이동

@@ -8,7 +8,11 @@ function AlarmItem({message}: Props) {
 
   return (
     <View style={Style.container}>
-      <Text ellipsizeMode="tail" numberOfLines={2} style={Style.multiline}>
+      <Text
+        key={message}
+        ellipsizeMode="tail"
+        numberOfLines={2}
+        style={Style.multiline}>
         알람아이템 {message}
       </Text>
       <Text style={Style.time}> 18일 전</Text>
