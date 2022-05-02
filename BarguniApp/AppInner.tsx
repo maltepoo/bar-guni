@@ -22,11 +22,11 @@ import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
-
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Alarm from './src/pages/Alarm';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -38,6 +38,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   AlarmSetting: undefined;
   MyPage: undefined;
+  Alarm: undefined;
   TrashCan: undefined;
   BasketSetting: undefined;
 };
@@ -48,7 +49,7 @@ function AppInner(props) {
     RootNavigation.pop();
   }, []);
   const goAlarm = useCallback(() => {
-    console.log(11);
+    RootNavigation.navigate('Alarm');
   }, []);
   const goSearch = useCallback(() => {
     RootNavigation.navigate('Search');
@@ -146,6 +147,11 @@ function AppInner(props) {
         <Stack.Screen
           name="TrashCan"
           component={TrashCan}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Alarm"
+          component={Alarm}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

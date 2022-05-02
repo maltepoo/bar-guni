@@ -13,6 +13,8 @@ import {
   ScrollView,
 } from 'react-native';
 import SearchBar from '../components/SearchBar';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 
 function Search() {
   const [searchResult, setSearchResult] = useState([
