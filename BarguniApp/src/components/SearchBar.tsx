@@ -3,7 +3,7 @@ import {Alert, Pressable, StyleSheet, TextInput, View} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-function SearchBar() {
+function SearchBar({handleModal}) {
   const handleSearch = useCallback(() => {
     Alert.alert('검색한다');
   });
@@ -18,7 +18,7 @@ function SearchBar() {
           style={styles.searchInput}
           placeholder="검색어를 입력해주세요"
         />
-        <Pressable style={styles.filterIcon}>
+        <Pressable style={styles.filterIcon} onPress={handleModal}>
           <Ionicons name="options-outline" size={18} color="rgba(0,0,0,0.4)" />
         </Pressable>
       </View>

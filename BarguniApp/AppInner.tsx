@@ -17,7 +17,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
-import Search from './src/pages/Search';
+import Search from './src/pages/Search2';
 import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';

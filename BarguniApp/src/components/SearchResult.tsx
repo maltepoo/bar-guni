@@ -1,9 +1,7 @@
 import React from 'react';
 
-function SearchResult() {
-    return (
-        <div></div>
-    );
+function SearchResult({contents}) {
+  return <div>{contents}</div>;
 }
 
 export default SearchResult;
