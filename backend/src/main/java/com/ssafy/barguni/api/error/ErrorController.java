@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/error")
 @Tag(name = "error controller", description = "오류 관련 컨트롤러")
 public class ErrorController {
-    @GetMapping
+    @GetMapping("/jwt")
     public void handleInterceptorException(HttpServletRequest request) throws JwtException{
         throw new JwtException((ErrorResVO) request.getAttribute("data"));
     }
