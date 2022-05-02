@@ -3,7 +3,11 @@ import {
   createNativeStackNavigator,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {ParamListBase} from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   Alert,
   Image,
@@ -48,8 +52,8 @@ export type RootStackParamList = {
   RegisterModal: undefined;
 };
 function AppInner(props) {
+  const RootNavigation = 
   const [isLogin, setIsLogin] = useState(true);
-
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
@@ -123,6 +127,7 @@ function AppInner(props) {
             source={require('./src/assets/bell.png')}></Image>
         </Pressable>
       </View>
+
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"

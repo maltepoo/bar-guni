@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -10,8 +10,11 @@ import {
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../../AppInner';
 
 function Search2() {
+  useEffect(() => {}, [route]);
   const [searchResult, setSearchResult] = useState([
     {id: 1, title: '이전검색어?'},
     {id: 2, title: '이전검색어'},
