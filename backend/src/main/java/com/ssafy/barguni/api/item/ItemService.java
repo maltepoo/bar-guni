@@ -13,6 +13,7 @@ import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserBasketService;
+import com.ssafy.barguni.api.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +27,18 @@ import java.util.Optional;
 @Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
+    private final UserService userService;
     private final BasketService basketService;
     private final PictureService pictureService;
     private final CategoryService categoryService;
     private final UserBasketService userBasketService;
 
-    public Item saveNewItem(User user, ItemPostReq req) {
-        Basket bkt = basketService.getBasket(req.getBktId());
-        if (userBasketService.findByUserAndBasket(user.getId(), bkt.getId()) == null){
+    public Item saveNewItem(Long userId, ItemPostReq req) {
+        if (!userBasketService.existsBybktId(userId, req.getBktId())){
             throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
         }
 
+        Basket bkt = basketService.getBasket(req.getBktId());
         Picture pic = pictureService.getById(req.getPicId());
         Categories cate = categoryService.getById(req.getCateId());
 
@@ -115,5 +117,12 @@ public class ItemService {
 
     public List<Item> findAll(){
         return itemRepository.findAllWithBasket();
+    }
+
+    public boolean canUserChangeItem(Long userId, Long itemId){
+        Item item = getById(itemId);
+        Long bktId = item.getBasket().getId();
+        if (userBasketService.findByUserAndBasket(userId, bktId) != null) return true;
+        return false;
     }
 }
