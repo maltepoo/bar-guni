@@ -11,15 +11,18 @@ function Home() {
       <Stack.Screen
         name="ItemList"
         component={ItemList}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="ItemDetail"
         component={ItemDetail}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="ItemModify"
         component={ItemModify}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }

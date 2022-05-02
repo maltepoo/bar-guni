@@ -14,7 +14,6 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 
 function Search2() {
-  useEffect(() => {}, [route]);
   const [searchResult, setSearchResult] = useState([
     {id: 1, title: '이전검색어?'},
     {id: 2, title: '이전검색어'},

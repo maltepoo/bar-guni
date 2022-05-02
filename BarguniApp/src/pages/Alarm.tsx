@@ -12,7 +12,7 @@ function Alarm() {
     {message: '유통기한이 10일 남았습니다.'},
   ];
   const renderItem = useCallback(({item}: {item: Object}) => {
-    return <AlarmItem message={item.message}></AlarmItem>;
+    return <AlarmItem message={item.message} />;
   }, []);
   // Todo: 해당 바구니로 이동
   const goBasket = useCallback(() => {}, []);
@@ -21,9 +21,9 @@ function Alarm() {
       <Text style={Style.content}>
         읽지않은 알림 <Text style={Style.count}>{count}</Text>개
       </Text>
-      <View style={Style.line}></View>
+      <View style={Style.line} />
       <Pressable onPress={goBasket}>
-        <FlatList data={alarms} renderItem={renderItem}></FlatList>
+        <FlatList data={alarms} renderItem={renderItem} />
       </Pressable>
     </View>
   );

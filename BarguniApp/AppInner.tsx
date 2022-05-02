@@ -27,7 +27,7 @@ import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
 import Alarm from './src/pages/Alarm';
-
+import * as RootNavigation from './RootNavigation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -52,7 +52,6 @@ export type RootStackParamList = {
   RegisterModal: undefined;
 };
 function AppInner(props) {
-  const RootNavigation = 
   const [isLogin, setIsLogin] = useState(true);
   const back = useCallback(() => {
     RootNavigation.pop();
