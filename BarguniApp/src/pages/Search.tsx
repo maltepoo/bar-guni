@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
   ScrollView,
 } from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SearchBar from '../components/SearchBar';
 
 function Search() {
