@@ -18,15 +18,16 @@ import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
 import Search from './src/pages/Search';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import Search from './src/pages/Search';
 import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
+
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
 export type RootStackParamList = {
   SignIn: undefined;
   Login: undefined;
@@ -79,6 +80,15 @@ function AppInner(props) {
           component={Settings}
           options={{
             title: '설정',
+            tabBarActiveTintColor: 'blue',
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={Search}
+          options={{
+            title: '검색',
             tabBarActiveTintColor: 'blue',
             headerShown: false,
           }}
@@ -178,14 +188,6 @@ function AppInner(props) {
           tabBarIcon: () => <FontAwesomeIcon name="search" size={18} />,
           tabBarActiveTintColor: 'blue',
         }}
-      />
-    </Tab.Navigator>
-  ) : (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{title: 'Overview'}}
       />
     </Stack.Navigator>
   );
