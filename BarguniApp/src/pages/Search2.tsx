@@ -1,12 +1,44 @@
 import React, {useCallback, useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Keyboard,
+} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 function Search2() {
+  const [searchResult, setSearchResult] = useState([
+    {id: 1, title: '이전검색어?'},
+    {id: 2, title: '이전검색어'},
+    {id: 3, title: '이전검색어'},
+    {id: 4, title: '이전검색어'},
+  ]);
+  const renderItem = useCallback(
+    ({item}) => {
+      return (
+        <View key={item.id} style={styles.item}>
+          <Pressable>
+            <Text style={styles.itemText}>{item.title}</Text>
+          </Pressable>
+        </View>
+      );
+    },
+    [searchResult],
+  );
+
   return (
     <View>
       <NewSearchBar />
+      <FlatList
+        data={searchResult}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
@@ -21,6 +53,7 @@ function NewSearchBar() {
 
   const removeText = useCallback(() => {
     setText('');
+    Keyboard.dismiss();
   });
 
   return (
@@ -36,10 +69,10 @@ function NewSearchBar() {
         value={text}
         onChangeText={handleText}
       />
-      <Pressable
-        style={{position: 'absolute', zIndex: 9, top: '30%', right: '20%'}}>
-        <Octicons name="x" size={18} color="rgba(0,0,0,0.4)" />
-      </Pressable>
+      {/*<Pressable*/}
+      {/*  style={{position: 'absolute', zIndex: 9, top: '30%', right: '20%'}}>*/}
+      {/*  <Octicons name="x" size={18} color="rgba(0,0,0,0.4)" />*/}
+      {/*</Pressable>*/}
       <Pressable style={styles.cancelBtn} onPress={removeText}>
         <Text>취소</Text>
       </Pressable>
@@ -48,6 +81,17 @@ function NewSearchBar() {
 }
 
 const styles = StyleSheet.create({
+  item: {
+    backgroundColor: 'pink',
+    height: 40,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderBottomColor: 'black',
+    marginBottom: 10,
+  },
+  itemText: {
+    color: 'black',
+  },
   textINput: {
     backgroundColor: 'gray',
     borderRadius: 5,
