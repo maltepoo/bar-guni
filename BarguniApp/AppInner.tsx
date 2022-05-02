@@ -41,6 +41,7 @@ export type RootStackParamList = {
   ItemDetail: Object;
   ItemList: undefined;
   ItemModify: Object;
+  RegisterModal: undefined;
 };
 function AppInner(props) {
   const [isLogin, setIsLogin] = useState(true);
