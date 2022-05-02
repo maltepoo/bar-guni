@@ -38,6 +38,9 @@ export type RootStackParamList = {
   Alarm: undefined;
   TrashCan: undefined;
   BasketSetting: undefined;
+  ItemDetail: Object;
+  ItemList: undefined;
+  ItemModify: Object;
 };
 function AppInner(props) {
   const [isLogin, setIsLogin] = useState(true);
