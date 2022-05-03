@@ -77,7 +77,7 @@ public class UserController {
      * @param socialLoginType (GOOGLE, FACEBOOK, NAVER, KAKAO)
      */
     @GetMapping("/oauth-login/{socialLoginType}")
-    @Operation(summary = "구글 로그인", description = "구글 로그인을 요쳥한다.")
+    @Operation(summary = "SNS 로그인 폼", description = "SNS 로그인 폼을 요쳥한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
@@ -104,7 +104,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<TokenRes>> googleLogin (
+    public ResponseEntity<ResVO<TokenRes>> snsLogin(
             @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
             @RequestParam(name = "code") String code) throws Exception {
         log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
@@ -135,7 +135,7 @@ public class UserController {
         // 토큰으로 프로필 정보 가져오기
         ResponseEntity<String> responseProfile = oauthService.getProfile(socialLoginType, oauthToken);
         // 유효하지 않은 엑세스 토큰
-        if(responseToken == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_ACCESS_TOKEN));
+        if(responseProfile == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_ACCESS_TOKEN));
 
         // 프로필 정보 추출
         OauthProfileinfo emailAndName = oauthService.getEmailAndName(socialLoginType, responseProfile.getBody());
@@ -153,6 +153,49 @@ public class UserController {
         String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
         String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
+        result.setData(tokenRes);
+
+        result.setMessage("SNS 로그인 성공");
+
+        return new ResponseEntity<ResVO<TokenRes>>(result, status);
+    }
+
+    @GetMapping("/oauth-login/{socialLoginType}/access-token")
+    @Operation(summary = "SNS 로그인", description = "엑세스 토큰으로 프로필 정보를 얻고 로그인한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<TokenRes>> snsGetProfile(
+            @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
+            @RequestParam String accessToken) throws Exception {
+        ResVO<TokenRes> result = new ResVO<>();
+        HttpStatus status = null;
+
+        //------------ 통신 ---------------//
+        // 토큰으로 프로필 정보 가져오기
+        ResponseEntity<String> responseProfile = oauthService.getProfile(socialLoginType, accessToken);
+        // 유효하지 않은 엑세스 토큰
+        if(responseProfile == null) throw new OauthException(new ErrorResVO(ErrorCode.OAUTH_INVALID_ACCESS_TOKEN));
+
+        // 프로필 정보 추출
+        OauthProfileinfo emailAndName = oauthService.getEmailAndName(socialLoginType, responseProfile.getBody());
+
+        Boolean duplicated = userService.isDuplicated(emailAndName.getEmail());
+        User user = null;
+        if(!duplicated) {
+            user = userService.oauthSignup(emailAndName);
+        }
+        else{
+            user = userService.findByEmail(emailAndName.getEmail());
+        }
+
+        status = HttpStatus.OK;
+        String jwtAccessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
+        String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
+        TokenRes tokenRes = new TokenRes(jwtAccessToken, refreshToken);
         result.setData(tokenRes);
 
         result.setMessage("SNS 로그인 성공");

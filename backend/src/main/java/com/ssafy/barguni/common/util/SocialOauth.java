@@ -27,4 +27,6 @@ public interface SocialOauth {
     }
 
     ResponseEntity<String> getProfile(OauthToken oauthToken);
+
+    ResponseEntity<String> getProfile(String accessToken);
 }

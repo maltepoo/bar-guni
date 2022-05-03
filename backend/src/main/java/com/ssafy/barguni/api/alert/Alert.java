@@ -25,6 +25,10 @@ public class Alert {
     @JoinColumn(name="bkt_id")
     private Basket basket;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="item_id")
+    private Item item;
+
     private String title;
     private String content;
     @Enumerated(value = EnumType.STRING)
@@ -36,6 +40,7 @@ public class Alert {
         this.title = item.getName() + msg;
         this.status = AlertStatus.UNCHECKED;
         this.basket = item.getBasket();
+        this.item = item;
 
         LocalDate expirationDate = item.getAlertBy() == AlertBy.SHELF_LIFE ?
                 item.getShelfLife() : item.getRegDate().plusDays(item.getDDAY());

@@ -2,6 +2,7 @@ package com.ssafy.barguni.api.alert;
 
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
 import com.ssafy.barguni.api.item.Item;
+import com.ssafy.barguni.api.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,13 @@ import java.util.List;
 public class AlertService {
     private final AlertRepository alertRepository;
     private final BasketRepository basketRepository;
+    private final ItemRepository itemRepository;
 
     public List<Alert> findAllByUserId(Long userId){
         List<Alert> alerts = alertRepository.findAllByUserId(userId);
         alerts.forEach((alert)->{
             basketRepository.getById(alert.getBasket().getId());
+            itemRepository.getById(alert.getItem().getId());
         });
         return alerts;
     }
