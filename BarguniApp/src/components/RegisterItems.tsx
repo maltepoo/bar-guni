@@ -5,17 +5,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TouchableOpacity,
 } from 'react-native';
-import {RootStackParamList} from '../../AppInner';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 function RegisterItems() {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [day, setDay] = useState(10);
   const [checked, setChecked] = React.useState(false);
   const deleteItem = useCallback(() => {
@@ -52,7 +48,10 @@ function RegisterItems() {
 
   return (
     <View style={Style.cont}>
-      <Image style={Style.picture} source={require('../assets/bell.png')} />
+      <View style={Style.col}>
+        <Image style={Style.picture} source={require('../assets/bell.png')} />
+        <Text>name</Text>
+      </View>
       <View style={Style.col}>
         <View style={Style.cont}>
           <View>
@@ -83,13 +82,10 @@ function RegisterItems() {
 
         {checked ? (
           <View style={{alignItems: 'center'}}>
-            {/*//date picker*/}
             <Pressable
               onPress={() => {
                 setRegOpen(true);
-              }}
-              // style={Style.description}
-            >
+              }}>
               <Text>{regDate.toJSON()}</Text>
             </Pressable>
             <DateTimePicker

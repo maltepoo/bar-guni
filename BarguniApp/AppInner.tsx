@@ -82,7 +82,7 @@ function AppInner(props) {
         />
         <Tab.Screen
           name="RegisterModal"
-          component={Register}
+          component={RegisterModal}
           options={{
             title: '등록',
             tabBarActiveTintColor: 'blue',
@@ -168,6 +168,11 @@ function AppInner(props) {
         <Stack.Screen
           name="Alarm"
           component={Alarm}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
