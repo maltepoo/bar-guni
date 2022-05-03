@@ -3,6 +3,7 @@ import HomeItems from '../components/HomeItems';
 import {Picker} from '@react-native-picker/picker';
 import {
   FlatList,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +12,11 @@ import {
 } from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import KakaoSDK from '@actbase/react-kakaosdk';
+import {ApiInstance} from '../api/instance';
+import Config from 'react-native-config';
+import {Link} from '@react-navigation/native';
+import WebView from 'react-native-webview';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
@@ -45,8 +51,28 @@ function ItemList({navigation}: ItemListScreenProps) {
   const renderItem = useCallback(({item}: {item: object}) => {
     return <HomeItems></HomeItems>;
   }, []);
+  const login = useCallback(async () => {
+    // const api = ApiInstance();
+    console.log('click');
+    await KakaoSDK.init('54ad48f9c764c3ad1488b92892d9d348');
+    const tokens = KakaoSDK.login();
+    console.log(tokens);
+    // try {
+    // console.log(Config.API_URL);
+    // // https://k6b202.p.ssafy.io:8080/api/user/oauth-login/google
+    // const res = await api.get(
+    //   `https://k6b202.p.ssafy.io:8080/api/user/oauth-login/kakao`,
+    // );
+    // console.log(res, 'res');
+    // } catch (e) {
+    //   console.log(e);
+    // }
+  }, []);
   return (
     <View style={Style.container}>
+      <Pressable onPress={login}>
+        <Text>로그인</Text>
+      </Pressable>
       <Picker
         selectedValue={selectedBasket}
         onValueChange={itemValue => {
