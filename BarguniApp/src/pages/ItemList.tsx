@@ -54,11 +54,12 @@ function ItemList({navigation}: ItemListScreenProps) {
   const login = useCallback(async () => {
     // const api = ApiInstance();
     console.log('click');
-    // await KakaoSDK.init('54ad48f9c764c3ad1488b92892d9d348');
-    await KakaoSDK.init('a6877b7154134087d749b5c6f95c5403');
+    await KakaoSDK.init('54ad48f9c764c3ad1488b92892d9d348').catch(e =>
+      console.log(e),
+    );
+    // await KakaoSDK.init('a6877b7154134087d749b5c6f95c5403');
     console.log('111');
-    console.log(KakaoSDK);
-    const tokens = await KakaoSDK.login();
+    const tokens = await KakaoSDK.login().catch(e => console.log(e));
     console.log('222');
     console.log(tokens, ' token!!!!!!!!!!!!!!');
     console.log(Config.API_URL);

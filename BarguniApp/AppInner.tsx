@@ -32,6 +32,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {useSelector} from 'react-redux';
+import {RootState} from './src/store/reducer';
+import Login from './src/pages/Login';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -52,7 +55,8 @@ export type RootStackParamList = {
   RegisterModal: undefined;
 };
 function AppInner(props) {
-  const [isLogin, setIsLogin] = useState(true);
+  const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  console.log(isLogin);
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
@@ -166,44 +170,11 @@ function AppInner(props) {
       </Stack.Navigator>
     </>
   ) : (
-    <Stack.Navigator initialRouteName="Detail">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: '홈',
-          tabBarIcon: () => <Entypo name="home" size={20} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Register"
-        component={Register}
-        options={{
-          title: '등록',
-          tabBarIcon: () => <Ionicons name="barcode" size={22} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          title: '설정',
-          tabBarIcon: () => <FontAwesome name="gear" size={20} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          title: '검색',
-          headerShown: false,
-          tabBarIcon: () => <FontAwesomeIcon name="search" size={18} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}></Stack.Screen>
     </Stack.Navigator>
   );
 }
