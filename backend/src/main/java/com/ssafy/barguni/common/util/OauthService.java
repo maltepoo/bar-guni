@@ -46,6 +46,11 @@ public class OauthService {
         return socialOauth.getProfile(oauthToken);
     }
 
+    public ResponseEntity<String> getProfile(SocialLoginType socialLoginType, String accessToken){
+        SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
+        return socialOauth.getProfile(accessToken);
+    }
+
     public OauthProfileinfo getEmailAndName(SocialLoginType socialLoginType, String responseBody) throws Exception{
         ObjectMapper objectMapper = new ObjectMapper();
         OauthProfileinfo oauthProfileinfo = new OauthProfileinfo();
