@@ -13,34 +13,34 @@ function HomeItems(props) {
     navigation.navigate('ItemDetail', test);
   }, [navigation, test]);
   return (
-    <Pressable onPress={onClick}>
-      <View style={Style.container}>
-        <View style={Style.row}>
-          <Image
-            style={Style.picture}
-            source={require('../assets/bell.png')}></Image>
-        </View>
-        <View style={Style.row2}>
-          <Text style={Style.date}> 등록일자</Text>
-          <Text style={Style.date}> 2022.04.12</Text>
-        </View>
-        <View style={Style.row3}>
-          <Text style={Style.color}>카테고리 이름</Text>
-          <Text style={Style.color}>D-Day</Text>
-        </View>
+      <Pressable onPress={onClick}>
         <View style={Style.container}>
-          <Pressable onPress={deleteItem}>
+          <View style={Style.row}>
             <Image
-              style={Style.cancel}
-              source={require('../assets/close.png')}></Image>
-          </Pressable>
+                style={Style.picture}
+                source={require('../assets/bell.png')}></Image>
+          </View>
+          <View style={Style.row2}>
+            <Text style={Style.date}> 등록일자</Text>
+            <Text style={Style.date}> 2022.04.12</Text>
+          </View>
+          <View style={Style.row3}>
+            <Text style={Style.color}>카테고리 이름</Text>
+            <Text style={Style.color}>D-Day</Text>
+          </View>
+          <View style={Style.container}>
+            <Pressable onPress={deleteItem}>
+              <Image
+                  style={Style.cancel}
+                  source={require('../assets/close.png')}></Image>
+            </Pressable>
+          </View>
         </View>
-      </View>
-      <View>
-        <Text style={Style.title}>타이레놀</Text>
-      </View>
-      <View style={Style.line}></View>
-    </Pressable>
+        <View>
+          <Text style={Style.title}>타이레놀</Text>
+        </View>
+        <View style={Style.line}></View>
+      </Pressable>
   );
 }
 const Style = StyleSheet.create({

@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
+import * as RootNavigation from '../../RootNavigation';
 
 type RegisterModalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -16,14 +17,17 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
     // navigation.navigate('');
   }, [navigation]);
   const bySelf = useCallback(() => {
-    // navigation.navigate('');
+    RootNavigation.navigate('Register');
+  }, []);
+  const goModify = useCallback(() => {
+    navigation.navigate('Register');
   }, [navigation]);
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={byReceipt}>
         <Text style={{color: '#FFFFFF'}}>영수증 등록</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={byBarcode}>
+      <TouchableOpacity style={styles.button} onPress={goModify}>
         <Text style={{color: '#FFFFFF'}}>바코드 등록</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={bySelf}>

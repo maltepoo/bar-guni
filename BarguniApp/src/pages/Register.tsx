@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text} from 'react-native';
+import RegisterItems from '../components/RegisterItems';
 
 function Register() {
-  return <Text>Register Screen</Text>;
+  return <RegisterItems />;
 }
 
 export default Register;
