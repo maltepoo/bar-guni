@@ -1,6 +1,9 @@
+
 from flask import Flask
 import pytesseract
 from PIL import Image
+
+
 
 app = Flask(__name__)
 
@@ -22,3 +25,8 @@ def rec():  # put application's code here
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
+
+
+
+
+
