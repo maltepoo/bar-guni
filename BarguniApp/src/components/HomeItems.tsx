@@ -50,7 +50,7 @@ const Style = StyleSheet.create({
   row: {
     width: '20%',
     marginTop: 10,
-    marginLeft: 5,
+    marginLeft: 4,
   },
   row2: {
     flexDirection: 'row',
@@ -63,24 +63,24 @@ const Style = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     marginTop: 40,
-    marginLeft: 5,
+    marginLeft: 4,
     color: 'black',
   },
   picture: {
-    width: 80,
+    width: 70,
     height: 80,
   },
   line: {width: '100%', height: 0.7, backgroundColor: 'gray'},
   title: {
     marginTop: 5,
-    marginLeft: 20,
+    marginLeft: 12,
     color: 'black',
     fontSize: 15,
   },
   cancel: {
-    marginTop: 10,
-    width: 15,
-    height: 15,
+    marginTop: 5,
+    width: 13,
+    height: 13,
   },
   color: {
     marginTop: 25,

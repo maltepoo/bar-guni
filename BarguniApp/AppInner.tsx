@@ -54,7 +54,7 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
 };
-function AppInner(props) {
+function AppInner() {
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   console.log(isLogin);
   const back = useCallback(() => {
@@ -120,7 +120,7 @@ function AppInner(props) {
         </Pressable>
         <Pressable onPress={goSearch}>
           <Image
-            style={StyleSheet.compose(style.tinyLogo, style.search)}
+            style={style.tinyLogoLeft}
             source={require('./src/assets/search.png')}
           />
         </Pressable>
@@ -184,8 +184,10 @@ const style = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  search: {
-    marginLeft: 280,
+  tinyLogoLeft: {
+    width: 40,
+    height: 40,
+    marginLeft: 240,
   },
   header: {
     flexDirection: 'row',

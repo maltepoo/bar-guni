@@ -46,16 +46,20 @@ function Login({navigation}: LoginScreenProps) {
   }, [navigation]);
   useEffect(() => {
     async function init(): Promise<void> {
-      const token = await EncryptedStorage.getItem('accessToken');
-      if (!token) {
-        try {
-          await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
-        } catch (e) {
-          console.log(e, '카카오 로그인 세팅 중 에러');
+      try {
+        const token = await EncryptedStorage.getItem('accessToken');
+        if (!token) {
+          try {
+            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
+          } catch (e) {
+            console.log(e, '카카오 로그인 세팅 중 에러');
+          }
+        } else {
+          const user = {name: '', email: '', accessToken: token};
+          dispatch(userSlice.actions.setUser(user));
         }
-      } else {
-        const user = {name: '', email: '', accessToken: token};
-        dispatch(userSlice.actions.setUser(user));
+      } catch (e) {
+        console.log(e);
       }
     }
     init();
