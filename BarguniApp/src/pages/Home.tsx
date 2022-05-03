@@ -1,8 +1,30 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ItemList from './ItemList';
+import ItemDetail from './ItemDetail';
+import ItemModify from './ItemModify';
 
 function Home() {
-  return <Text>Home Screen</Text>;
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ItemList"
+        component={ItemList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ItemDetail"
+        component={ItemDetail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ItemModify"
+        component={ItemModify}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
 }
 
 export default Home;

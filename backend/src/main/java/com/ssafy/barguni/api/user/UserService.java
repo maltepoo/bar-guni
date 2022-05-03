@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.user.vo.OauthProfileinfo;
 import com.ssafy.barguni.api.user.vo.UserPostReq;
 import com.ssafy.barguni.common.util.GoogleOauthUtil;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,11 @@ public class UserService {
 
     public void modifyDefault(Long userId, Basket defaultBasket) {
         userRepository.modifyDefault(userId, defaultBasket);
+    }
+
+    public User oauthSignup(OauthProfileinfo emailAndName) {
+        User user = new User(emailAndName.getEmail(), emailAndName.getName());
+        userRepository.save(user);
+        return user;
     }
 }

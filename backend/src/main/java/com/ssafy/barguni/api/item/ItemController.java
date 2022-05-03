@@ -1,10 +1,16 @@
 package com.ssafy.barguni.api.item;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.service.BasketService;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.vo.ItemRes;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +34,8 @@ import java.util.stream.Collectors;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
+    private final UserBasketService userBasketService;
+    private final BasketService basketService;
 
     @PostMapping("")
     @Operation(summary = "물품 등록", description = "새로운 물품을 등록한다.")
@@ -44,8 +52,8 @@ public class ItemController {
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User nowUser = userService.findById(userDetails.getUserId());
-            Item newItem = itemService.saveNewItem(nowUser, req);
+
+            Item newItem = itemService.saveNewItem(userDetails.getUserId(), req);
             result.setData(new ItemRes(newItem));
             result.setMessage("물품 등록에 성공했습니다.");
             status = HttpStatus.CREATED;
@@ -73,8 +81,6 @@ public class ItemController {
         HttpStatus status;
 
         try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User nowUser = userService.findById(userDetails.getUserId());
             Item findItem = itemService.getById(itemId);
             result.setData(findItem);
             result.setMessage("물품 조회에 성공했습니다.");
@@ -103,11 +109,38 @@ public class ItemController {
         ResVO<Item> result = new ResVO<>();
         HttpStatus status;
 
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (!itemService.canUserChangeItem(userDetails.getUserId(), itemId)){
+            throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
+        }
+
+        Item item = itemService.changeItem(itemId, req);
+        result.setData(item);
+        result.setMessage("물품 수정에 성공했습니다.");
+        status = HttpStatus.OK;
+
+
+        return new ResponseEntity<ResVO<Item>>(result, status);
+    }
+
+    @PutMapping("/status")
+    @Operation(summary = "물품 상태변경", description = "물품을 휴지통으로 보내거나 복구한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Item>> checkUsedItem(
+            @PathVariable @Parameter Long itemId, @PathVariable @Parameter Boolean used) {
+        ResVO<Item> result = new ResVO<>();
+        HttpStatus status;
+
         try {
-            Item item = itemService.changeItem(itemId, req);
-            result.setData(item);
+            itemService.changeStatus(itemId, used);
             result.setMessage("물품 수정에 성공했습니다.");
-            status = HttpStatus.OK;
+            status = HttpStatus.NO_CONTENT;
 
         } catch (Exception e) {
             e.printStackTrace();
