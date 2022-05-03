@@ -22,6 +22,7 @@ import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
 import Search from './src/pages/Search2';
+import SearchResult from './src/pages/SearchResult';
 import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
@@ -136,6 +137,11 @@ function AppInner(props) {
         <Stack.Screen
           name="Search"
           component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SearchResult"
+          component={SearchResult}
           options={{headerShown: false}}
         />
         <Stack.Screen
