@@ -54,11 +54,15 @@ function ItemList({navigation}: ItemListScreenProps) {
   const login = useCallback(async () => {
     // const api = ApiInstance();
     console.log('click');
-    await KakaoSDK.init('54ad48f9c764c3ad1488b92892d9d348');
-    const tokens = KakaoSDK.login();
-    console.log(tokens);
+    // await KakaoSDK.init('54ad48f9c764c3ad1488b92892d9d348');
+    await KakaoSDK.init('a6877b7154134087d749b5c6f95c5403');
+    console.log('111');
+    console.log(KakaoSDK);
+    const tokens = await KakaoSDK.login();
+    console.log('222');
+    console.log(tokens, ' token!!!!!!!!!!!!!!');
+    console.log(Config.API_URL);
     // try {
-    // console.log(Config.API_URL);
     // // https://k6b202.p.ssafy.io:8080/api/user/oauth-login/google
     // const res = await api.get(
     //   `https://k6b202.p.ssafy.io:8080/api/user/oauth-login/kakao`,
