@@ -1,4 +1,4 @@
-package com.barguniapp;
+package com.kongkong.barguniapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

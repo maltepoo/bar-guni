@@ -6,12 +6,14 @@ import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter @Setter
+@BatchSize(size = 300)
 public class Item {
     @Id @GeneratedValue
     @Column(name="item_id")

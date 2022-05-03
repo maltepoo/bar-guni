@@ -5,6 +5,7 @@ import {RootState} from '../store/reducer';
 // import EncryptedStorage from 'react-native-encrypted-storage';
 
 function ApiInstance(): AxiosInstance {
+  console.log(Config.API_URL, 'instance');
   const instance = axios.create({
     baseURL: Config.API_URL,
     headers: {

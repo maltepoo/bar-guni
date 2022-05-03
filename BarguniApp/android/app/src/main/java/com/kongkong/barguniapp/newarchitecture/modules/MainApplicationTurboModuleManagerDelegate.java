@@ -1,4 +1,4 @@
-package com.barguniapp.newarchitecture.modules;
+package com.kongkong.barguniapp.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
