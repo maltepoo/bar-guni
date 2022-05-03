@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@actbase/react-kakaosdk": "^0.9.19",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "@react-native-community/datetimepicker": "^6.1.3",
     "@react-native-picker/picker": "^2.4.1",

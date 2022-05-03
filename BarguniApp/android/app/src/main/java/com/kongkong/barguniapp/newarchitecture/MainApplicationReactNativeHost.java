@@ -1,4 +1,4 @@
-package com.barguniapp.newarchitecture;
+package com.kongkong.barguniapp.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.barguniapp.BuildConfig;
-import com.barguniapp.newarchitecture.components.MainComponentsRegistry;
-import com.barguniapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.kongkong.barguniapp.BuildConfig;
+import com.kongkong.barguniapp.newarchitecture.components.MainComponentsRegistry;
+import com.kongkong.barguniapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
