@@ -75,12 +75,39 @@ public class KakaoOauthUtil implements SocialOauth {
         return tokens;
     }
 
+    @Override
     public ResponseEntity<String> getProfile(OauthToken oauthToken) {
         ResponseEntity<String> response = null;
         // 카카오 프로필 요청
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + oauthToken.getAccess_token());
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> kakaoInfoRequest =
+                new HttpEntity<>(headers);
+        try {
+            response = rt.exchange(
+                    KAKAO_SNS_PROFILE_URL,
+                    HttpMethod.POST,
+                    kakaoInfoRequest,
+                    String.class
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<String> getProfile(String accessToken) {
+        ResponseEntity<String> response = null;
+        // 카카오 프로필 요청
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         HttpEntity<MultiValueMap<String, String>> kakaoInfoRequest =
