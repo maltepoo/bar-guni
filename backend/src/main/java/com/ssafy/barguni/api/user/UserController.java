@@ -203,23 +203,23 @@ public class UserController {
         return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
 
-    @GetMapping
-    @Operation(summary = "사용자 조회", description = "테스트 조회한다.")
+    @GetMapping("")
+    @Operation(summary = "사용자 조회", description = "ㅅㅏ용자를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<String>> find(){
-        ResVO<String> result = new ResVO<>();
+    public ResponseEntity<ResVO<UserRes>> find(){
+        ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
             User nowUser = userService.findById(userDetails.getUserId());
             status = HttpStatus.OK;
-            result.setData(nowUser.getEmail());
+            result.setData(UserRes.convertTo(nowUser));
             result.setMessage("조회 성공");
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,7 +227,7 @@ public class UserController {
             result.setMessage("조회 실패");
         }
 
-        return new ResponseEntity<ResVO<String>>(result, status);
+        return new ResponseEntity<ResVO<UserRes>>(result, status);
     }
 
     @PutMapping
