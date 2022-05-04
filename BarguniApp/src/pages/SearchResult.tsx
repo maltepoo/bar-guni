@@ -3,7 +3,7 @@ import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import NewSearchBar from '../components/NewSearchBar';
 
 function SearchResult({route, navigation}) {
-  const {searchText} = route.params;)
+  const {searchText} = route.params;
   const [result, setResult] = useState([]);
 
   useEffect(() => {
