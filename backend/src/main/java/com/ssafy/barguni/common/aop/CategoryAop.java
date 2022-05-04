@@ -40,6 +40,7 @@ public class CategoryAop {
 
         Object[] args = joinPoint.getArgs();
         for(Object obj : args) {
+            if(obj == null) continue;
             if("Long".equals(obj.getClass().getSimpleName())){
                 Long basketId = (Long)obj;
                 AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
