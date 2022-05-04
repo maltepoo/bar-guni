@@ -1,5 +1,4 @@
 import {ApiInstance} from './instance';
-import {AxiosPromise} from 'axios';
 
 const axios = ApiInstance();
 

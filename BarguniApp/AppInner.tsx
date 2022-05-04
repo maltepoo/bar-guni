@@ -37,6 +37,9 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import Login from './src/pages/Login';
+import RegisterModal from './src/pages/RegisterModal';
+import {getBaskets, getTest, setJwtToken} from './src/api/basket';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -57,7 +60,18 @@ export type RootStackParamList = {
   RegisterModal: undefined;
 };
 function AppInner() {
+  const checkBasket = useCallback(async () => {
+    const data = await getBaskets(-1);
+    console.log(data);
+
+    // const data2 = await getTest(jwtToken);
+    // console.log(data2);
+  }, []);
+  const removeToken = useCallback(async () => {
+    await EncryptedStorage.removeItem('accessToken');
+  }, []);
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  // const isLogin = false;
   console.log(isLogin);
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -82,8 +96,8 @@ function AppInner() {
           }}
         />
         <Tab.Screen
-          name="Register"
-          component={Register}
+          name="RegisterModal"
+          component={RegisterModal}
           options={{
             title: '등록',
             tabBarActiveTintColor: 'blue',
@@ -132,7 +146,12 @@ function AppInner() {
             source={require('./src/assets/bell.png')}></Image>
         </Pressable>
       </View>
-
+      <Pressable onPress={checkBasket}>
+        <Text>바구니 조회</Text>
+      </Pressable>
+      <Pressable onPress={removeToken}>
+        <Text>토큰 삭제</Text>
+      </Pressable>
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"
