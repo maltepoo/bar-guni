@@ -75,9 +75,6 @@ function ItemList({navigation}: ItemListScreenProps) {
   }, []);
   return (
     <View style={Style.container}>
-      <Pressable onPress={login}>
-        <Text>로그인</Text>
-      </Pressable>
       <Picker
         selectedValue={selectedBasket}
         onValueChange={itemValue => {
@@ -135,8 +132,8 @@ const Style = StyleSheet.create({
   },
   container: {
     marginTop: 10,
-    marginLeft: 3,
-    marginRight: 3,
+    marginLeft: 1,
+    marginRight: 1,
   },
   button: {
     marginTop: 3,

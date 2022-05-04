@@ -38,6 +38,8 @@ import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import Login from './src/pages/Login';
 import RegisterModal from './src/pages/RegisterModal';
+import {getBaskets, getTest, setJwtToken} from './src/api/basket';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -57,9 +59,20 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
 };
-function AppInner(props) {
-  // const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+
+function AppInner() {
+  const checkBasket = useCallback(async () => {
+    const data = await getBaskets(-1);
+    console.log(data);
+
+    // const data2 = await getTest(jwtToken);
+    // console.log(data2);
+  }, []);
+  const removeToken = useCallback(async () => {
+    await EncryptedStorage.removeItem('accessToken');
+  }, []);
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  // const isLogin = false;
   console.log(isLogin);
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -125,7 +138,7 @@ function AppInner(props) {
         </Pressable>
         <Pressable onPress={goSearch}>
           <Image
-            style={StyleSheet.compose(style.tinyLogo, style.search)}
+            style={style.tinyLogoLeft}
             source={require('./src/assets/search.png')}
           />
         </Pressable>
@@ -136,7 +149,12 @@ function AppInner(props) {
           />
         </Pressable>
       </View>
-
+      <Pressable onPress={checkBasket}>
+        <Text>바구니 조회</Text>
+      </Pressable>
+      <Pressable onPress={removeToken}>
+        <Text>토큰 삭제</Text>
+      </Pressable>
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"
@@ -206,8 +224,10 @@ const style = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  search: {
-    marginLeft: 280,
+  tinyLogoLeft: {
+    width: 40,
+    height: 40,
+    marginLeft: 240,
   },
   header: {
     flexDirection: 'row',
