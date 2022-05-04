@@ -58,6 +58,7 @@ export type RootStackParamList = {
   RegisterModal: undefined;
 };
 function AppInner(props) {
+  // const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   console.log(isLogin);
   const back = useCallback(() => {
