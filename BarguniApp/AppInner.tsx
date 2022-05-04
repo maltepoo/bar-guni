@@ -38,7 +38,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import Login from './src/pages/Login';
 import RegisterModal from './src/pages/RegisterModal';
-import {getBaskets, getTest, setJwtToken} from './src/api/basket';
+import {getBaskets, getBaskets2, getTest, setJwtToken} from './src/api/basket';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 export type RootStackParamList = {
@@ -63,13 +63,12 @@ export type RootStackParamList = {
 function AppInner() {
   const checkBasket = useCallback(async () => {
     const data = await getBaskets(-1);
-    console.log(data);
-
-    // const data2 = await getTest(jwtToken);
-    // console.log(data2);
+    console.log(data, 'res!!!!!!!!!!!!!!!!');
   }, []);
   const removeToken = useCallback(async () => {
     await EncryptedStorage.removeItem('accessToken');
+    const res = await EncryptedStorage.getItem('accessToken');
+    console.log(res);
   }, []);
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   // const isLogin = false;
@@ -127,7 +126,7 @@ function AppInner() {
     );
   }
   const Stack = createNativeStackNavigator();
-  return !isLogin ? (
+  return isLogin ? (
     <>
       <View style={style.header}>
         <Pressable onPress={back}>

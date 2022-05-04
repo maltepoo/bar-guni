@@ -16,26 +16,8 @@ type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 function Login({navigation}: LoginScreenProps) {
   const dispatch = useAppDispatch();
-  const kakaoLogin = useCallback(async () => {
-    // Alert.alert(
-    //   'Alert Title',
-    //   'My Alert Msg',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => Alert.alert('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //   ],
-    //   {
-    //     cancelable: true,
-    //     onDismiss: () =>
-    //       Alert.alert(
-    //         'This alert was dismissed by tapping outside of the alert dialog.',
-    //       ),
-    //   },
-    // );
 
+  const kakaoLogin = useCallback(async () => {
     try {
       const res = (await KakaoSDK.login()) as AccessTokenType;
       console.log(res.access_token);
@@ -43,28 +25,33 @@ function Login({navigation}: LoginScreenProps) {
         await KakaoSDK.logout();
         Alert.alert('회원 가입 실패', '이메일 설정을 해주세요!');
         navigation.navigate('Login');
+        return;
       }
       const data = await login(SocialType.KAKAO, res.access_token);
+      console.log(data.accessToken, 'RESTAPI 발급 토큰');
+      console.log(data.refreshToken, 'RESTAPI 리프레쉬 발급 토큰');
       const userProfile = await KakaoSDK.getProfile();
       const user = {
         name: userProfile.properties.nickname,
         email: userProfile.kakao_account.email,
         accessToken: data.accessToken,
       };
-      console.log(user);
+      console.log(user, ' 생성 받은 토큰 ');
       dispatch(userSlice.actions.setUser(user));
       await EncryptedStorage.setItem('refreshToken', data.refreshToken);
-      setJwtToken(data.accessToken);
       await EncryptedStorage.setItem('accessToken', data.accessToken);
+      setJwtToken(data.accessToken);
     } catch (e) {
       console.log(e, '카카오 로그인 중 에러');
     }
     navigation.navigate('SignUp');
   }, [navigation]);
+
   useEffect(() => {
     async function init(): Promise<void> {
       try {
         const token = await EncryptedStorage.getItem('accessToken');
+        console.log(token, '초기 토큰');
         if (!token) {
           try {
             await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));

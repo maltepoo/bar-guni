@@ -1,4 +1,4 @@
-import axios, {AxiosInstance} from 'axios';
+import axios, {AxiosError, AxiosInstance} from 'axios';
 import Config from 'react-native-config';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
@@ -7,7 +7,6 @@ import {User} from './user';
 // import EncryptedStorage from 'react-native-encrypted-storage';
 
 let jwtToken = '';
-let jwtRefreshToken = '';
 
 function ApiInstance(): AxiosInstance {
   console.log(Config.API_URL, 'instance');
@@ -23,12 +22,7 @@ function setJwtToken(token: string) {
   jwtToken = token;
 }
 
-function setRefreshToken(token: string) {
-  jwtRefreshToken = token;
-}
-
 function LoginApiInstance(): AxiosInstance {
-  // const jwtToken = EncryptedStorage.getItem('accessToken');
   console.log(Config.API_URL);
   const instance = axios.create({
     baseURL: Config.API_URL,
@@ -41,19 +35,36 @@ function LoginApiInstance(): AxiosInstance {
   instance.interceptors.response.use(
     response => response,
     async error => {
+      console.log(error.request);
+      console.log(error);
       if (error.response.data.code === 'J003') {
-        // console.log('토큰 유효기간 만료');
-        const config = {...error.config};
-        console.log('토큰 유효기간 만료 2');
-        config.headers.REFRESH = jwtRefreshToken;
-        const data: User = (await instance.request(config)).data.data;
-        console.log('토큰 유효기간 만료2');
-        await EncryptedStorage.setItem('accessToken', data.accessToken);
-        await EncryptedStorage.setItem('refreshToken', data.refreshToken);
-        console.log('토큰 유효기간 만료3');
-        error.config.headers.Authorization = `Bearer ${jwtToken}`;
-        console.log('토큰 재 발급 과정 종료');
-        return (await instance.request(error.config)).data;
+        console.log(error);
+        const request = {...error.request};
+        const refreshToken = await EncryptedStorage.getItem('refreshToken');
+        const token = await EncryptedStorage.getItem('accessToken');
+
+        const config: any = {
+          baseURL: request.responseURL,
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            REFRESH: `Bearer ${refreshToken}` as string | undefined,
+          },
+          data: error.config.data,
+        };
+        const res = await instance.request(config);
+        delete config.headers.REFRESH;
+        config.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
+        await EncryptedStorage.setItem(
+          'accessToken',
+          res.data.data.accessToken,
+        );
+        await EncryptedStorage.setItem(
+          'refreshToken',
+          res.data.data.refreshToken,
+        );
+        setJwtToken(res.data.data.accessToken);
+        return (await instance.request(config)).data;
       }
 
       return Promise.reject(error);
