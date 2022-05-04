@@ -92,6 +92,14 @@ function ItemList({navigation}: ItemListScreenProps) {
             value={item.value}></Picker.Item>
         ))}
       </Picker>
+      <TouchableOpacity>
+        <Text
+          onPress={() => {
+            navigation.navigate('BasketDetail');
+          }}>
+          바구니디테일임시로보내긔
+        </Text>
+      </TouchableOpacity>
       <ScrollView horizontal={true} style={Style.category}>
         {category.map((item, index) => (
           <TouchableOpacity

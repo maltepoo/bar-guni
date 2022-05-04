@@ -22,11 +22,13 @@ import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
 import Search from './src/pages/Search2';
+import SearchResult from './src/pages/SearchResult';
 import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
 import Alarm from './src/pages/Alarm';
+import BasketDetail from './src/pages/BasketDetail';
 import * as RootNavigation from './RootNavigation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -146,6 +148,11 @@ function AppInner(props) {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="SearchResult"
+          component={SearchResult}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="AlarmSetting"
           component={AlarmSetting}
           options={{headerShown: false}}
@@ -173,6 +180,11 @@ function AppInner(props) {
         <Stack.Screen
           name="Register"
           component={Register}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BasketDetail"
+          component={BasketDetail}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
