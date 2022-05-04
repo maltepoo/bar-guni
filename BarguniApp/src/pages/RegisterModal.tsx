@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
+import * as RootNavigation from '../../RootNavigation';
 
 type RegisterModalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -10,14 +11,14 @@ type RegisterModalScreenProps = NativeStackScreenProps<
 
 function RegisterModal({navigation}: RegisterModalScreenProps) {
   const byReceipt = useCallback(() => {
-    // navigation.navigate('');
+    RootNavigation.navigate('Register');
   }, [navigation]);
   const byBarcode = useCallback(() => {
     // navigation.navigate('');
   }, [navigation]);
   const bySelf = useCallback(() => {
     // navigation.navigate('');
-  }, [navigation]);
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={byReceipt}>

@@ -37,6 +37,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import Login from './src/pages/Login';
+import RegisterModal from './src/pages/RegisterModal';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -82,8 +83,8 @@ function AppInner(props) {
           }}
         />
         <Tab.Screen
-          name="Register"
-          component={Register}
+          name="RegisterModal"
+          component={RegisterModal}
           options={{
             title: '등록',
             tabBarActiveTintColor: 'blue',
@@ -112,13 +113,14 @@ function AppInner(props) {
     );
   }
   const Stack = createNativeStackNavigator();
-  return isLogin ? (
+  return !isLogin ? (
     <>
       <View style={style.header}>
         <Pressable onPress={back}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/back.png')}></Image>
+            source={require('./src/assets/back.png')}
+          />
         </Pressable>
         <Pressable onPress={goSearch}>
           <Image
@@ -129,7 +131,8 @@ function AppInner(props) {
         <Pressable onPress={goAlarm}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/bell.png')}></Image>
+            source={require('./src/assets/bell.png')}
+          />
         </Pressable>
       </View>
 
@@ -179,6 +182,11 @@ function AppInner(props) {
           component={BasketDetail}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </>
   ) : (
@@ -186,7 +194,8 @@ function AppInner(props) {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }
