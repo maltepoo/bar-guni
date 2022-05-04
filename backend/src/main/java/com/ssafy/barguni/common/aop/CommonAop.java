@@ -47,6 +47,7 @@ public class CommonAop {
         //메서드에 들어가는 매개변수들에 대한 배열
 
         for(Object obj : args) {
+            if(obj == null) continue;
             log.debug(obj.toString());
             log.debug("type : "+obj.getClass().getSimpleName());
             log.debug("value : "+obj);
