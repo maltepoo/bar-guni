@@ -31,10 +31,11 @@ public class ErrorController {
         ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        String refreshToken = (String) request.getAttribute("refresh");
         String userId = (String) request.getAttribute("userId");
 
         String accessToken = JwtTokenUtil.getToken(userId, TokenType.ACCESS);
+        String refreshToken = JwtTokenUtil.getToken(userId, TokenType.REFRESH);
+
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
         result.setData(tokenRes);
         result.setMessage("ACCESS Token 재발행 성공");

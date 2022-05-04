@@ -67,7 +67,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 JwtTokenUtil.handleError(refresh);
                 DecodedJWT decodedJWT = verifier.verify(refresh.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
                 String userId = decodedJWT.getSubject();
-                request.setAttribute("refresh",refresh);
                 request.setAttribute("userId", userId);
                 request.getRequestDispatcher("/error/refresh").forward(request,response);
 
