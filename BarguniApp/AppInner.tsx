@@ -59,6 +59,7 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
 };
+
 function AppInner() {
   const checkBasket = useCallback(async () => {
     const data = await getBaskets(-1);
@@ -126,13 +127,14 @@ function AppInner() {
     );
   }
   const Stack = createNativeStackNavigator();
-  return isLogin ? (
+  return !isLogin ? (
     <>
       <View style={style.header}>
         <Pressable onPress={back}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/back.png')}></Image>
+            source={require('./src/assets/back.png')}
+          />
         </Pressable>
         <Pressable onPress={goSearch}>
           <Image
@@ -143,7 +145,8 @@ function AppInner() {
         <Pressable onPress={goAlarm}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/bell.png')}></Image>
+            source={require('./src/assets/bell.png')}
+          />
         </Pressable>
       </View>
       <Pressable onPress={checkBasket}>
@@ -198,6 +201,11 @@ function AppInner() {
           component={BasketDetail}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </>
   ) : (
@@ -205,7 +213,8 @@ function AppInner() {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{headerShown: false}}></Stack.Screen>
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }
