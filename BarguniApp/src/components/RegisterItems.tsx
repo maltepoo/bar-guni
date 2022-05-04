@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
@@ -50,7 +51,8 @@ function RegisterItems() {
     <View style={Style.cont}>
       <View style={Style.col}>
         <Image style={Style.picture} source={require('../assets/bell.png')} />
-        <Text>name</Text>
+        {/*<Text style={Style.name}>제품명</Text>*/}
+        <TextInput style={Style.textInput} placeholder="제품명 입력" />
       </View>
       <View style={Style.col}>
         <View style={Style.cont}>
@@ -80,7 +82,7 @@ function RegisterItems() {
           </Pressable>
         </View>
 
-        {checked ? (
+        {!checked ? (
           <View style={{alignItems: 'center'}}>
             <Pressable
               onPress={() => {
@@ -159,6 +161,20 @@ const Style = StyleSheet.create({
     marginLeft: 7,
     marginRight: 7,
     alignItems: 'center',
+  },
+  name: {
+    textAlign: 'center',
+    top: 20,
+  },
+  textInput: {
+    padding: 5,
+    marginTop: 5,
+    height: 30,
+    margin: 5,
+    borderWidth: 1,
+    width: '100%',
+    textAlign: 'center',
+    // borderRadius: 10,
   },
   picture: {
     width: 80,
