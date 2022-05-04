@@ -178,13 +178,13 @@ function AppInner(props) {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Register"
-          component={Register}
+          name="BasketDetail"
+          component={BasketDetail}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="BasketDetail"
-          component={BasketDetail}
+          name="Register"
+          component={Register}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
