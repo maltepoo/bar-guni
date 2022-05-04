@@ -17,5 +17,20 @@ async function getBaskets(basketId: number): Promise<Basket[]> {
   const axios = LoginApiInstance();
   return (await axios.get(`/item/list/${basketId}`)).data;
 }
+async function getBaskets2(): Promise<Basket[]> {
+  const axios = LoginApiInstance();
+  return (
+    await axios.post(`item/`, {
+      bktId: 0,
+      picId: 0,
+      cateId: 0,
+      name: 'string',
+      alertBy: 'D_DAY',
+      shelfLife: '2022-05-04',
+      content: 'string',
+      dday: 0,
+    })
+  ).data;
+}
 
-export {getBaskets};
+export {getBaskets, getBaskets2};
