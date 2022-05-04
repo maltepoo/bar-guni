@@ -6,11 +6,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import InviteModal from '../components/InviteModal';
 
 function BasketDetail(props) {
   const [toggleMenu, setToggleMenu] = useState(true);
+  const [inviteModal, setInviteModal] = useState(false);
   const [tempCategories, setCategories] = useState([
     // TODO: 바구니 api 조회 후 state에 할당
     {
@@ -51,7 +54,7 @@ function BasketDetail(props) {
   const renderCategory = useCallback(
     ({item}) => {
       return (
-        <View>
+        <View style={{backgroundColor: 'pink'}}>
           <Text>{item.name}</Text>
           <TouchableOpacity>
             <Text
@@ -70,7 +73,10 @@ function BasketDetail(props) {
   const renderMembers = useCallback(
     ({item}) => {
       return (
-        <View>
+        <View
+          style={{
+            backgroundColor: 'lightgreen',
+          }}>
           <Text>{item.name}</Text>
           <TouchableOpacity
             onPress={() => {
@@ -94,35 +100,59 @@ function BasketDetail(props) {
     if (status === 'category') setToggleMenu(true);
     else setToggleMenu(false);
   });
+
+  const handleInviteModal = useCallback(() => {
+    setInviteModal(!inviteModal);
+  });
+
+  const exitBasket = useCallback(() => {
+    // TODO: api 통신하여 현재 유저 바구니에서 삭제
+    Alert.alert('바구니를 나갑니까?!?!?');
+  });
+
   return (
     <>
-      <View style={styles.basketHeader}>
-        <Text>바구니이름</Text>
-        <Text>멤버추가</Text>
-        <Text>바구니나가기</Text>
+      <View>
+        <View style={styles.basketHeader}>
+          <Text>바구니이름</Text>
+          <TouchableOpacity onPress={handleInviteModal}>
+            <Text>멤버추가</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={exitBasket}>
+            <Text>바구니나가기</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.menu}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              changeToggle('category');
+            }}>
+            <Text>카테고리</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              changeToggle('member');
+            }}>
+            <Text>멤버</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView>
+          <FlatList
+            data={toggleMenu ? tempCategories : tempMembers}
+            renderItem={toggleMenu ? renderCategory : renderMembers}
+          />
+        </ScrollView>
       </View>
-      <View style={styles.menu}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => {
-            changeToggle('category');
-          }}>
-          <Text>카테고리</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => {
-            changeToggle('member');
-          }}>
-          <Text>멤버</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView>
-        <FlatList
-          data={toggleMenu ? tempCategories : tempMembers}
-          renderItem={toggleMenu ? renderCategory : renderMembers}
-        />
-      </ScrollView>
+      {inviteModal ? (
+        <>
+          <TouchableOpacity
+            style={styles.modalBackground}
+            onPress={handleInviteModal}></TouchableOpacity>
+          <InviteModal handle={handleInviteModal} />
+        </>
+      ) : null}
     </>
   );
 }
@@ -138,6 +168,14 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     backgroundColor: 'orange',
+  },
+  modalBackground: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 
