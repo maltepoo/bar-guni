@@ -2,6 +2,7 @@ package com.ssafy.barguni.common.interceptor;
 
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.JwtException;
+import com.ssafy.barguni.common.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +26,17 @@ public class JwtInterceptor implements HandlerInterceptor {
             throws Exception {
         log.debug("jwt 토큰 유무 확인 인터셉터");
         String jwtToken = request.getHeader("Authorization");
-
         if(jwtToken == null) {
             log.error("jwt 토큰이 없습니다.");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             throw new JwtException(new ErrorResVO(JWT_NOT_EXIST));
-        } else {
+        }
+        else if(!jwtToken.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
             log.error("jwt 토큰이 유효하지 않습니다.");
             throw  new JwtException(new ErrorResVO(JWT_INVALID));
         }
+
+        return true;
 
     }
 
