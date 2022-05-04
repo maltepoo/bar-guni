@@ -204,7 +204,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    @Operation(summary = "사용자 조회", description = "ㅅㅏ용자를 조회한다.")
+    @Operation(summary = "사용자 조회", description = "사용자를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),

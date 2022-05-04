@@ -64,6 +64,7 @@ public class UserService {
 
     public User oauthSignup(OauthProfileinfo emailAndName) {
         User user = new User(emailAndName.getEmail(), emailAndName.getName());
+        userRepository.save(user);
         String bktName = user.getName() + "의 바구니";
         Long bktId = basketService.createBasket(bktName, null, user);
         Basket basket = basketService.getBasket(bktId);
