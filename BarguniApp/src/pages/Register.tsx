@@ -14,7 +14,8 @@ import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {LoginApiInstance} from '../api/instance';
-
+import registerItems from '../components/RegisterItems';
+import {registerItem} from '../api/item';
 function Register() {
   const [name, setName] = useState('');
   const changeName = useCallback(text => {
@@ -63,33 +64,49 @@ function Register() {
 
   const onSubmit = useCallback(async () => {
     try {
-      console.log(
-        bktId,
-        picId,
-        cateId,
+      //   console.log(
+      //     bktId,
+      //     picId,
+      //     cateId,
+      //     name,
+      //     alertBy,
+      //     shelfLife,
+      //     content,
+      //     dday,
+      //   );
+      //   await axios.post('item/', {
+      //     bktId,
+      //     picId,
+      //     cateId,
+      //     name,
+      //     alertBy,
+      //     shelfLife,
+      //     content,
+      //     dday,
+      //   });
+      //   // Alert.alert('등록되었습니다');
+      // } catch (error) {
+      //   console.log('등록에러');
+      //   console.log(error);
+      // } finally {
+      // }
+      const res = await registerItem(
+        1,
         name,
-        alertBy,
-        shelfLife,
-        content,
-        dday,
+        regDate,
+        name,
+        regDate,
+        regDate,
+        name,
+        name,
+        name,
+        1,
       );
-      await axios.post('item/', {
-        bktId,
-        picId,
-        cateId,
-        name,
-        alertBy,
-        shelfLife,
-        content,
-        dday,
-      });
-      // Alert.alert('등록되었습니다');
+      console.log(res);
     } catch (error) {
-      console.log('등록에러');
       console.log(error);
-    } finally {
     }
-  }, []);
+  }, [name, regDate]);
   return (
     <View>
       <View style={Style.cont}>

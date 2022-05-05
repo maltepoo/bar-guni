@@ -18,4 +18,31 @@ async function getItems(basketId: number): Promise<Item[]> {
   return (await axios.get(`/item/list/${basketId}`)).data.data;
 }
 
-export {getItems};
+async function registerItem(
+  itemId: number,
+  name: string,
+  regDate: Date,
+  alertBy: string,
+  shelfLife: Date,
+  usedDate: Date,
+  category: string,
+  content: string,
+  pictureUrl: string,
+  dday: number,
+): Promise<void> {
+  const axios = LoginApiInstance();
+  await axios.post('/item', {
+    itemId: itemId,
+    name: name,
+    regDate: regDate,
+    alertBy: alertBy,
+    shelfLife: shelfLife,
+    usedDate: usedDate,
+    category: category,
+    content: content,
+    pictureUrl: pictureUrl,
+    dday: dday,
+  });
+}
+
+export {getItems, registerItem};
