@@ -11,7 +11,7 @@ import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
 import {Basket, getBasketInfo} from '../api/basket';
 import {Button} from '@rneui/base';
-import {getCategory} from '../api/category';
+import {Category, getCategory} from '../api/category';
 import {getItems, Item} from '../api/item';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,9 +19,10 @@ type ItemListScreenProps = NativeStackScreenProps<
 >;
 
 function ItemList({navigation}: ItemListScreenProps) {
+  const user = useSelector((state: RootState) => state.user);
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
-  const [category, setCategory] = useState([{cateId: -1, name: '전체'}]);
+  const [category, setCategory] = useState([] as Category[]);
   const [selectedBasket, setSelectedBasket] = useState(basket[0]);
   const [selectedCategory, setselectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
@@ -36,23 +37,37 @@ function ItemList({navigation}: ItemListScreenProps) {
   }, []);
 
   const dispatch = useAppDispatch();
+  const [test, setTest] = useState(false);
   useEffect(() => {
     async function init(): Promise<void> {
       console.log('init');
-      const user = await getProfile();
-      await dispatch(userSlice.actions.setUserName(user));
+      const userRes = await getProfile();
+      await dispatch(userSlice.actions.setUserName(userRes));
       const baskets = await getBaskets();
+      console.log(baskets, 'baskets');
       setBasket(baskets);
       const categoryRes = await getCategory(baskets[0].bkt_id);
-      console.log(categoryRes);
-      const categoryList = [...category, ...categoryRes];
+      const categoryList = [{cateId: -1, name: '전체'}, ...categoryRes];
       setCategory(categoryList);
       const itemRes = await getItems(baskets[0].bkt_id);
       setItems(itemRes);
     }
     init();
   }, [dispatch]);
-  const user = useSelector((state: RootState) => state.user);
+
+  const changeBasket = useCallback(
+    async (id: number) => {
+      console.log(id);
+      const res = await getCategory(id);
+      console.log(res, ' 카테고리 목록들');
+      setCategory([{cateId: -1, name: '전체'}, ...res]);
+      const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
+      setSelectedBasket(selectBasket);
+      const itemRes = await getItems(id);
+      setItems(itemRes);
+    },
+    [basket],
+  );
   return (
     <View style={Style.container}>
       <View>
@@ -61,10 +76,10 @@ function ItemList({navigation}: ItemListScreenProps) {
         <Text style={Style.topText}>{count}개가 있어요</Text>
       </View>
       <Picker
-        selectedValue={selectedBasket}
+        selectedValue={selectedBasket.bkt_id}
         onValueChange={itemValue => {
+          changeBasket(itemValue);
           //Todo: 바구니 선택시 해당 카테고리로 바꿔줘야함
-          setSelectedBasket(itemValue);
         }}
         style={Style.dropdown}>
         {basket.map(item => (
@@ -135,7 +150,7 @@ const Style = StyleSheet.create({
     marginRight: 4,
     borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
-    marginLeft: 2,
+    marginLeft: 4,
     height: 30,
     borderRadius: 20,
   },
@@ -149,10 +164,9 @@ const Style = StyleSheet.create({
   selectButton: {
     backgroundColor: 'rgba(0, 148, 255, 0.6)',
     marginTop: 3,
-    marginRight: 4,
+    marginLeft: 4,
     borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
-    marginLeft: 2,
     height: 30,
     borderRadius: 20,
   },
@@ -166,6 +180,7 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
     height: 35,
+    marginLeft: 10,
   },
 });
 
