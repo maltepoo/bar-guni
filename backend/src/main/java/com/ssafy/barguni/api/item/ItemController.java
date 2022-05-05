@@ -179,7 +179,7 @@ public class ItemController {
 
 
     @GetMapping("/list/{basketId}")
-    @Operation(summary = "바구니 조회", description = "바구니를 조회한다. id가 -1이면 전체 바구니 조회")
+    @Operation(summary = "바구니 내 아이템 조회", description = "바구니 내 아이템을 조회한다. id가 -1이면 전체 바구니 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
@@ -190,18 +190,14 @@ public class ItemController {
         ResVO<List<ItemRes>> result = new ResVO<>();
         HttpStatus status = null;
 
-        try{
-            result.setData(itemService
-                    .getAllInBasket(basketId)
-                    .stream()
-                    .map(ItemRes::new)
-                    .collect(Collectors.toList()));
-            result.setMessage("바구니 내 아이템 조회 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e){
-            result.setMessage("바구니 내 아이템 조회 실패");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        result.setData(itemService
+                .getAllInBasket(basketId, userDetails.getUserId())
+                .stream()
+                .map(ItemRes::new)
+                .collect(Collectors.toList()));
+        result.setMessage("바구니 내 아이템 조회 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
     }
@@ -218,18 +214,16 @@ public class ItemController {
         ResVO<List<ItemRes>> result = new ResVO<>();
         HttpStatus status = null;
 
-        try{
-            result.setData(itemService
-                    .getItemsUsingFilter(itemSearch)
-                    .stream()
-                    .map(ItemRes::new)
-                    .collect(Collectors.toList()));
-            result.setMessage("아이템 필터 조회 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e){
-            result.setMessage("아이템 필터 조회 실패");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        System.out.println("유저 조회");
+
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        result.setData(itemService
+                .getItemsUsingFilter(itemSearch, userDetails.getUserId())
+                .stream()
+                .map(ItemRes::new)
+                .collect(Collectors.toList()));
+        result.setMessage("아이템 필터 조회 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
     }

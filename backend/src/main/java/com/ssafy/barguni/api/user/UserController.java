@@ -297,8 +297,7 @@ public class UserController {
 
         try {
             AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User user = userService.findById(userDetails.getUserId());
-            List<UserBasket> bktOfUser = userBasketService.findByUserId(user.getId());
+            List<UserBasket> bktOfUser = userBasketService.findByUserId(userDetails.getUserId());
 
 
             result.setMessage("바구니 리스트 조회 성공");

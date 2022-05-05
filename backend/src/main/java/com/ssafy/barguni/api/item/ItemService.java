@@ -15,19 +15,20 @@ import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
-    private final UserService userService;
     private final BasketService basketService;
     private final PictureService pictureService;
     private final CategoryService categoryService;
@@ -107,11 +108,50 @@ public class ItemService {
         itemRepository.deleteById(id);
     }
 
-    public List<Item> getAllInBasket(Long basketId){
-        return itemRepository.getAllInBasket(basketId == -1 ? null : basketId);
+    public List<Item> getAllInBasket(Long basketId, Long userId){
+
+        // 참여 중인 바구니 전체 조회인 경우
+        if(basketId == -1){
+            List<Long> basketIds = userBasketService.findByUserId(userId)
+                    .stream()
+                    .map(e -> e.getBasket().getId())
+                    .collect(Collectors.toList());
+            return itemRepository.getMyAllItems(basketIds);
+        }
+        else {
+            // 해당 바구니 접근 권한이 없는 경우
+            if(!userBasketService.existsByUserAndBasket(userId, basketId))
+                throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
+            return itemRepository.getAllInBasket(basketId);
+        }
     }
 
-    public List<Item> getItemsUsingFilter(ItemSearch itemSearch){
+    public List<Item> getItemsUsingFilter(ItemSearch itemSearch, Long userId){
+        // 유저와 관련된 전체 바구니 조회
+        List<Long> basketIds = userBasketService.findByUserId(userId)
+                .stream()
+                .map(e -> e.getBasket().getId())
+                .collect(Collectors.toList());
+
+        Optional<Long> first = itemSearch
+                .getBasketIds()
+                .stream()
+                .filter(i -> i == -1L)
+                .findFirst();
+
+        // 바구니 id 에 -1이 포함된 경우
+        // 전체 바구니 조회로 변경
+        if(!first.isEmpty())
+            itemSearch.setBasketIds(basketIds);
+        else
+            itemSearch
+                    .getBasketIds()
+                    .forEach(basketId->{
+                        // 검색을 요청한 바구니에 접근 권한이 없는 경우
+                        if(!basketIds.contains(basketId))
+                            throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
+                    });
+
         return itemRepository.getItemsUsingFilter(itemSearch);
     }
 
