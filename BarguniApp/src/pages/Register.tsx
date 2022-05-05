@@ -7,15 +7,20 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  Button,
+  Alert,
 } from 'react-native';
 import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import {LoginApiInstance} from '../api/instance';
 
 function Register() {
-  const [name, setName] = useState();
-  const [day, setDay] = useState(10);
-  const [checked, setChecked] = React.useState(false);
+  const [name, setName] = useState('');
+  const changeName = useCallback(text => {
+    setName(text.trim());
+  }, []);
+
   const [basket, setBasket] = useState([
     {name: '테스트 바구니1', value: 1},
     {name: '테스트 바구니2', value: 2},
@@ -26,9 +31,11 @@ function Register() {
     {name: '테스트 카테고리2', value: 2},
     {name: '테스트 카테고리3', value: 3},
   ]);
+
+  const [checked, setChecked] = React.useState(false);
   const [selectedBasket, setSelectedBasket] = useState(basket[0]);
   const [selectedCategory, setSelectedCategory] = useState(basket[0]);
-
+  const [day, setDay] = useState(10);
   const onClickMinusOne = useCallback(() => {
     setDay(day - 1);
   }, [day]);
@@ -45,17 +52,56 @@ function Register() {
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
   // 등록버튼
-  const onClick = useCallback(() => {}, []);
+  const [bktId, setBktId] = useState(0);
+  const [picId, setPicId] = useState(0);
+  const [cateId, setCateId] = useState(0);
+  const [alertBy, setAlertBy] = useState('alert');
+  const [shelfLife, setShelfLife] = useState('shelf');
+  const [content, setContent] = useState('content');
+  const [dday, setDday] = useState(0);
+  const axios = LoginApiInstance();
+
+  const onSubmit = useCallback(async () => {
+    try {
+      console.log(
+        bktId,
+        picId,
+        cateId,
+        name,
+        alertBy,
+        shelfLife,
+        content,
+        dday,
+      );
+      await axios.post('item/', {
+        bktId,
+        picId,
+        cateId,
+        name,
+        alertBy,
+        shelfLife,
+        content,
+        dday,
+      });
+      // Alert.alert('등록되었습니다');
+    } catch (error) {
+      console.log('등록에러');
+      console.log(error);
+    } finally {
+    }
+  }, []);
   return (
     <View>
-      <View style={{alignItems: 'center'}}>
+      <View style={Style.cont}>
+        <Text style={{marginRight: '5%'}}>제품명 :</Text>
         <TextInput
           style={Style.textInput}
-          onChangeText={setName}
           value={name}
+          onChangeText={changeName}
           placeholder="제품명 입력"
         />
       </View>
+
       <View style={Style.cont}>
         <View>
           <Checkbox
@@ -136,7 +182,7 @@ function Register() {
         ))}
       </Picker>
       <View style={{alignItems: 'center'}}>
-        <TouchableOpacity style={Style.button} onPress={onClick}>
+        <TouchableOpacity style={Style.button} onPress={onSubmit}>
           <Text>등록</Text>
         </TouchableOpacity>
       </View>
@@ -147,6 +193,8 @@ const Style = StyleSheet.create({
   cont: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'center',
+    marginLeft: '15%',
   },
   col: {
     flexDirection: 'column',
