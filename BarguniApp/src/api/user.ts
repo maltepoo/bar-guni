@@ -1,10 +1,13 @@
-import {ApiInstance} from './instance';
+import {ApiInstance, LoginApiInstance} from './instance';
+import {Basket} from './basket';
 
 const axios = ApiInstance();
 
 export interface User {
   accessToken: string;
   refreshToken: string;
+  name: string;
+  email: string;
 }
 export enum SocialType {
   KAKAO = 'kakao',
@@ -19,4 +22,13 @@ async function login(type: SocialType, token: string): Promise<User> {
   ).data.data;
 }
 
-export {login};
+async function getProfile(): Promise<User> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.get('/user/')).data.data;
+}
+async function getBaskets(): Promise<Basket[]> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.get('/user/basket')).data.data;
+}
+
+export {login, getProfile, getBaskets};
