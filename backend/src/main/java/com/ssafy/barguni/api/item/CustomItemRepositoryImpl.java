@@ -35,6 +35,18 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .fetch();
     }
 
+    public List<Item> getMyAllItems(List<Long> basketIds){
+        return query
+                .select(item)
+                .from(item)
+                .leftJoin(item.category, categories)
+                .fetchJoin()
+                .leftJoin(item.picture, picture)
+                .fetchJoin()
+                .where(basketCheckIn(basketIds))
+                .fetch();
+    }
+
     public List<Item> getItemsUsingFilter(ItemSearch itemSearch){
         return query
                 .select(item)
@@ -42,7 +54,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .leftJoin(item.category, categories)
                 .fetchJoin()
                 .where(nameLike(itemSearch.getWord()).or(contentLike(itemSearch.getWord())).or(categoryLike(itemSearch.getWord())))
-                .where(basketCheck(itemSearch.getBasketId()))
+                .where(basketCheckIn(itemSearch.getBasketIds()))
                 .fetch();
     }
 
@@ -51,6 +63,13 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
             return null;
         else
             return item.basket.id.eq(basketId);
+    }
+
+    private BooleanExpression basketCheckIn(List<Long> ids) {
+        if(ids == null)
+            return null;
+        else
+            return item.basket.id.in(ids);
     }
 
     private BooleanExpression categoryLike(String category) {
