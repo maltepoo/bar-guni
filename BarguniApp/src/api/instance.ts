@@ -35,10 +35,8 @@ function LoginApiInstance(): AxiosInstance {
   instance.interceptors.response.use(
     response => response,
     async error => {
-      console.log(error.request);
-      console.log(error);
       if (error.response.data.code === 'J003') {
-        console.log(error);
+        console.log(error, ' 토큰 재발급 에러 처리');
         const request = {...error.request};
         const refreshToken = await EncryptedStorage.getItem('refreshToken');
         const token = await EncryptedStorage.getItem('accessToken');
@@ -53,8 +51,10 @@ function LoginApiInstance(): AxiosInstance {
           data: error.config.data,
         };
         const res = await instance.request(config);
+        console.log(res, '토큰 재발급 res');
         delete config.headers.REFRESH;
         config.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
+        console.log(config, '바꾼 jwtToken');
         await EncryptedStorage.setItem(
           'accessToken',
           res.data.data.accessToken,
@@ -64,7 +64,7 @@ function LoginApiInstance(): AxiosInstance {
           res.data.data.refreshToken,
         );
         setJwtToken(res.data.data.accessToken);
-        return (await instance.request(config)).data;
+        return await instance.request(config);
       }
 
       return Promise.reject(error);
