@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserBasketRepository extends JpaRepository<UserBasket, Long> {
 
-    @Query("select ub from UserBasket ub where ub.user.id = ?1")
+    @Query("select ub from UserBasket ub join fetch ub.basket b where ub.user.id = ?1")
     List<UserBasket> findByUserId(Long id);
 
     @Modifying
