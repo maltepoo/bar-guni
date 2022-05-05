@@ -17,7 +17,7 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
     // navigation.navigate('');
   }, [navigation]);
   const bySelf = useCallback(() => {
-    // navigation.navigate('');
+    RootNavigation.navigate('Register');
   }, []);
   return (
     <View style={styles.container}>
