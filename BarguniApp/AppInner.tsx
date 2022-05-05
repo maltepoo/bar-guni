@@ -61,18 +61,7 @@ export type RootStackParamList = {
 };
 
 function AppInner() {
-  const checkBasket = useCallback(async () => {
-    const data = await getBaskets(-1);
-    console.log(data, 'res!!!!!!!!!!!!!!!!');
-  }, []);
-  const removeToken = useCallback(async () => {
-    await EncryptedStorage.removeItem('accessToken');
-    const res = await EncryptedStorage.getItem('accessToken');
-    console.log(res);
-  }, []);
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
-  // const isLogin = false;
-  console.log(isLogin);
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
@@ -148,12 +137,6 @@ function AppInner() {
           />
         </Pressable>
       </View>
-      <Pressable onPress={checkBasket}>
-        <Text>바구니 조회</Text>
-      </Pressable>
-      <Pressable onPress={removeToken}>
-        <Text>토큰 삭제</Text>
-      </Pressable>
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"

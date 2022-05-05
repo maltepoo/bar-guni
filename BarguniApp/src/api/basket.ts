@@ -1,36 +1,28 @@
 import {LoginApiInstance} from './instance';
+import {Item} from './item';
 
 export interface Basket {
-  itemId: number;
-  name: string;
-  regDate: Date;
-  alertBy: string;
-  shelfLife: Date;
-  usedDate: Date;
-  category: string;
-  content: string;
-  pictureUrl: string;
-  dday: number;
+  id: number;
+  user_id: number;
+  bkt_id: number;
+  authority: string;
+  bkt_name: string;
 }
 
-async function getBaskets(basketId: number): Promise<Basket[]> {
+async function registerBasket(
+  basketName: string,
+  basketImg?: string,
+): Promise<void> {
   const axios = LoginApiInstance();
-  return (await axios.get(`/item/list/${basketId}`)).data;
-}
-async function getBaskets2(): Promise<Basket[]> {
-  const axios = LoginApiInstance();
-  return (
-    await axios.post(`item/`, {
-      bktId: 0,
-      picId: 0,
-      cateId: 0,
-      name: 'string',
-      alertBy: 'D_DAY',
-      shelfLife: '2022-05-04',
-      content: 'string',
-      dday: 0,
-    })
-  ).data;
+  console.log(basketName, ' 바구니 이름 ');
+  await axios.post(`/basket/?name=${encodeURI(basketName)}`, {
+    basketImg: basketImg,
+  });
 }
 
-export {getBaskets, getBaskets2};
+async function getBasketInfo(basketId: number) {
+  const axios = LoginApiInstance();
+  return (await axios.get(`/basket/${basketId}`)).data.data;
+}
+
+export {registerBasket, getBasketInfo};
