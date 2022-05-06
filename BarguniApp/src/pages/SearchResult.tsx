@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import NewSearchBar from '../components/NewSearchBar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {getItems} from '../api/item';
 
 function SearchResult({route, navigation}) {
   const {searchText} = route.params;
@@ -8,12 +10,23 @@ function SearchResult({route, navigation}) {
 
   useEffect(() => {
     // TODO : searchText로 api 통신해서 검색 결과 받아서 뿌려주기
-    setResult([
-      {id: 1, result: '검색결과1'},
-      {id: 2, result: '검색결과2'},
-      {id: 3, result: '검색결과3'},
-      {id: 4, result: '검색결과4'},
-    ]);
+    getItemResults();
+  }, []);
+
+  const getItemResults = useCallback(async () => {
+    try {
+      const res = await getItems(-1);
+      const newRes = res.filter(
+        item =>
+          item.name.includes(searchText) ||
+          item.content.includes(searchText) ||
+          item.category.includes(searchText),
+      );
+      console.log(newRes, '바꾸기');
+      setResult(newRes);
+    } catch (error) {
+      console.log(error, 'getItem error');
+    }
   }, [searchText]);
 
   const renderItem = useCallback(
@@ -21,7 +34,7 @@ function SearchResult({route, navigation}) {
       return (
         <View key={item.id} style={styles.resultContainer}>
           <Pressable>
-            <Text>{item.result}</Text>
+            <Text>{item.name}</Text>
           </Pressable>
         </View>
       );
@@ -30,10 +43,23 @@ function SearchResult({route, navigation}) {
   );
 
   return (
-    <>
+    <View style={{flex: 1, paddingHorizontal: 20, backgroundColor: '#ffffff'}}>
       <NewSearchBar passedValue={searchText} />
-      <FlatList data={result} renderItem={renderItem} />
-    </>
+      {result.length > 0 ? (
+        <FlatList data={result} renderItem={renderItem} />
+      ) : (
+        <NoResult />
+      )}
+    </View>
+  );
+}
+
+function NoResult() {
+  return (
+    <View style={{display: 'flex', alignItems: 'center'}}>
+      <AntDesign name={'search1'} style={{fontSize: 30, marginTop: 160}} />
+      <Text style={{marginTop: 8}}>검색결과가 없습니다.</Text>
+    </View>
   );
 }
 

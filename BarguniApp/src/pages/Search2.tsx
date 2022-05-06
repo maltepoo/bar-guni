@@ -7,16 +7,18 @@ import {
   TextInput,
   View,
   Keyboard,
+  TouchableHighlight,
 } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 import NewSearchBar from '../components/NewSearchBar';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 function Search2({navigation}) {
   const [searchResult, setSearchResult] = useState([
-    {id: 1, title: '이전검색어?'},
+    {id: 1, title: '이전검색어'},
     {id: 2, title: '이전검색어'},
     {id: 3, title: '이전검색어'},
     {id: 4, title: '이전검색어'},
@@ -24,18 +26,28 @@ function Search2({navigation}) {
   const renderItem = useCallback(
     ({item}) => {
       return (
-        <View key={item.id} style={styles.item}>
-          <Pressable>
+        <TouchableHighlight activeOpacity={0.6} underlayColor="#F5F4F4">
+          <>
+            <Entypo
+              name={'back-in-time'}
+              style={{
+                position: 'absolute',
+                left: 0,
+                fontSize: 18,
+                color: 'rgba(0,0,0,0.3)',
+                top: '27%',
+              }}
+            />
             <Text style={styles.itemText}>{item.title}</Text>
-          </Pressable>
-        </View>
+          </>
+        </TouchableHighlight>
       );
     },
     [searchResult],
   );
 
   return (
-    <View>
+    <View style={styles.searchContainer}>
       <NewSearchBar navigation={navigation} />
       <FlatList
         data={searchResult}
@@ -46,60 +58,19 @@ function Search2({navigation}) {
   );
 }
 
-// function NewSearchBar({navigation}) {
-//   const [text, setText] = useState('');
-//
-//   const handleText = useCallback(txt => {
-//     setText(txt);
-//     console.log(text);
-//   });
-//
-//   const removeText = useCallback(() => {
-//     setText('');
-//     Keyboard.dismiss();
-//   });
-//
-//   const goToSearch = useCallback(text => {
-//     console.log(text, 'submit text');
-//     navigation.navigate('SearchResult', {
-//       searchText: text,
-//     });
-//   });
-//
-//   return (
-//     <View
-//       style={{display: 'flex', flexDirection: 'row', backgroundColor: 'green'}}>
-//       <Pressable
-//         style={{position: 'absolute', zIndex: 9, top: '27%', left: '3%'}}>
-//         <FontAwesomeIcon name="search" size={18} color="rgba(0,0,0,0.4)" />
-//       </Pressable>
-//       <TextInput
-//         placeholder="찾으실 물건 또는 바구니를 입력해주세요."
-//         style={styles.textINput}
-//         value={text}
-//         onChangeText={handleText}
-//         onSubmitEditing={() => {
-//           goToSearch(text);
-//         }}
-//       />
-//       <Pressable style={styles.cancelBtn} onPress={removeText}>
-//         <Text style={styles.cancelBtnText}>취소</Text>
-//       </Pressable>
-//     </View>
-//   );
-// }
-
 const styles = StyleSheet.create({
+  searchContainer: {
+    backgroundColor: '#ffffff',
+    flex: 1,
+    paddingHorizontal: 20,
+  },
   item: {
-    backgroundColor: 'pink',
     height: 40,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderBottomColor: 'black',
-    marginBottom: 10,
   },
   itemText: {
-    color: 'black',
+    color: '#A09F9F',
+    lineHeight: 40,
+    paddingLeft: 30,
   },
   textINput: {
     backgroundColor: 'gray',
