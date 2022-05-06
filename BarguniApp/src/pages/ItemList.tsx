@@ -38,38 +38,37 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [items, setItems] = useState([] as Item[]);
   const [open, setOpen] = useState(false);
   const [basketDialog, setBasketDialog] = useState(false);
-  const toggleBasketDialog = useCallback(() => {
-    setBasketDialog(!basketDialog);
-    setOpen(!open);
-  }, []);
-  const toggleCategoryDialog = useCallback(() => {
-    console.log(categoryDialog);
-    setCategoryDialog(!categoryDialog);
-    setOpen(!open);
-  }, []);
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [categoryName, setCategoryName] = useState('');
   const [basketName, setBasketName] = useState('');
+  const dispatch = useAppDispatch();
+
+  const toggleBasketDialog = useCallback(() => {
+    setBasketDialog(!basketDialog);
+  }, [basketDialog]);
+
+  const toggleCategoryDialog = useCallback(() => {
+    setCategoryDialog(!categoryDialog);
+  }, [categoryDialog]);
 
   const onChangeBasketName = useCallback(text => {
-    console.log(text);
-    console.log(basketName, 'set 전 ');
     setBasketName(text);
-    console.log(basketName, ' set 후 ');
   }, []);
+
   const onChangeCategoryName = useCallback(text => {
     setCategoryName(text);
   }, []);
+
   const selectCategory = useCallback(index => {
-    // console.log(index);
     setselectedCategory(index);
     // Todo:카테고리를 바꾸면 아래 항목 리스트도 바뀌어야함
   }, []);
+
   const renderItem = useCallback(({item}: {item: Item}) => {
     console.log('renderItem', item);
     return <HomeItems item={item} />;
   }, []);
-  const dispatch = useAppDispatch();
+
   useEffect(() => {
     async function init(): Promise<void> {
       console.log('init');
@@ -88,15 +87,19 @@ function ItemList({navigation}: ItemListScreenProps) {
     init();
   }, [dispatch]);
   const addBasket = useCallback(async () => {
-    console.log(basketName, ' 버튼 클릭');
-    // await registerBasket(basketName);
-    // toggleBasketDialog();
-  }, []);
+    await registerBasket(basketName);
+    const res = await getBaskets();
+    setBasket(res);
+    setBasketName('');
+    setBasketDialog(false);
+  }, [basketName, open]);
   const addCategory = useCallback(async () => {
-    console.log(categoryName, '카테고리네임');
-    // await registerCategory(selectedBasket.bkt_id, categoryName);
-    // toggleCategoryDialog();
-  }, []);
+    await registerCategory(selectedBasket.bkt_id, categoryName);
+    const res = await getCategory(selectedBasket.bkt_id);
+    setCategory([{cateId: -1, name: '전체'}, ...res]);
+    setCategoryDialog(false);
+    setCategoryName('');
+  }, [selectedBasket.bkt_id, categoryName, setCategory]);
   const changeBasket = useCallback(
     async (id: number) => {
       console.log(id);
@@ -181,31 +184,23 @@ function ItemList({navigation}: ItemListScreenProps) {
           }}
         />
       </SpeedDial>
-      <Dialog
-        isVisible={basketDialog}
-        onBackdropPress={() => {
-          toggleBasketDialog();
-        }}>
+      <Dialog isVisible={basketDialog} onBackdropPress={toggleBasketDialog}>
         <Dialog.Title title="바구니 생성" />
-        <TextInput
+        <Input
           value={basketName}
           onChangeText={onChangeBasketName}
           placeholder="바구니 이름을 입력하세요"
         />
-        <Button onPress={addBasket} title="완료"></Button>
+        <Button onPress={addBasket} title="완료" />
       </Dialog>
-      <Dialog
-        isVisible={categoryDialog}
-        onBackdropPress={() => {
-          toggleCategoryDialog();
-        }}>
+      <Dialog isVisible={categoryDialog} onBackdropPress={toggleCategoryDialog}>
         <Dialog.Title title="카테고리 생성" />
         <Input
           value={categoryName}
           onChangeText={onChangeCategoryName}
           placeholder="카테고리 이름을 입력하세요"
         />
-        <Button onPress={addCategory} title="완료"></Button>
+        <Button onPress={addCategory} title="완료" />
       </Dialog>
     </View>
   );
