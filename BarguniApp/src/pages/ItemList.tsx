@@ -92,7 +92,7 @@ function ItemList({navigation}: ItemListScreenProps) {
     setBasket(res);
     setBasketName('');
     setBasketDialog(false);
-  }, [basketName, open]);
+  }, [basketName]);
   const addCategory = useCallback(async () => {
     await registerCategory(selectedBasket.bkt_id, categoryName);
     const res = await getCategory(selectedBasket.bkt_id);
