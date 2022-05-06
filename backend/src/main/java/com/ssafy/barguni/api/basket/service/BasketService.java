@@ -6,6 +6,7 @@ import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.basket.repository.CategoryRepository;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.ItemRepository;
@@ -32,6 +33,7 @@ public class BasketService {
     private final PictureRepository pictureRepository;
     private final ItemRepository itemRepository;
     private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public Long createBasket(String name, MultipartFile multipartFile, User user) {
@@ -106,6 +108,9 @@ public class BasketService {
         Basket basket = basketRepository.getById(basketId);
         // 관계 삭제
         userBasketRepository.delete(userBasket);
+        // 카테고리 삭제
+        categoryRepository.deleteByBasketId(basketId);
+        // 바구니 삭제
         basketRepository.deleteById(basketId);
         // 이미지 삭제
         if(basket.getPicture() != null)
