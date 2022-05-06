@@ -35,11 +35,12 @@ function LoginApiInstance(): AxiosInstance {
     async error => {
       if (error.response.data.code === 'J003') {
         const request = {...error.request};
+        console.log(request, ' request');
         const refreshToken = await EncryptedStorage.getItem('refreshToken');
         const token = await EncryptedStorage.getItem('accessToken');
-
         const config: any = {
           baseURL: request.responseURL,
+          method: request._method,
           headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${token}`,
