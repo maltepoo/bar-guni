@@ -1,8 +1,19 @@
 import React, {useCallback, useState} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  DatePickerAndroid,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TimePickerAndroid,
+  View,
+} from 'react-native';
+import {Switch} from '@rneui/themed';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../AppInner';
 import {ParamListBase} from '@react-navigation/native';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -11,6 +22,9 @@ type SettingsScreenProps = NativeStackScreenProps<
 >;
 function Settings({navigation}: SettingsScreenProps) {
   const [on, setOn] = useState(true);
+  const [alarmOn, setAlarmOn] = useState(false);
+  const [alarmTime, setAlarmTime] = useState({hour: 0, min: 0});
+
   const goAlarm = useCallback(() => {
     navigation.navigate('AlarmSetting');
   }, [navigation]);
@@ -23,38 +37,48 @@ function Settings({navigation}: SettingsScreenProps) {
   const goBasketSetting = useCallback(() => {
     navigation.navigate('BasketSetting');
   }, [navigation]);
+
+  const handleAlarmOn = useCallback(() => {
+    setAlarmOn(true);
+  });
+
   return (
-    <View>
+    <ScrollView
+      style={{flex: 1, backgroundColor: '#fff', paddingHorizontal: 20}}>
       <Text style={style.title}>알림</Text>
-      <View style={style.line}></View>
-      <Pressable onPress={goAlarm}>
-        <Text style={style.content}>알림 설정</Text>
-      </Pressable>
-      <View style={style.imageBox}>
-        <Text style={style.content}>알림 </Text>
-        <Pressable
-          style={style.button}
-          onPress={() => {
-            setOn(!on);
-          }}>
-          {on ? (
-            <Image
-              style={style.image}
-              source={require('../assets/on-button.png')}></Image>
-          ) : (
-            <Image
-              style={style.image}
-              source={require('../assets/off-button.png')}></Image>
-          )}
-        </Pressable>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={style.content}>알림시간 설정</Text>
+        <Text style={style.content2} onPress={handleAlarmOn}>
+          {alarmTime.hour}시 {alarmTime.min}분
+        </Text>
+        <DateTimePicker
+          mode="time"
+          isVisible={alarmOn}
+          onConfirm={time => {
+            const newTime = new Date(time);
+            setAlarmTime({hour: newTime.getHours(), min: newTime.getMinutes()});
+            setAlarmOn(false);
+          }}
+          onCancel={() => {
+            setAlarmOn(false);
+          }}
+        />
       </View>
-      <Text style={style.title}>바구니</Text>
+      <View style={style.imageBox}>
+        <Text style={style.content}>
+          알림 (유통기한 및 초대 알림을 받습니다)
+        </Text>
+        <Text style={style.content2}>
+          <Switch value={on} onValueChange={value => setOn(value)} />
+        </Text>
+      </View>
       <View style={style.line}></View>
+      <Text style={style.title}>바구니</Text>
       <Pressable onPress={goBasketSetting}>
         <Text style={style.content}>바구니 관리</Text>
       </Pressable>
-      <Text style={style.title}>기타</Text>
       <View style={style.line}></View>
+      <Text style={style.title}>기타</Text>
       <Pressable onPress={goTrashCan}>
         <Text style={style.content}>휴지통</Text>
       </Pressable>
@@ -65,9 +89,9 @@ function Settings({navigation}: SettingsScreenProps) {
         <Text style={style.content}>로그아웃</Text>
       </Pressable>
       <Pressable>
-        <Text style={style.content}>회원탈퇴</Text>
+        <Text style={{...style.content, marginBottom: 40}}>회원탈퇴</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -76,11 +100,13 @@ const style = StyleSheet.create({
     paddingLeft: 290,
   },
   title: {
-    paddingLeft: 10,
+    // paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
-    fontSize: 35,
+    fontSize: 20,
+    fontWeight: 'bold',
     color: 'black',
+    // backgroundColor: 'orange',
   },
   image: {
     paddingBottom: 50,
@@ -89,18 +115,24 @@ const style = StyleSheet.create({
     resizeMode: 'stretch',
   },
   line: {
-    width: '100%',
     height: 0.7,
-    backgroundColor: 'gray',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    marginTop: 30,
   },
   content: {
-    paddingLeft: 10,
+    // paddingLeft: 10,
     paddingTop: 20,
-    fontSize: 20,
+    color: 'black',
+    flex: 1,
+  },
+  content2: {
+    paddingTop: 20,
     color: 'black',
   },
   imageBox: {
+    // backgroundColor: 'yellow',
     flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
