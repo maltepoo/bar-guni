@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -16,26 +16,21 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import {LoginApiInstance} from '../api/instance';
 import Config from 'react-native-config';
 import {registerItem} from '../api/item';
+import {getBaskets} from '../api/user';
+import {Category, getCategory} from '../api/category';
+import {Basket} from '../api/basket';
 function Register() {
   const [name, setName] = useState('');
   const changeName = useCallback(text => {
     setName(text.trim());
   }, []);
 
-  const [basket, setBasket] = useState([
-    {name: '테스트 바구니1', value: 1},
-    {name: '테스트 바구니2', value: 2},
-    {name: '테스트 바구니3', value: 3},
-  ]);
-  const [category, setCategory] = useState([
-    {name: '테스트 카테고리1', value: 1},
-    {name: '테스트 카테고리2', value: 2},
-    {name: '테스트 카테고리3', value: 3},
-  ]);
+  const [basket, setBasket] = useState([] as Basket[]);
+  const [category, setCategory] = useState([] as Category[]);
 
   const [checked, setChecked] = React.useState(false);
-  const [selectedBasket, setSelectedBasket] = useState(basket[0]);
-  const [selectedCategory, setSelectedCategory] = useState(basket[0]);
+  const [selectedBasket, setSelectedBasket] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const [day, setDay] = useState(10);
   const onClickMinusOne = useCallback(() => {
     setDay(day - 1);
@@ -64,28 +59,25 @@ function Register() {
 
   const onSubmit = useCallback(async () => {
     try {
-      //   await axios.post('${Config.https://k6b202.p.ssafy.io:8080/api}/item', {
-      //     bktId,
-      //     picId,
-      //     cateId,
-      //     name,
-      //     alertBy,
-      //     shelfLife,
-      //     content,
-      //     dday,
-      //   });
-      //   // Alert.alert('등록되었습니다');
-      // } catch (error) {
-      //   console.log('등록에러');
-      //   console.log(error);
-      // } finally {
-      // }
       const res = await registerItem();
       console.log(res);
     } catch (error) {
       console.log(error);
     }
   }, []);
+
+  useEffect(() => {
+    async function init(): Promise<void> {
+      const basketRes = await getBaskets();
+      setBasket(basketRes);
+      console.log(basketRes, 'basketRes');
+      const categoryRes = await getCategory(basketRes[0].bkt_id);
+      console.log(categoryRes, 'categoryRes');
+      setCategory(categoryRes);
+    }
+    init();
+  }, []);
+
   return (
     <View>
       <View style={Style.cont}>
@@ -161,11 +153,18 @@ function Register() {
       )}
       <Picker
         selectedValue={selectedBasket}
-        onValueChange={itemValue => {
+        onValueChange={async itemValue => {
+          console.log(itemValue, '바스켓 선택');
           setSelectedBasket(itemValue);
+          const res = await getCategory(itemValue as number);
+          console.log(res);
         }}>
         {basket.map(item => (
-          <Picker.Item label={item.name} />
+          <Picker.Item
+            key={item.bkt_id}
+            label={item.bkt_name}
+            value={item.bkt_id}
+          />
         ))}
       </Picker>
       <Picker
@@ -174,7 +173,11 @@ function Register() {
           setSelectedCategory(itemValue);
         }}>
         {category.map(item => (
-          <Picker.Item label={item.name} />
+          <Picker.Item
+            label={item.name}
+            key={item.cateId}
+            value={item.cateId}
+          />
         ))}
       </Picker>
       <View style={{alignItems: 'center'}}>
