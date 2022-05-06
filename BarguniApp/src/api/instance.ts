@@ -9,7 +9,6 @@ import {User} from './user';
 let jwtToken = '';
 
 function ApiInstance(): AxiosInstance {
-  console.log(Config.API_URL, 'instance');
   const instance = axios.create({
     baseURL: Config.API_URL,
     headers: {
@@ -23,7 +22,6 @@ function setJwtToken(token: string) {
 }
 
 function LoginApiInstance(): AxiosInstance {
-  console.log(Config.API_URL);
   const instance = axios.create({
     baseURL: Config.API_URL,
     headers: {
@@ -36,7 +34,6 @@ function LoginApiInstance(): AxiosInstance {
     response => response,
     async error => {
       if (error.response.data.code === 'J003') {
-        console.log(error, ' 토큰 재발급 에러 처리');
         const request = {...error.request};
         const refreshToken = await EncryptedStorage.getItem('refreshToken');
         const token = await EncryptedStorage.getItem('accessToken');
@@ -51,10 +48,8 @@ function LoginApiInstance(): AxiosInstance {
           data: error.config.data,
         };
         const res = await instance.request(config);
-        console.log(res, '토큰 재발급 res');
         delete config.headers.REFRESH;
         config.headers.Authorization = `Bearer ${res.data.data.accessToken}`;
-        console.log(config, '바꾼 jwtToken');
         await EncryptedStorage.setItem(
           'accessToken',
           res.data.data.accessToken,
