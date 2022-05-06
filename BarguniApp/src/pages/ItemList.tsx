@@ -22,7 +22,7 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([{cateId: -1, name: '전체'}]);
-  const [selectedBasket, setSelectedBasket] = useState(basket[0]);
+  const [selectedBasket, setSelectedBasket] = useState({bkt_id: 0});
   const [selectedCategory, setselectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
   const selectCategory = useCallback(index => {
@@ -102,7 +102,8 @@ function ItemList({navigation}: ItemListScreenProps) {
       <FlatList
         data={items}
         keyExtractor={item => item.itemId as any}
-        renderItem={renderItem}></FlatList>
+        renderItem={renderItem}
+      />
     </View>
   );
 }

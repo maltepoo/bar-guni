@@ -14,7 +14,7 @@ import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {LoginApiInstance} from '../api/instance';
-import registerItems from '../components/RegisterItems';
+import Config from 'react-native-config';
 import {registerItem} from '../api/item';
 function Register() {
   const [name, setName] = useState('');
@@ -64,17 +64,7 @@ function Register() {
 
   const onSubmit = useCallback(async () => {
     try {
-      //   console.log(
-      //     bktId,
-      //     picId,
-      //     cateId,
-      //     name,
-      //     alertBy,
-      //     shelfLife,
-      //     content,
-      //     dday,
-      //   );
-      //   await axios.post('item/', {
+      //   await axios.post('${Config.https://k6b202.p.ssafy.io:8080/api}/item', {
       //     bktId,
       //     picId,
       //     cateId,
@@ -90,23 +80,12 @@ function Register() {
       //   console.log(error);
       // } finally {
       // }
-      const res = await registerItem(
-        1,
-        name,
-        regDate,
-        name,
-        regDate,
-        regDate,
-        name,
-        name,
-        name,
-        1,
-      );
+      const res = await registerItem();
       console.log(res);
     } catch (error) {
       console.log(error);
     }
-  }, [name, regDate]);
+  }, []);
   return (
     <View>
       <View style={Style.cont}>
