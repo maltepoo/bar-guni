@@ -1,7 +1,6 @@
 from flask import Flask, request
 import pytesseract
 from PIL import Image
-import requests
 from Filter import TrieNode
 
 app = Flask(__name__)
