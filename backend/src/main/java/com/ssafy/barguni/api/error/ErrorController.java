@@ -21,20 +21,21 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/error")
 @Tag(name = "error controller", description = "오류 관련 컨트롤러")
 public class ErrorController {
-    @GetMapping("/jwt")
+    @RequestMapping("/jwt")
     public void handleInterceptorException(HttpServletRequest request) throws JwtException{
         throw new JwtException((ErrorResVO) request.getAttribute("data"));
     }
 
-    @GetMapping("/refresh")
+    @RequestMapping("/refresh")
     public ResponseEntity<ResVO<TokenRes>> reIssueToken(HttpServletRequest request) {
         ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        String refreshToken = (String) request.getAttribute("refresh");
         String userId = (String) request.getAttribute("userId");
 
         String accessToken = JwtTokenUtil.getToken(userId, TokenType.ACCESS);
+        String refreshToken = JwtTokenUtil.getToken(userId, TokenType.REFRESH);
+
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
         result.setData(tokenRes);
         result.setMessage("ACCESS Token 재발행 성공");

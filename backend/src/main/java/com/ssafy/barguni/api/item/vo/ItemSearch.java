@@ -2,8 +2,10 @@ package com.ssafy.barguni.api.item.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ItemSearch {
     private String word;
-    private Long basketId;
+    private List<Long> basketIds;
 }

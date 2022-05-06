@@ -1,51 +1,90 @@
-import React, {useCallback} from 'react';
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {View, Image, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 // @ts-ignore
 import logo from '../assets/loginlogo.png';
 import {RootStackParamList} from '../../AppInner';
-
+import KakaoSDK from '@actbase/react-kakaosdk';
+import Config from 'react-native-config';
+import {AccessTokenType} from '@actbase/react-kakaosdk/lib/types';
+import {SocialType, login} from '../api/user';
+import {useAppDispatch} from '../store';
+import userSlice from '../slices/user';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {setJwtToken} from '../api/instance';
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 function Login({navigation}: LoginScreenProps) {
-  const onSubmit = useCallback(() => {
-    navigation.navigate('Home');
-  }, [navigation]);
-  const goSignUp = useCallback(() => {
+  const dispatch = useAppDispatch();
+
+  const kakaoLogin = useCallback(async () => {
+    try {
+      const res = (await KakaoSDK.login()) as AccessTokenType;
+      console.log(res.access_token);
+      if (!res.scopes.includes('account_email')) {
+        await KakaoSDK.logout();
+        Alert.alert('회원 가입 실패', '이메일 설정을 해주세요!');
+        navigation.navigate('Login');
+        return;
+      }
+      const data = await login(SocialType.KAKAO, res.access_token);
+      console.log(data.accessToken, 'RESTAPI 발급 토큰');
+      console.log(data.refreshToken, 'RESTAPI 리프레쉬 발급 토큰');
+      const userProfile = await KakaoSDK.getProfile();
+      const user = {
+        name: userProfile.properties.nickname,
+        email: userProfile.kakao_account.email,
+        accessToken: data.accessToken,
+      };
+      console.log(user, ' 생성 받은 토큰 ');
+      dispatch(userSlice.actions.setUser(user));
+      await EncryptedStorage.setItem('refreshToken', data.refreshToken);
+      await EncryptedStorage.setItem('accessToken', data.accessToken);
+      setJwtToken(data.accessToken);
+    } catch (e) {
+      console.log(e, '카카오 로그인 중 에러');
+    }
     navigation.navigate('SignUp');
   }, [navigation]);
+
+  useEffect(() => {
+    async function init(): Promise<void> {
+      try {
+        const token = await EncryptedStorage.getItem('accessToken');
+        console.log(token, '초기 토큰');
+        if (!token) {
+          try {
+            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
+          } catch (e) {
+            console.log(e, '카카오 로그인 세팅 중 에러');
+          }
+        } else {
+          const user = {name: '', email: '', accessToken: token};
+          setJwtToken(token);
+          dispatch(userSlice.actions.setUser(user));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    init();
+  }, []);
   return (
     <View style={styles.container}>
       <Image
         source={logo}
         resizeMode={'contain'}
-        style={{width: 200, height: 200, marginBottom: 20}}
+        style={{width: 140, height: 140, marginBottom: 30, marginTop: 80}}
       />
-      <TextInput style={styles.textInput} placeholder="baguni@baguni.com" />
-      <TextInput style={styles.textInput} placeholder="********" />
+      <TouchableOpacity onPress={kakaoLogin}>
+        <Image
+          style={styles.kakao}
+          source={require('../assets/kakao-login.png')}></Image>
+      </TouchableOpacity>
       <TouchableOpacity>
-        <Text>비밀번호를 잊어버리셨나요?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{marginTop: 5, marginBottom: 5}}
-        onPress={goSignUp}>
-        <Text>회원가입</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
-        <Text style={{color: '#FFFFFF'}}>로그인</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.kakaobutton}>
-        <Text>카카오로 로그인</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.googlebutton}>
-        <Text>구글 로그인</Text>
+        <Image
+          style={styles.google}
+          source={require('../assets/google-login.png')}></Image>
       </TouchableOpacity>
     </View>
   );
@@ -57,41 +96,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
-  textInput: {
-    padding: 5,
+  kakao: {
+    marginTop: 140,
+    borderRadius: 5,
+    width: 220,
+    resizeMode: 'stretch',
+  },
+  google: {
+    borderRadius: 5,
+    width: 318,
     marginTop: 10,
-    height: 30,
-    margin: 12,
-    borderWidth: 1,
-    width: '60%',
-    textAlign: 'center',
-    borderRadius: 10,
-  },
-  button: {
-    borderRadius: 10,
-    width: '60%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#32A3F5',
-    marginBottom: 5,
-    height: 25,
-  },
-  kakaobutton: {
-    borderRadius: 10,
-    width: '60%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FEE500',
-    marginBottom: 5,
-    height: 25,
-  },
-  googlebutton: {
-    borderRadius: 10,
-    width: '60%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F13F31',
-    height: 25,
+    height: 55,
+    resizeMode: 'contain',
   },
 });
 

@@ -22,16 +22,24 @@ import Home from './src/pages/Home';
 import Register from './src/pages/Register';
 import Settings from './src/pages/Settings';
 import Search from './src/pages/Search2';
+import SearchResult from './src/pages/SearchResult';
 import AlarmSetting from './src/pages/AlarmSetting';
 import MyPage from './src/pages/MyPage';
 import BasketSetting from './src/pages/BasketSetting';
 import TrashCan from './src/pages/TrashCan';
 import Alarm from './src/pages/Alarm';
+import BasketDetail from './src/pages/BasketDetail';
 import * as RootNavigation from './RootNavigation';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import {useSelector} from 'react-redux';
+import {RootState} from './src/store/reducer';
+import Login from './src/pages/Login';
+import RegisterModal from './src/pages/RegisterModal';
+import {getBaskets, getBaskets2, getTest, setJwtToken} from './src/api/basket';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -51,8 +59,9 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
 };
-function AppInner(props) {
-  const [isLogin, setIsLogin] = useState(true);
+
+function AppInner() {
+  const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
@@ -76,8 +85,8 @@ function AppInner(props) {
           }}
         />
         <Tab.Screen
-          name="Register"
-          component={Register}
+          name="RegisterModal"
+          component={RegisterModal}
           options={{
             title: '등록',
             tabBarActiveTintColor: 'blue',
@@ -112,21 +121,22 @@ function AppInner(props) {
         <Pressable onPress={back}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/back.png')}></Image>
+            source={require('./src/assets/back.png')}
+          />
         </Pressable>
         <Pressable onPress={goSearch}>
           <Image
-            style={StyleSheet.compose(style.tinyLogo, style.search)}
+            style={style.tinyLogoLeft}
             source={require('./src/assets/search.png')}
           />
         </Pressable>
         <Pressable onPress={goAlarm}>
           <Image
             style={style.tinyLogo}
-            source={require('./src/assets/bell.png')}></Image>
+            source={require('./src/assets/bell.png')}
+          />
         </Pressable>
       </View>
-
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"
@@ -136,6 +146,11 @@ function AppInner(props) {
         <Stack.Screen
           name="Search"
           component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SearchResult"
+          component={SearchResult}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -163,46 +178,24 @@ function AppInner(props) {
           component={Alarm}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="BasketDetail"
+          component={BasketDetail}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </>
   ) : (
-    <Stack.Navigator initialRouteName="Detail">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: '홈',
-          tabBarIcon: () => <Entypo name="home" size={20} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Register"
-        component={Register}
-        options={{
-          title: '등록',
-          tabBarIcon: () => <Ionicons name="barcode" size={22} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={Settings}
-        options={{
-          title: '설정',
-          tabBarIcon: () => <FontAwesome name="gear" size={20} />,
-          tabBarActiveTintColor: 'blue',
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          title: '검색',
-          headerShown: false,
-          tabBarIcon: () => <FontAwesomeIcon name="search" size={18} />,
-          tabBarActiveTintColor: 'blue',
-        }}
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -213,8 +206,10 @@ const style = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  search: {
-    marginLeft: 280,
+  tinyLogoLeft: {
+    width: 40,
+    height: 40,
+    marginLeft: 240,
   },
   header: {
     flexDirection: 'row',
