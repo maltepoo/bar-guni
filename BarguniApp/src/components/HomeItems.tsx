@@ -32,9 +32,7 @@ function HomeItems(props: HomeItem) {
         </View>
         <View style={Style.row3}>
           <Text style={Style.dDay}>D - {item.dday}</Text>
-          <Text style={Style.lifetime}>
-            유통기한: {item.usedDate.toString()}
-          </Text>
+          <Text style={Style.lifetime}>유통기한: {item.usedDate}</Text>
         </View>
         <View style={Style.container}>
           <Pressable onPress={deleteItem}>
