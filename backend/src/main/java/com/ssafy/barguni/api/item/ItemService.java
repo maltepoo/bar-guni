@@ -40,8 +40,20 @@ public class ItemService {
         }
 
         Basket bkt = basketService.getBasket(req.getBktId());
-        Picture pic = pictureService.getById(req.getPicId());
-        Categories cate = categoryService.getById(req.getCateId());
+
+        Picture pic;
+        if (req.getPicId() != null) {
+            pic = pictureService.getById(req.getPicId());
+        } else {
+            pic = pictureService.getById((long) 1);
+        }
+
+        Categories cate;
+        if (req.getCateId() != null){
+            cate = categoryService.getById(req.getCateId());
+        } else {
+            cate = categoryService.getByBasketId(req.getBktId()).get(0);
+        }
 
         Item item = Item.createItem(bkt, pic, cate, req);
         return itemRepository.save(item);

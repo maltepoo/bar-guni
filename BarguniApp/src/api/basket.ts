@@ -14,7 +14,6 @@ async function registerBasket(
   basketImg?: string,
 ): Promise<void> {
   const axios = LoginApiInstance();
-  console.log(basketName, ' 바구니 이름 ');
   await axios.post(`/basket/?name=${encodeURI(basketName)}`, {
     basketImg: basketImg,
   });
