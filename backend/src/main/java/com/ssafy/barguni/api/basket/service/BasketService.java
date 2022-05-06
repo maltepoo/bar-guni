@@ -54,10 +54,9 @@ public class BasketService {
 
         Basket save = basketRepository.save(basket);
 
-        // 카테고리 생성
+        // 기본 카테고리 생성
         Long cateId = categoryService.register(save.getId(), "기본");
         Categories cate = categoryService.getById(cateId);
-
 
         // UserBasket 중계 테이블에 기록
         UserBasket userBasket = new UserBasket();
