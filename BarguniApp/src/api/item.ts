@@ -15,13 +15,13 @@ export interface Item {
 
 export interface ItemReq {
   bktId: number;
-  picId: number;
+  picId: number | null;
   cateId: number;
   name: string;
   alertBy: string;
-  shelfLife: string;
+  shelfLife?: string;
   content: string;
-  dday: number;
+  dday: number | null;
 }
 
 async function getItems(basketId: number): Promise<Item[]> {
@@ -31,7 +31,7 @@ async function getItems(basketId: number): Promise<Item[]> {
 
 async function registerItem(item: ItemReq): Promise<void> {
   const axios = LoginApiInstance();
-  await axios.post('/item', item);
+  await axios.post('/item/', JSON.stringify(item));
 }
 
 export {getItems, registerItem};

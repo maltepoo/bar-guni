@@ -15,14 +15,14 @@ import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {LoginApiInstance} from '../api/instance';
 import Config from 'react-native-config';
-import {registerItem} from '../api/item';
+import {getItems, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
-import {Basket} from '../api/basket';
+import {Basket, getBasketInfo} from '../api/basket';
 function Register() {
   const [name, setName] = useState('');
   const changeName = useCallback(text => {
-    setName(text.trim());
+    setName(text);
   }, []);
 
   const [basket, setBasket] = useState([] as Basket[]);
@@ -59,12 +59,28 @@ function Register() {
 
   const onSubmit = useCallback(async () => {
     try {
-      const res = await registerItem();
+      const item = {
+        bktId: selectedBasket,
+        cateId: selectedCategory,
+        name: name,
+        shelfLife: regDate.toJSON().substring(0, 10),
+        alertBy: 'SHELF_LIFE',
+        content: '테스트용',
+        picId: null,
+        dday: null,
+        // ddday로 했을 시에는 shelflife 필요 없음, 사진도 없으면 필요없음
+      };
+      const res2 = await getItems(-1);
+      console.log(res2, ' 아이템 조회!');
+      console.log(item, ' item');
+      const res = await registerItem(item);
       console.log(res);
+      const confirm = await getItems(selectedBasket);
+      console.log(confirm, ' confirm');
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [name, regDate, selectedBasket, selectedCategory]);
 
   useEffect(() => {
     async function init(): Promise<void> {
@@ -116,7 +132,7 @@ function Register() {
             onPress={() => {
               setRegOpen(true);
             }}>
-            <Text>{regDate.toJSON()}</Text>
+            <Text>설정된 유효기간 : {regDate.toJSON().substring(0, 10)}</Text>
           </Pressable>
           <DateTimePicker
             isVisible={regOpen}
@@ -157,7 +173,7 @@ function Register() {
           console.log(itemValue, '바스켓 선택');
           setSelectedBasket(itemValue);
           const res = await getCategory(itemValue as number);
-          console.log(res);
+          setCategory(res);
         }}>
         {basket.map(item => (
           <Picker.Item
