@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class OpenEMConfig {
     @Bean
-    public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilterFilter() {
+    public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilter() {
         FilterRegistrationBean<OpenEntityManagerInViewFilter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
         filterFilterRegistrationBean.setOrder(Integer.MIN_VALUE);
