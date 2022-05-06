@@ -27,6 +27,7 @@ import java.util.Random;
 import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasketService {
     private final BasketRepository basketRepository;
     private final UserBasketRepository userBasketRepository;
@@ -93,6 +94,7 @@ public class BasketService {
         }
     }
 
+    @Transactional
     public Boolean deleteBasket(Long basketId, Long userId) {
         // 관리자가 아닌 경우
         UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
