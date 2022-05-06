@@ -18,6 +18,7 @@ public class ItemRes {
     private String category;
     private String content;
     private String pictureUrl;
+    private Boolean used;
 
     public ItemRes(Item item){
         this.name = item.getName();
@@ -38,5 +39,6 @@ public class ItemRes {
         this.content = item.getContent();
         if(item.getPicture() != null)
             this.pictureUrl = item.getPicture().getPicUrl();
+        this.used = item.getUsed();
     }
 }
