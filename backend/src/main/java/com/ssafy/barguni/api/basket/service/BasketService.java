@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.basket.service;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureEntity;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
@@ -39,7 +40,7 @@ public class BasketService {
         if(multipartFile != null
                 && !multipartFile.isEmpty())
         {
-            Picture picture = ImageUtil.create(multipartFile, "Basket");
+            Picture picture = ImageUtil.create(multipartFile, PictureEntity.BASKET);
             pictureRepository.save(picture);
             basket.setPicture(picture);
         }
