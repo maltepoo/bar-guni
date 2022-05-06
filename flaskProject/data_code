@@ -1,0 +1,28 @@
+api_key = "%2FFcYlFOefSczcSw8Ra5SXrup1ENH5ohszaxb%2FA8dF5l9NZIFW3f4faSbqHKRJmxPmU9505mjU1OwIp5mw9EoYQ%3D%3D"
+api_key2 = "/FcYlFOefSczcSw8Ra5SXrup1ENH5ohszaxb/A8dF5l9NZIFW3f4faSbqHKRJmxPmU9505mjU1OwIp5mw9EoYQ=="
+
+
+        #한글만
+        # n_word= ''
+        # for c in word:
+        #     if '가' <= c <= '힣':
+        #         n_word+=c
+        # word = n_word
+
+        # if len(word)<2: continue
+        #
+        # url = "http://apis.data.go.kr/B553748/CertImgListService/getCertImgListService"
+        # url += "?ServiceKey="+api_key + "&prdlstNm="+word + "&returnType=json"
+        #
+        # res = requests.get(url)
+        # if res.status_code != 200: continue
+        # js = res.json()
+        # print(word)
+        # if js['totalCount'] != '0':
+        #     # result_li.append(word)
+        #     result_li.append(js)
+
+    # print(pytesseract.image_to_string(Image.open('./static/img_1.png'), lang='kor_vert'))
+    # result1 = pytesseract.image_to_string(Image.open('./static/ljh_best.png'), lang='kor')
+
+    # return result1
