@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BasketController {
     private final BasketService basketService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "바구니 생성", description = "바구니를 생성한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),

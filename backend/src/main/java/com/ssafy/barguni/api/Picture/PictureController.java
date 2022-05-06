@@ -1,10 +1,6 @@
 package com.ssafy.barguni.api.Picture;
 
 import com.ssafy.barguni.api.common.ResVO;
-import com.ssafy.barguni.api.item.Item;
-import com.ssafy.barguni.api.item.vo.ItemPostReq;
-import com.ssafy.barguni.api.item.vo.ItemRes;
-import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,13 +9,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/picture/")
+@RequestMapping("/api/picture")
 @Tag(name = "picture controller", description = "이미지 관련 컨트롤러")
 public class PictureController {
     private final PictureService pictureService;
