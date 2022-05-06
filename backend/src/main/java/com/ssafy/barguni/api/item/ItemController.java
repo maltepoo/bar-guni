@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/item/")
+@RequestMapping("/api/item")
 @Tag(name = "item controller", description = "물품 관련 컨트롤러")
 public class ItemController {
     private final ItemService itemService;
