@@ -160,15 +160,16 @@ function ItemList({navigation}: ItemListScreenProps) {
     console.log(basket[deleteIndex]);
     try {
       if (deleteMode === 'basket') {
-        await deleteBasket(basket[deleteIndex].bkt_id);
+        const res2 = await deleteBasket(basket[deleteIndex].bkt_id);
+        console.log(res2, ' res2');
         const res = await getBaskets();
         setBasket(res);
       } else if (deleteMode === 'category') {
         console.log(category[deleteIndex], ' 카테고리 ');
         await deleteCategory(category[deleteIndex].cateId);
         console.log(selectedBasket, ' selected Basket');
-        // const res = await getCategory(selectedBasket.bkt_id);
-        // console.log(res, 'category list');
+        const res = await getCategory(selectedBasket.bkt_id);
+        console.log(res, 'category list');
         setCategory(res);
       }
       toggleDeleteDialog();
@@ -277,7 +278,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         <ScrollView style={Style.scroll}>
           {basket.length > 0 ? (
             basket.map((item, index) => (
-              <View style={Style.row}>
+              <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
                 <Pressable
                   onPress={() => {
@@ -305,7 +306,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         <ScrollView style={Style.scroll}>
           {category.length > 0 ? (
             category.map((item, index) => (
-              <View style={Style.row}>
+              <View style={Style.row} key={item.cateId}>
                 <Text style={Style.text}>{item.name}</Text>
                 <Pressable
                   onPress={() => {
