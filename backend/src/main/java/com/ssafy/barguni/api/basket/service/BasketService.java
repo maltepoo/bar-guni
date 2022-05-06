@@ -3,6 +3,7 @@ package com.ssafy.barguni.api.basket.service;
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
@@ -29,12 +30,12 @@ public class BasketService {
     private final UserBasketRepository userBasketRepository;
     private final PictureRepository pictureRepository;
     private final ItemRepository itemRepository;
+    private final CategoryService categoryService;
 
     @Transactional
     public Long createBasket(String name, MultipartFile multipartFile, User user) {
         Basket basket = new Basket();
         basket.setName(name);
-
         // 그림도 넣기
         if(multipartFile != null
                 && !multipartFile.isEmpty())
@@ -51,8 +52,12 @@ public class BasketService {
         } while(basketRepository.existsByJoinCode(joinCode));
         basket.setJoinCode(joinCode);
 
-
         Basket save = basketRepository.save(basket);
+
+        // 카테고리 생성
+        Long cateId = categoryService.register(save.getId(), "기본");
+        Categories cate = categoryService.getById(cateId);
+
 
         // UserBasket 중계 테이블에 기록
         UserBasket userBasket = new UserBasket();
