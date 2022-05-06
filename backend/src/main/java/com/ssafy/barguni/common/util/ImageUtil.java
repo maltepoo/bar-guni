@@ -1,6 +1,7 @@
 package com.ssafy.barguni.common.util;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureEntity;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class ImageUtil {
         uploadFolder = path;
     }
 
-    public static Picture create(MultipartFile multipartFile, String entity) {
+    public static Picture create(MultipartFile multipartFile, PictureEntity entity) {
         Picture picture = new Picture();
         String imageFileName = entity + "_" + getRandomCode() + "_" + Long.toString(System.currentTimeMillis()) + "." + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         Path imageFilePath = Paths.get(uploadFolder + imageFileName);
