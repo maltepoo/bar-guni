@@ -64,10 +64,15 @@ function ItemList({navigation}: ItemListScreenProps) {
     // Todo:카테고리를 바꾸면 아래 항목 리스트도 바뀌어야함
   }, []);
 
-  const renderItem = useCallback(({item}: {item: Item}) => {
-    console.log('renderItem', item);
-    return <HomeItems item={item} />;
-  }, []);
+  const renderItem = useCallback(
+    ({item}: {item: Item}) => {
+      console.log('renderItem', item, selectedCategory);
+      return (
+        <HomeItems item={item} category={category[selectedCategory].name} />
+      );
+    },
+    [category, selectedCategory],
+  );
 
   useEffect(() => {
     async function init(): Promise<void> {
@@ -79,13 +84,13 @@ function ItemList({navigation}: ItemListScreenProps) {
       setBasket(baskets);
       setSelectedBasket(baskets[0]);
       const categoryRes = await getCategory(baskets[0].bkt_id);
-      const categoryList = [{cateId: -1, name: '전체'}, ...categoryRes];
-      setCategory(categoryList);
+      setCategory(categoryRes);
       const itemRes = await getItems(baskets[0].bkt_id);
       setItems(itemRes);
     }
     init();
   }, [dispatch]);
+
   const addBasket = useCallback(async () => {
     await registerBasket(basketName);
     const res = await getBaskets();
@@ -93,6 +98,7 @@ function ItemList({navigation}: ItemListScreenProps) {
     setBasketName('');
     setBasketDialog(false);
   }, [basketName]);
+
   const addCategory = useCallback(async () => {
     await registerCategory(selectedBasket.bkt_id, categoryName);
     const res = await getCategory(selectedBasket.bkt_id);
@@ -100,12 +106,13 @@ function ItemList({navigation}: ItemListScreenProps) {
     setCategoryDialog(false);
     setCategoryName('');
   }, [selectedBasket.bkt_id, categoryName, setCategory]);
+
   const changeBasket = useCallback(
     async (id: number) => {
       console.log(id);
       const res = await getCategory(id);
       console.log(res, ' 카테고리 목록들');
-      setCategory([{cateId: -1, name: '전체'}, ...res]);
+      setCategory(res);
       const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
       setSelectedBasket(selectBasket);
       const itemRes = await getItems(id);
@@ -272,7 +279,7 @@ const Style = StyleSheet.create({
   category: {
     flexDirection: 'row',
     marginTop: 5,
-    height: 35,
+    height: 50,
     marginLeft: 10,
   },
 });

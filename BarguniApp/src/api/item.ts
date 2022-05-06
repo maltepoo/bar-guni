@@ -31,7 +31,7 @@ async function getItems(basketId: number): Promise<Item[]> {
 
 async function registerItem(item: ItemReq): Promise<void> {
   const axios = LoginApiInstance();
-  await axios.post('/item/', JSON.stringify(item));
+  await axios.post('/item', JSON.stringify(item));
 }
 
 export {getItems, registerItem};
