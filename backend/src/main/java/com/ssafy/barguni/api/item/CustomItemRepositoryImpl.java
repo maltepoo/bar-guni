@@ -23,7 +23,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<Item> getAllInBasket(Long basketId){
+    public List<Item> getAllInBasket(Long basketId, Boolean used){
         return query
                 .select(item)
                 .from(item)
@@ -32,10 +32,11 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .leftJoin(item.picture, picture)
                 .fetchJoin()
                 .where(basketCheck(basketId))
+                .where(usedCheck(used))
                 .fetch();
     }
 
-    public List<Item> getMyAllItems(List<Long> basketIds){
+    public List<Item> getMyAllItems(List<Long> basketIds, Boolean used){
         return query
                 .select(item)
                 .from(item)
@@ -44,6 +45,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .leftJoin(item.picture, picture)
                 .fetchJoin()
                 .where(basketCheckIn(basketIds))
+                .where(usedCheck(used))
                 .fetch();
     }
 
@@ -55,7 +57,15 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
                 .fetchJoin()
                 .where(nameLike(itemSearch.getWord()).or(contentLike(itemSearch.getWord())).or(categoryLike(itemSearch.getWord())))
                 .where(basketCheckIn(itemSearch.getBasketIds()))
+                .where(usedCheck(itemSearch.getUsed()))
                 .fetch();
+    }
+
+    private BooleanExpression usedCheck(Boolean used){
+        if(used == null)
+            return null;
+        else
+            return item.used.eq(used);
     }
 
     private BooleanExpression basketCheck(Long basketId){
