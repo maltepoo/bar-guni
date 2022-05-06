@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {changeName, getProfile} from '../api/user';
+import {changeName, getProfile, signOut} from '../api/user';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({});
@@ -36,6 +36,17 @@ function MyPage() {
     }
   });
 
+  const handleSignOut = useCallback(async () => {
+    // TODO: 회원탈퇴 후 스토어에서 토큰삭제
+    await Alert.alert('정말,,, 탈퇴하시렵니까,,');
+    try {
+      await signOut();
+      console.log('byebye...');
+    } catch (err) {
+      Alert.alert('회원탈퇴 실패', err);
+    }
+  });
+
   return (
     <ScrollView>
       <Text>회원정보</Text>
@@ -48,6 +59,9 @@ function MyPage() {
       />
       <TouchableOpacity onPress={modifyUserName}>
         <Text>회원이름수정</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleSignOut}>
+        <Text>회원탈퇴</Text>
       </TouchableOpacity>
     </ScrollView>
   );

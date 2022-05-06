@@ -33,9 +33,14 @@ async function changeName(newName: string): Promise<User> {
   return (await loginAxios.put(`/user?name=${newName}`)).data.data;
 }
 
+async function signOut(): Promise<User> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.delete(`/user`)).data.data;
+}
+
 async function getBaskets(): Promise<Basket[]> {
   const loginAxios = LoginApiInstance();
   return (await loginAxios.get('/user/basket')).data.data;
 }
 
-export {login, getProfile, changeName, getBaskets};
+export {login, getProfile, changeName, signOut, getBaskets};
