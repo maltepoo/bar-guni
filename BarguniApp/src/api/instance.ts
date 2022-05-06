@@ -58,6 +58,7 @@ function LoginApiInstance(): AxiosInstance {
           'refreshToken',
           res.data.data.refreshToken,
         );
+        console.log(config, '바꾼 config');
         setJwtToken(res.data.data.accessToken);
         return await instance.request(config);
       }
