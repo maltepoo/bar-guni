@@ -24,7 +24,7 @@ async function login(type: SocialType, token: string): Promise<User> {
 
 async function getProfile(): Promise<User> {
   const loginAxios = LoginApiInstance();
-  return (await loginAxios.get('/user/')).data.data;
+  return (await loginAxios.get('/user')).data.data;
 }
 async function getBaskets(): Promise<Basket[]> {
   const loginAxios = LoginApiInstance();
