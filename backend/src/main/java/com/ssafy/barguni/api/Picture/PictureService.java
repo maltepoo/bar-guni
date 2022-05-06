@@ -27,7 +27,7 @@ public class PictureService {
     }
 
     @Transactional
-    public Picture create(MultipartFile multipartFile, String entity){
+    public Picture create(MultipartFile multipartFile, PictureEntity entity){
         return picRepository.save(ImageUtil.create(multipartFile, entity));
     }
 

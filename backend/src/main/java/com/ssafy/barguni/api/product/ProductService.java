@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.product;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureEntity;
 import com.ssafy.barguni.common.util.barcodeSearch.BarcodeSearchUtil;
 import com.ssafy.barguni.common.util.NaverImgSearchUtil;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class ProductService {
         MultipartFile multipartFile = new MockMultipartFile(prodName, prodName+"."+imgExtension,"image/"+imgExtension, baos.toByteArray());
 
         // PictureService를 통해 객체를 만들고 저장.
-        return pictureService.create(multipartFile, "Item");
+        return pictureService.create(multipartFile, PictureEntity.ITEM);
     }
 
 }

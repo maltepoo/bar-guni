@@ -13,9 +13,25 @@ export interface Item {
   dday: number;
 }
 
+export interface ItemReq {
+  bktId: number;
+  picId: number | null;
+  cateId: number;
+  name: string;
+  alertBy: string;
+  shelfLife?: string;
+  content: string;
+  dday: number | null;
+}
+
 async function getItems(basketId: number): Promise<Item[]> {
   const axios = LoginApiInstance();
   return (await axios.get(`/item/list/${basketId}`)).data.data;
 }
 
-export {getItems};
+async function registerItem(item: ItemReq): Promise<void> {
+  const axios = LoginApiInstance();
+  await axios.post('/item/', JSON.stringify(item));
+}
+
+export {getItems, registerItem};

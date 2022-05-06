@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user")
 @Slf4j
 @Tag(name = "user controller", description = "회원 관련 컨트롤러")
 public class UserController {
@@ -230,7 +230,7 @@ public class UserController {
         return new ResponseEntity<ResVO<UserRes>>(result, status);
     }
 
-    @PutMapping
+    @PutMapping()
     @Operation(summary = "사용자 정보(이름만) 수정", description = "사용자 정보 수정한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
