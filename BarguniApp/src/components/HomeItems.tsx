@@ -3,7 +3,7 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Divider} from '@rneui/base';
-import {Item} from '../api/item';
+import {changeItemStatus, Item} from '../api/item';
 import {getCategory} from '../api/category';
 interface HomeItem {
   item: Item;
@@ -12,26 +12,34 @@ interface HomeItem {
 
 function HomeItems(props: HomeItem) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const deleteItem = useCallback(() => {
+  const deleteItem = useCallback(async () => {
     // Todo : 삭제 할 아이템
+    try {
+      console.log(item.itemId, 'itemid');
+      const res = await changeItemStatus(item.itemId, true);
+      console.log(res, 'res');
+    } catch (error) {
+      console.log(error, 'error');
+    }
+    // console.log(item);
   }, []);
   // const onClick = useCallback(() => {
   //   // navigation.navigate('ItemDetail', test);
   // }, [navigation]);
   const item = props.item;
   return item.category === props.category ? (
-    <Pressable>
+    <View>
       <View style={Style.container}>
         <View style={Style.row}>
           <Image style={Style.picture} source={require('../assets/bell.png')} />
         </View>
-        <View style={Style.row2}>
+        <Pressable style={Style.row2}>
           <Text style={Style.date}> {item.name}</Text>
           <Text style={Style.date2}>
             {item.regDate.toString().substring(0, 10)}
           </Text>
           <Text style={Style.date2}> {item.category}</Text>
-        </View>
+        </Pressable>
         <View style={Style.row3}>
           <Text style={Style.dDay}>D - {item.dday}</Text>
           <Text style={Style.lifetime}>유통기한: {item.shelfLife}</Text>
@@ -52,7 +60,7 @@ function HomeItems(props: HomeItem) {
           color="#ECECEC"
         />
       </View>
-    </Pressable>
+    </View>
   ) : (
     <></>
   );

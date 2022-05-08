@@ -40,4 +40,9 @@ async function barcodeItemInfo(barcode: number): Promise<Item> {
   return await axios.get(`/prod?barcode=${barcode}`);
 }
 
-export {getItems, barcodeItemInfo, registerItem};
+async function changeItemStatus(itemId: number, used: boolean): Promise<void> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.put('/item/status', {itemId, used})).data.data;
+}
+
+export {getItems, barcodeItemInfo, registerItem, changeItemStatus};
