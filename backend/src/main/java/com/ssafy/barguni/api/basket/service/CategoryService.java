@@ -24,6 +24,10 @@ public class CategoryService {
         return categoryRepository.existsByBasketIdAndName(basketId, name);
     }
 
+    public Categories getByIdWithBasket(Long id){
+        return categoryRepository.getByIdWithBasket(id);
+    }
+
     @Transactional
     public Long register(Long basketId, String name) {
         Categories category = new Categories();

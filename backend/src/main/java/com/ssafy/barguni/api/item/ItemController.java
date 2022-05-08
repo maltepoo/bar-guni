@@ -186,13 +186,14 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<List<ItemRes>>> getItemList(@PathVariable Long basketId){
+    public ResponseEntity<ResVO<List<ItemRes>>> getItemList(@PathVariable Long basketId,
+                                                            @RequestParam(required = false) Boolean used){
         ResVO<List<ItemRes>> result = new ResVO<>();
         HttpStatus status = null;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         result.setData(itemService
-                .getAllInBasket(basketId, userDetails.getUserId())
+                .getAllInBasket(basketId, userDetails.getUserId(), used)
                 .stream()
                 .map(ItemRes::new)
                 .collect(Collectors.toList()));

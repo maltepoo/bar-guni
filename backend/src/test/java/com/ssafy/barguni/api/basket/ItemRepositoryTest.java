@@ -20,18 +20,18 @@ class ItemRepositoryTest {
 
         ItemSearch itemSearch2 = new ItemSearch();
         itemSearch2.setWord("과자");
-        itemSearch2.setBasketId(1L);
+//        itemSearch2.setBasketId(1L);
 
         ItemSearch itemSearch3 = new ItemSearch();
         itemSearch3.setWord("포카칩");
-        itemSearch3.setBasketId(1L);
+//        itemSearch3.setBasketId(1L);
 
         assertEquals(5, itemRepository.getItemsUsingFilter(itemSearch1).size());
         assertEquals(0, itemRepository.getItemsUsingFilter(itemSearch2).size());
         assertEquals(3, itemRepository.getItemsUsingFilter(itemSearch3).size());
-        assertEquals(10, itemRepository.getAllInBasket(null).size());
-        assertEquals(7, itemRepository.getAllInBasket(2L).size());
-        assertEquals(3, itemRepository.getAllInBasket(1L).size());
+//        assertEquals(10, itemRepository.getAllInBasket(null).size());
+//        assertEquals(7, itemRepository.getAllInBasket(2L).size());
+//        assertEquals(3, itemRepository.getAllInBasket(1L).size());
 
 
     }
