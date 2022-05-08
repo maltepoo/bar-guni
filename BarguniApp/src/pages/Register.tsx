@@ -19,6 +19,8 @@ import {getItems, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
 import {Basket, getBasketInfo} from '../api/basket';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../../AppInner';
 function Register() {
   const [name, setName] = useState('');
   const changeName = useCallback(text => {
@@ -30,16 +32,15 @@ function Register() {
   }, []);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
-
   const [selectedBasket, setSelectedBasket] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [checked, setChecked] = React.useState(true);
   const [day, setDay] = useState(0);
   const [alertBy, setAlertBy] = useState('SHELF_LIFE');
-
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
   const [shelfLife, setShelfLife] = useState(new Date());
+  const route = useRoute<RouteProp<RootStackParamList>>();
   const onSubmit = useCallback(async () => {
     try {
       shelfLife.setDate(regDate.getDate() + day);
@@ -65,16 +66,26 @@ function Register() {
     } catch (error) {
       console.log(error);
     }
-  }, [name, regDate, selectedBasket, selectedCategory]);
-
+  }, [
+    alertBy,
+    content,
+    day,
+    name,
+    regDate,
+    selectedBasket,
+    selectedCategory,
+    shelfLife,
+  ]);
   useEffect(() => {
     async function init(): Promise<void> {
+      console.log(route.params, 'params');
       const basketRes = await getBaskets();
       setBasket(basketRes);
       console.log(basketRes, 'basketRes');
       const categoryRes = await getCategory(basketRes[0].bkt_id);
       console.log(categoryRes, 'categoryRes');
       setCategory(categoryRes);
+      setName(route.params.name);
     }
     init();
   }, []);

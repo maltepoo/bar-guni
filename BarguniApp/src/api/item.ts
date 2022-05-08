@@ -37,7 +37,7 @@ async function registerItem(item: ItemReq): Promise<void> {
 
 async function barcodeItemInfo(barcode: number): Promise<Item> {
   const axios = LoginApiInstance();
-  return await axios.get(`/prod?barcode=${barcode}`);
+  return (await axios.get(`/prod?barcode=${barcode}`)).data.data;
 }
 
 export {getItems, barcodeItemInfo, registerItem};
