@@ -24,59 +24,44 @@ function Register() {
   const changeName = useCallback(text => {
     setName(text);
   }, []);
-
+  const [content, setContent] = useState('');
+  const changeContent = useCallback(text => {
+    setContent(text);
+  }, []);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
 
-  const [checked, setChecked] = React.useState(false);
   const [selectedBasket, setSelectedBasket] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [day, setDay] = useState(10);
-  const onClickMinusOne = useCallback(() => {
-    setDay(day - 1);
-  }, [day]);
-  const onClickMinusFive = useCallback(() => {
-    setDay(day - 5);
-  }, [day]);
-  const onClickPlusOne = useCallback(() => {
-    setDay(day + 1);
-  }, [day]);
-  const onClickPlusFive = useCallback(() => {
-    setDay(day + 5);
-  }, [day]);
-  // datepicker
+  const [checked, setChecked] = React.useState(true);
+  const [day, setDay] = useState(0);
+  const [alertBy, setAlertBy] = useState('SHELF_LIFE');
+
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
-  // 등록버튼
-  const [bktId, setBktId] = useState(0);
-  const [picId, setPicId] = useState(0);
-  const [cateId, setCateId] = useState(0);
-  const [alertBy, setAlertBy] = useState('alert');
-  const [shelfLife, setShelfLife] = useState('shelf');
-  const [content, setContent] = useState('content');
-  const [dday, setDday] = useState(0);
-  const axios = LoginApiInstance();
-
+  const [shelfLife, setShelfLife] = useState(new Date());
   const onSubmit = useCallback(async () => {
     try {
+      shelfLife.setDate(regDate.getDate() + day);
       const item = {
         bktId: selectedBasket,
         cateId: selectedCategory,
         name: name,
-        shelfLife: regDate.toJSON().substring(0, 10),
-        alertBy: 'SHELF_LIFE',
-        content: '테스트용',
+        shelfLife: shelfLife,
+        // shelfLife: regDate.toJSON().substring(0, 10),
+        alertBy: alertBy,
+        content: content,
         picId: null,
-        dday: null,
+        dday: day,
         // ddday로 했을 시에는 shelflife 필요 없음, 사진도 없으면 필요없음
       };
       const res2 = await getItems(-1);
       console.log(res2, ' 아이템 조회!');
       console.log(item, ' item');
-      const res = await registerItem(item);
-      console.log(res);
-      const confirm = await getItems(selectedBasket);
-      console.log(confirm, ' confirm');
+      // const res = await registerItem(item);
+      // console.log(res);
+      // const confirm = await getItems(selectedBasket);
+      // console.log(confirm, ' confirm');
     } catch (error) {
       console.log(error);
     }
@@ -111,22 +96,24 @@ function Register() {
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
-              setChecked(!checked);
-            }}
-          />
-        </View>
-        <Text>지금부터 관리</Text>
-        <View>
-          <Checkbox
-            status={checked ? 'unchecked' : 'checked'}
-            onPress={() => {
-              setChecked(!checked);
+              setChecked(true);
+              setAlertBy('SHELF_LIFE');
             }}
           />
         </View>
         <Text>유효기간 관리</Text>
+        <View>
+          <Checkbox
+            status={checked ? 'unchecked' : 'checked'}
+            onPress={() => {
+              setChecked(false);
+              setAlertBy('dday');
+            }}
+          />
+        </View>
+        <Text>지금부터 관리</Text>
       </View>
-      {!checked ? (
+      {checked ? (
         <View style={{alignItems: 'center'}}>
           <Pressable
             onPress={() => {
@@ -151,17 +138,25 @@ function Register() {
           <View style={Style.cont}>
             <TouchableOpacity
               style={Style.daybutton}
-              onPress={onClickMinusFive}>
+              onPress={() => setDay(day - 5)}>
               <Text>-5</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.daybutton} onPress={onClickMinusOne}>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => setDay(day - 1)}>
               <Text>-1</Text>
             </TouchableOpacity>
             <Text>D + {day}</Text>
-            <TouchableOpacity style={Style.daybutton} onPress={onClickPlusOne}>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => setDay(day + 1)}>
               <Text>+1</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Style.daybutton} onPress={onClickPlusFive}>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => {
+                setDay(day + 5);
+              }}>
               <Text>+5</Text>
             </TouchableOpacity>
           </View>
@@ -196,6 +191,15 @@ function Register() {
           />
         ))}
       </Picker>
+      <View style={Style.cont}>
+        <Text>설명 :</Text>
+        <TextInput
+          style={Style.contentInput}
+          value={content}
+          onChangeText={changeContent}
+          placeholder="설명 입력"
+        />
+      </View>
       <View style={{alignItems: 'center'}}>
         <TouchableOpacity style={Style.button} onPress={onSubmit}>
           <Text>등록</Text>
@@ -245,6 +249,15 @@ const Style = StyleSheet.create({
     width: '40%',
     textAlign: 'center',
     // borderRadius: 10,
+  },
+  contentInput: {
+    padding: 5,
+    marginTop: 5,
+    height: 30,
+    margin: 5,
+    borderWidth: 1,
+    width: '70%',
+    textAlign: 'center',
   },
   picture: {
     width: 80,
