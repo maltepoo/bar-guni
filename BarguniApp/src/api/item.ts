@@ -11,6 +11,7 @@ export interface Item {
   content: string;
   pictureUrl: string;
   dday: number;
+  barcode: number;
 }
 
 export interface ItemReq {
@@ -34,4 +35,9 @@ async function registerItem(item: ItemReq): Promise<void> {
   await axios.post('/item', JSON.stringify(item));
 }
 
-export {getItems, registerItem};
+async function barcodeItemInfo(barcode: number): Promise<Item> {
+  const axios = LoginApiInstance();
+  return await axios.get(`/prod?barcode=${barcode}`);
+}
+
+export {getItems, barcodeItemInfo, registerItem};
