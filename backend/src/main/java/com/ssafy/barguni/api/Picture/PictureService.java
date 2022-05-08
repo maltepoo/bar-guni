@@ -45,8 +45,4 @@ public class PictureService {
         return ImageUtil.update(picture, multipartFile);
     }
 
-//    public Picture createPicByProdName(String prodName) {
-//
-//    }
-
 }

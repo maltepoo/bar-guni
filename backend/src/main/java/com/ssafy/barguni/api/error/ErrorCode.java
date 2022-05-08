@@ -22,7 +22,9 @@ public enum ErrorCode {
 
     OAUTH_INVALID_AUTHORIZATION_CODE("AUTHORIZATION CODE 가 유효하지 않습니다.", "O001", HttpStatus.UNAUTHORIZED),
     OAUTH_INVALID_ACCESS_TOKEN("ACCESS TOKEN 이 유효하지 않습니다.", "O002", HttpStatus.UNAUTHORIZED),
-    OAUTH_EMAIL_NOT_ALLOWED("이메일 정보 제공 동의가 필요합니다.","O003", HttpStatus.NOT_ACCEPTABLE)
+    OAUTH_EMAIL_NOT_ALLOWED("이메일 정보 제공 동의가 필요합니다.","O003", HttpStatus.NOT_ACCEPTABLE),
+
+    CATEGOTY_DUPLICATED("이미 등록된 카테고리입니다.", "C001", HttpStatus.NOT_ACCEPTABLE)
     ;
 
     private final String message;

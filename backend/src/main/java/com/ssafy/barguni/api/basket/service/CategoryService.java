@@ -35,9 +35,6 @@ public class CategoryService {
         category.setName(name);
         category.setBasket(basket);
         Categories save = categoryRepository.save(category);
-
-        // 동일 바구니 내 같은 카테고리명 불가능
-
         return save.getId();
     }
 

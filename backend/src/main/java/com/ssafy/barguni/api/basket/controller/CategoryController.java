@@ -4,6 +4,9 @@ import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.service.CategoryService;
 import com.ssafy.barguni.api.basket.vo.CategoryRes;
 import com.ssafy.barguni.api.common.ResVO;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.CategoryException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -36,25 +39,13 @@ public class CategoryController {
         HttpStatus status = null;
 
 
-        try {
-            if(categoryService.isDuplicated(basketId, name))
-            {
-                result.setData(-1L);
-                result.setMessage("이미 등록된 카테고리입니다.");
-                status = HttpStatus.NOT_ACCEPTABLE;
-                return new ResponseEntity<ResVO<Long>>(result, status);
-            }
+        if(categoryService.isDuplicated(basketId, name))
+            throw new CategoryException(new ErrorResVO(ErrorCode.CATEGOTY_DUPLICATED));
 
-            Long categoryId = categoryService.register(basketId, name);
-            result.setData(categoryId);
-            result.setMessage("카테고리 등록 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("카테고리 등록 실패");
-
-        }
+        Long categoryId = categoryService.register(basketId, name);
+        result.setData(categoryId);
+        result.setMessage("카테고리 등록 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Long>>(result, status);
 
@@ -72,19 +63,13 @@ public class CategoryController {
         ResVO<List<CategoryRes>> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            List<Categories> categories = categoryService.getByBasketId(basketId);
-            result.setData(categories
-                    .stream()
-                    .map(CategoryRes::new)
-                    .collect(Collectors.toList()));
-            result.setMessage("카테고리 조회 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("카테고리 조회 실패");
-        }
+        List<Categories> categories = categoryService.getByBasketId(basketId);
+        result.setData(categories
+                .stream()
+                .map(CategoryRes::new)
+                .collect(Collectors.toList()));
+        result.setMessage("카테고리 조회 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<List<CategoryRes>>>(result, status);
     }
@@ -101,17 +86,10 @@ public class CategoryController {
         ResVO<Long> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            categoryService.modify(categoryId, name);
-            result.setData(categoryId);
-            result.setMessage("카테고리 수정 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("카테고리 수정 실패");
-            result.setData(categoryId);
-        }
+        categoryService.modify(categoryId, name);
+        result.setData(categoryId);
+        result.setMessage("카테고리 수정 성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Long>>(result, status);
     }
@@ -128,16 +106,10 @@ public class CategoryController {
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 
-        try{
-            categoryService.delete(categoryId);
-            result.setMessage("카테고리 삭제 성공");
-            result.setData(true);
-            status = HttpStatus.OK;
-        } catch (Exception e){
-            result.setMessage("카테고리 삭제 실패");
-            result.setData(false);
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        categoryService.delete(categoryId);
+        result.setMessage("카테고리 삭제 성공");
+        result.setData(true);
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);
     }
