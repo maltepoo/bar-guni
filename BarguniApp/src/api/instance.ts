@@ -35,7 +35,6 @@ function LoginApiInstance(): AxiosInstance {
     async error => {
       if (error.response.data.code === 'J003') {
         const request = {...error.request};
-        console.log(request, ' request');
         const refreshToken = await EncryptedStorage.getItem('refreshToken');
         const token = await EncryptedStorage.getItem('accessToken');
         const config: any = {
@@ -59,7 +58,6 @@ function LoginApiInstance(): AxiosInstance {
           'refreshToken',
           res.data.data.refreshToken,
         );
-        console.log(config, '바꾼 config');
         setJwtToken(res.data.data.accessToken);
         return await instance.request(config);
       }
