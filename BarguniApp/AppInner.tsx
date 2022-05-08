@@ -37,6 +37,7 @@ import Login from './src/pages/Login';
 import RegisterModal from './src/pages/RegisterModal';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import HeaderRight from './src/components/HeaderRight';
+import BasketSettingDetail from './src/pages/BasketSettingDetail';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -182,6 +183,11 @@ function AppInner() {
         <Stack.Screen
           name="BasketSetting"
           component={BasketSetting}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="BasketSettingDetail"
+          component={BasketSettingDetail}
           options={{headerShown: true}}
         />
         <Stack.Screen
