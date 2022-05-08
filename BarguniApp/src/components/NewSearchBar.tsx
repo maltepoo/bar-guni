@@ -7,7 +7,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function NewSearchBar({navigation, passedValue}) {
   const [text, setText] = useState('');
@@ -30,47 +31,54 @@ function NewSearchBar({navigation, passedValue}) {
   });
 
   useEffect(() => {
-    setText('');
+    const initialText = passedValue ? passedValue : '';
+    setText(initialText);
   }, []);
 
   return (
     <View
-      style={{display: 'flex', flexDirection: 'row', backgroundColor: 'green'}}>
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 16,
+        marginBottom: 10,
+      }}>
       <Pressable
-        style={{position: 'absolute', zIndex: 9, top: '27%', left: '3%'}}>
-        <FontAwesomeIcon name="search" size={18} color="rgba(0,0,0,0.4)" />
+        style={{position: 'absolute', zIndex: 9, top: '22%', left: '3%'}}>
+        <AntDesign name="search1" size={18} color="rgba(0,0,0,0.4)" />
       </Pressable>
       <TextInput
-        placeholder="찾으실 물건 또는 바구니를 입력해주세요."
+        placeholder="검색할 바구니, 물건을 입력해 주세요"
         style={styles.textINput}
-        value={passedValue ? passedValue : text}
+        value={text}
         onChangeText={handleText}
         onSubmitEditing={() => {
           goToSearch(text);
         }}
       />
-      <Pressable style={styles.cancelBtn} onPress={removeText}>
-        <Text style={styles.cancelBtnText}>취소</Text>
-      </Pressable>
+      {text ? (
+        <Pressable
+          style={{position: 'absolute', zIndex: 9, top: '22%', right: '3%'}}
+          onPress={removeText}>
+          <MaterialIcons name="cancel" size={18} color="rgba(0,0,0,0.4)" />
+        </Pressable>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: 'pink',
-    height: 40,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderBottomColor: 'black',
-    marginBottom: 10,
-  },
+  item: {},
   itemText: {
     color: 'black',
   },
   textINput: {
-    backgroundColor: 'gray',
-    borderRadius: 5,
+    width: '100%',
+    height: 36,
+    backgroundColor: '#F5F4F4',
+    borderRadius: 100,
     paddingHorizontal: 20,
     paddingLeft: 40,
   },

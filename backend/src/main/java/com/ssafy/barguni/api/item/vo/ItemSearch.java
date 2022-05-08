@@ -8,4 +8,5 @@ import java.util.List;
 public class ItemSearch {
     private String word;
     private List<Long> basketIds;
+    private Boolean used;
 }

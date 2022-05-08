@@ -7,8 +7,9 @@ import {Item} from '../api/item';
 import {getCategory} from '../api/category';
 interface HomeItem {
   item: Item;
-  category: number;
+  category: string;
 }
+
 function HomeItems(props: HomeItem) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const deleteItem = useCallback(() => {
@@ -18,7 +19,6 @@ function HomeItems(props: HomeItem) {
   //   // navigation.navigate('ItemDetail', test);
   // }, [navigation]);
   const item = props.item;
-  console.log(item, props.category);
   return item.category === props.category ? (
     <Pressable>
       <View style={Style.container}>
