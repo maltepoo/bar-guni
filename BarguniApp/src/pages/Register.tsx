@@ -15,11 +15,19 @@ import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import {LoginApiInstance} from '../api/instance';
 import Config from 'react-native-config';
-import {getItems, registerItem} from '../api/item';
+import {getItems, ItemReq, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
 import {Basket, getBasketInfo} from '../api/basket';
-function Register() {
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../AppInner';
+import {CommonActions} from '@react-navigation/native';
+type RegisterScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Register'
+>;
+
+function Register({navigation}: RegisterScreenProps) {
   const [name, setName] = useState('');
   const changeName = useCallback(text => {
     setName(text);
@@ -42,13 +50,15 @@ function Register() {
   const [shelfLife, setShelfLife] = useState(new Date());
   const onSubmit = useCallback(async () => {
     try {
-      shelfLife.setDate(regDate.getDate() + day);
-      const item = {
+      if (alertBy === 'D_DAY') {
+        shelfLife.setDate(new Date().getDate() + day);
+      }
+      console.log(shelfLife, '유효기간');
+      const item: ItemReq = {
         bktId: selectedBasket,
         cateId: selectedCategory,
         name: name,
-        shelfLife: shelfLife,
-        // shelfLife: regDate.toJSON().substring(0, 10),
+        shelfLife: shelfLife.toJSON().substring(0, 10),
         alertBy: alertBy,
         content: content,
         picId: null,
@@ -58,14 +68,23 @@ function Register() {
       const res2 = await getItems(-1);
       console.log(res2, ' 아이템 조회!');
       console.log(item, ' item');
-      // const res = await registerItem(item);
-      // console.log(res);
-      // const confirm = await getItems(selectedBasket);
-      // console.log(confirm, ' confirm');
+      const res = await registerItem(item);
+      console.log(res);
+      const confirm = await getItems(selectedBasket);
+      console.log(confirm, ' confirm');
     } catch (error) {
       console.log(error);
     }
-  }, [name, regDate, selectedBasket, selectedCategory]);
+  }, [
+    alertBy,
+    content,
+    day,
+    name,
+    regDate,
+    selectedBasket,
+    selectedCategory,
+    shelfLife,
+  ]);
 
   useEffect(() => {
     async function init(): Promise<void> {
@@ -97,6 +116,7 @@ function Register() {
             status={checked ? 'checked' : 'unchecked'}
             onPress={() => {
               setChecked(true);
+              setShelfLife(regDate);
               setAlertBy('SHELF_LIFE');
             }}
           />
@@ -107,7 +127,7 @@ function Register() {
             status={checked ? 'unchecked' : 'checked'}
             onPress={() => {
               setChecked(false);
-              setAlertBy('dday');
+              setAlertBy('D_DAY');
             }}
           />
         </View>

@@ -105,6 +105,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         setCategory(categoryRes);
         const itemRes = await getItems(baskets[0].bkt_id);
         setItems(itemRes);
+        console.log(itemRes, '아이템 리스트');
       } catch (e) {}
     }
     init();

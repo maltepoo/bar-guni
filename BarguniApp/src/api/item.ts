@@ -12,6 +12,7 @@ export interface Item {
   pictureUrl: string;
   dday: number;
   barcode: number;
+  used: boolean;
 }
 
 export interface ItemReq {
@@ -22,7 +23,7 @@ export interface ItemReq {
   alertBy: string;
   shelfLife?: string;
   content: string;
-  dday: number | null;
+  dday?: number;
 }
 
 async function getItems(basketId: number): Promise<Item[]> {
@@ -40,9 +41,10 @@ async function barcodeItemInfo(barcode: number): Promise<Item> {
   return await axios.get(`/prod?barcode=${barcode}`);
 }
 
-async function changeItemStatus(itemId: number, used: boolean): Promise<void> {
+async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   const loginAxios = LoginApiInstance();
-  return (await loginAxios.put('/item/status', {itemId, used})).data.data;
+  console.log(itemId, used);
+  return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
 
 export {getItems, barcodeItemInfo, registerItem, changeItemStatus};
