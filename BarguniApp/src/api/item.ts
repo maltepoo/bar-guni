@@ -3,10 +3,10 @@ import {LoginApiInstance} from './instance';
 export interface Item {
   itemId: number;
   name: string;
-  regDate: Date;
+  regDate: string;
   alertBy: string;
-  shelfLife: Date;
-  usedDate: Date;
+  shelfLife: string;
+  usedDate: string;
   category: string;
   content: string;
   pictureUrl: string;
@@ -47,8 +47,12 @@ async function barcodeItemInfo(barcode: number): Promise<Item> {
 
 async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   const loginAxios = LoginApiInstance();
-  console.log(itemId, used);
   return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
 
-export {getItems, barcodeItemInfo, registerItem, changeItemStatus};
+async function deleteItem(itemId: number): Promise<void> {
+  const axios = LoginApiInstance();
+  await axios.delete(`/item/${itemId}`);
+}
+
+export {getItems, deleteItem, barcodeItemInfo, registerItem, changeItemStatus};

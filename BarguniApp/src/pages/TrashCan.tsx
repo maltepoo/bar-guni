@@ -3,13 +3,71 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import TrashItem from '../components/TrashItem';
 import {Checkbox} from 'react-native-paper';
 import {Button} from '@rneui/base';
-
-function TrashCan() {
-  const [items, setItems] = useState([{id: 11}, {id: 22}]);
+import {changeItemStatus, deleteItem, getItems, Item} from '../api/item';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../AppInner';
+type TrashCanScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'TrashCan'
+>;
+function TrashCan({navigation}: TrashCanScreenProps) {
+  const [items, setItems] = useState([] as Item[]);
   const [checked, setChecked] = useState(false);
-  const renderItem = useCallback(({item}: {item: object}) => {
-    return <TrashItem item={item}></TrashItem>;
+  const [selectList, setSelectList] = useState([] as number[]);
+
+  const selectItem = useCallback(
+    (itemId: number, check: boolean) => {
+      if (check) {
+        const list = selectList.filter(item => item !== itemId);
+        setSelectList(list);
+      } else {
+        const list = [...selectList];
+        list.push(itemId);
+        setSelectList(list);
+      }
+    },
+    [selectList],
+  );
+
+  const renderItem = useCallback(
+    ({item}: {item: Item}) => {
+      return <TrashItem select={selectItem} allSelect={checked} item={item} />;
+    },
+    [checked, selectItem],
+  );
+
+  const restore = useCallback(async () => {
+    try {
+      for (let i = 0; i < selectList.length; i++) {
+        await changeItemStatus(selectList[i], false);
+      }
+      setSelectList([]);
+      navigation.navigate('ItemList');
+    } catch (e) {
+      console.log(e);
+    }
+  }, [navigation, selectList]);
+
+  const remove = useCallback(async () => {
+    try {
+      for (let i = 0; i < selectList.length; i++) {
+        await deleteItem(selectList[i]);
+      }
+      setSelectList([]);
+      navigation.navigate('ItemList');
+    } catch (e) {
+      console.log(e);
+    }
+  }, [navigation, selectList]);
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await getItems(-1, true);
+      setItems(res);
+    };
+    init();
   }, []);
+
   return (
     <View style={Style.container}>
       <View style={Style.header}>
@@ -25,14 +83,16 @@ function TrashCan() {
           title={'복원'}
           titleStyle={Style.buttonText}
           buttonStyle={Style.restore}
+          onPress={restore}
         />
         <Button
           title={'삭제'}
           titleStyle={Style.buttonText}
           buttonStyle={Style.remove}
+          onPress={remove}
         />
       </View>
-      <FlatList data={items} renderItem={renderItem} />
+      <FlatList data={items} renderItem={renderItem} style={Style.list} />
     </View>
   );
 }
@@ -46,12 +106,16 @@ const Style = StyleSheet.create({
   buttonText: {
     fontSize: 10,
   },
+  list: {
+    height: '91%',
+  },
   restore: {marginRight: 5},
   headerText: {
     color: 'black',
     marginTop: 7,
     fontWeight: 'bold',
     width: '65%',
+
     marginLeft: 10,
   },
   title: {
