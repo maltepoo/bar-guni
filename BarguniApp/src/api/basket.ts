@@ -24,9 +24,14 @@ async function getBasketInfo(basketId: number) {
   return (await axios.get(`/basket/${basketId}`)).data.data;
 }
 
+async function updateBasketName(basketId: number, basketName: string) {
+  const axios = LoginApiInstance();
+  return (await axios.put(`/basket/${basketId}?name=${basketName}`)).data.data;
+}
+
 async function deleteBasket(basketId: number) {
   const axios = LoginApiInstance();
   return (await axios.delete(`/basket/${basketId}`)).data.data;
 }
 
-export {registerBasket, getBasketInfo, deleteBasket};
+export {registerBasket, getBasketInfo, updateBasketName, deleteBasket};

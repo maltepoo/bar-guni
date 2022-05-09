@@ -3,15 +3,16 @@ import {LoginApiInstance} from './instance';
 export interface Item {
   itemId: number;
   name: string;
-  regDate: Date;
+  regDate: string;
   alertBy: string;
-  shelfLife: Date;
-  usedDate: Date;
+  shelfLife: string;
+  usedDate: string;
   category: string;
   content: string;
   pictureUrl: string;
   dday: number;
   barcode: number;
+  used: boolean;
 }
 
 export interface ItemReq {
@@ -22,12 +23,16 @@ export interface ItemReq {
   alertBy: string;
   shelfLife?: string;
   content: string;
-  dday: number | null;
+  dday?: number;
 }
 
-async function getItems(basketId: number): Promise<Item[]> {
+async function getItems(basketId: number, used?: boolean): Promise<Item[]> {
   const axios = LoginApiInstance();
-  return (await axios.get(`/item/list/${basketId}`)).data.data;
+  if (used === undefined) {
+    return (await axios.get(`/item/list/${basketId}`)).data.data;
+  } else {
+    return (await axios.get(`/item/list/${basketId}?used=${used}`)).data.data;
+  }
 }
 
 async function registerItem(item: ItemReq): Promise<void> {
@@ -40,4 +45,14 @@ async function barcodeItemInfo(barcode: number): Promise<Item> {
   return await axios.get(`/prod?barcode=${barcode}`);
 }
 
-export {getItems, barcodeItemInfo, registerItem};
+async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
+}
+
+async function deleteItem(itemId: number): Promise<void> {
+  const axios = LoginApiInstance();
+  await axios.delete(`/item/${itemId}`);
+}
+
+export {getItems, deleteItem, barcodeItemInfo, registerItem, changeItemStatus};

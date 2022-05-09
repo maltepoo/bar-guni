@@ -32,6 +32,7 @@ import {
 } from '../api/category';
 import {getItems, Item} from '../api/item';
 import {Dialog} from '@rneui/themed';
+import {useIsFocused} from '@react-navigation/native';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
@@ -45,7 +46,7 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [selectedBasket, setSelectedBasket] = useState({
     bkt_id: 0,
   });
-  const [selectedCategory, setselectedCategory] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
   const [open, setOpen] = useState(false);
   const [basketDialog, setBasketDialog] = useState(false);
@@ -56,7 +57,7 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(0);
   const [deleteMode, setDeleteMode] = useState('');
-
+  const isFocused = useIsFocused();
   const toggleDeleteDialog = useCallback(() => {
     setDeleteDialog(!deleteDialog);
   }, [deleteDialog]);
@@ -78,17 +79,32 @@ function ItemList({navigation}: ItemListScreenProps) {
   }, []);
 
   const selectCategory = useCallback(index => {
-    setselectedCategory(index);
-    // Todo:카테고리를 바꾸면 아래 항목 리스트도 바뀌어야함
+    setSelectedCategory(index);
   }, []);
 
+  // const remove = useCallback(index: number => {
+  //   console.log(index);
+  //   console.log(items, ' 아이템 들');
+  //   setItems(items.filter(item => item.itemId !== index));
+  // },[]);
+
+  const remove = useCallback(
+    (index: number) => {
+      setItems(items.filter(item => item.itemId !== index));
+    },
+    [items],
+  );
   const renderItem = useCallback(
     ({item}: {item: Item}) => {
       return (
-        <HomeItems item={item} category={category[selectedCategory].name} />
+        <HomeItems
+          item={item}
+          remove={remove}
+          category={category[selectedCategory].name}
+        />
       );
     },
-    [category, selectedCategory],
+    [category, remove, selectedCategory],
   );
 
   useEffect(() => {
@@ -102,13 +118,17 @@ function ItemList({navigation}: ItemListScreenProps) {
         setBasket(baskets);
         setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
+        console.log(categoryRes);
         setCategory(categoryRes);
-        const itemRes = await getItems(baskets[0].bkt_id);
+        const itemRes = await getItems(baskets[0].bkt_id, false);
         setItems(itemRes);
-      } catch (e) {}
+        console.log(itemRes, '아이템 리스트');
+      } catch (e) {
+        console.log(e);
+      }
     }
     init();
-  }, [dispatch]);
+  }, [dispatch, isFocused]);
 
   const addBasket = useCallback(async () => {
     try {
@@ -137,8 +157,10 @@ function ItemList({navigation}: ItemListScreenProps) {
         const res = await getCategory(id);
         console.log(res, ' 카테고리 목록들');
         setCategory(res);
+        setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
+        console.log(selectBasket);
         const itemRes = await getItems(id);
         setItems(itemRes);
       } catch (e) {}
