@@ -1,6 +1,5 @@
 package com.ssafy.barguni.api.item;
 
-import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.error.ErrorCode;
 import com.ssafy.barguni.api.error.ErrorResVO;
@@ -9,7 +8,6 @@ import com.ssafy.barguni.api.item.vo.ItemRes;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
-import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
@@ -50,19 +48,12 @@ public class ItemController {
         ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-            Item newItem = itemService.saveNewItem(userDetails.getUserId(), req);
-            result.setData(new ItemRes(newItem));
-            result.setMessage("물품 등록에 성공했습니다.");
-            status = HttpStatus.CREATED;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setMessage("서버 오류");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        Item newItem = itemService.saveNewItem(userDetails.getUserId(), req);
+        result.setData(new ItemRes(newItem));
+        result.setMessage("물품 등록에 성공했습니다.");
+        status = HttpStatus.CREATED;
 
         return new ResponseEntity<ResVO<ItemRes>>(result, status);
     }
@@ -80,17 +71,10 @@ public class ItemController {
         ResVO<Item> result = new ResVO<>();
         HttpStatus status;
 
-        try {
-            Item findItem = itemService.getById(itemId);
-            result.setData(findItem);
-            result.setMessage("물품 조회에 성공했습니다.");
-            status = HttpStatus.OK;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setMessage("서버 오류");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        Item findItem = itemService.getById(itemId);
+        result.setData(findItem);
+        result.setMessage("물품 조회에 성공했습니다.");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Item>>(result, status);
     }
@@ -137,16 +121,9 @@ public class ItemController {
         ResVO<Item> result = new ResVO<>();
         HttpStatus status;
 
-        try {
-            itemService.changeStatus(itemId, used);
-            result.setMessage("물품 수정에 성공했습니다.");
-            status = HttpStatus.NO_CONTENT;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setMessage("서버 오류");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        itemService.changeStatus(itemId, used);
+        result.setMessage("물품 수정에 성공했습니다.");
+        status = HttpStatus.NO_CONTENT;
 
         return new ResponseEntity<ResVO<Item>>(result, status);
     }
@@ -163,16 +140,10 @@ public class ItemController {
         ResVO<Item> result = new ResVO<>();
         HttpStatus status;
 
-        try {
-            itemService.deleteById(itemId);
-            result.setMessage("물품 수정에 성공했습니다.");
-            status = HttpStatus.NO_CONTENT;
+        itemService.deleteById(itemId);
+        result.setMessage("물품 수정에 성공했습니다.");
+        status = HttpStatus.NO_CONTENT;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setMessage("서버 오류");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
 
         return new ResponseEntity<ResVO<Item>>(result, status);
     }
@@ -215,8 +186,6 @@ public class ItemController {
         ResVO<List<ItemRes>> result = new ResVO<>();
         HttpStatus status = null;
 
-        System.out.println("유저 조회");
-
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         result.setData(itemService
                 .getItemsUsingFilter(itemSearch, userDetails.getUserId())
@@ -227,5 +196,24 @@ public class ItemController {
         status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
+    }
+
+    @DeleteMapping("/used/{bktId}")
+    @Operation(summary = "휴지통 비우기", description = "바구니의 사용된 아이템을 전부 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Integer>> deleteUsedItems(@PathVariable @Parameter Long bktId){
+        ResVO<Integer> result = new ResVO<>();
+        HttpStatus status = null;
+
+        result.setData(itemService.deleteUsedItemInBasket(bktId));
+        result.setMessage("휴지통 비우기 성공");
+        status = HttpStatus.OK;
+
+        return new ResponseEntity<ResVO<Integer>>(result, status);
     }
 }
