@@ -3,16 +3,17 @@ import {LoginApiInstance} from './instance';
 export interface Item {
   itemId: number;
   name: string;
-  regDate: Date;
+  regDate: string;
   alertBy: string;
-  shelfLife: Date;
-  usedDate: Date;
+  shelfLife: string;
+  usedDate: string;
   category: string;
   content: string;
   pictureUrl: string;
   dday: number;
   barcode: number;
   used: boolean;
+  basketName: string;
 }
 
 export interface ItemReq {
@@ -35,6 +36,11 @@ async function getItems(basketId: number, used?: boolean): Promise<Item[]> {
   }
 }
 
+async function getItem(itemId: any): Promise<T> {
+  const axios = LoginApiInstance();
+  return await axios.get(`/item/${itemId}`);
+}
+
 async function registerItem(item: ItemReq): Promise<void> {
   const axios = LoginApiInstance();
   await axios.post('/item', JSON.stringify(item));
@@ -51,4 +57,4 @@ async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
 
-export {getItems, barcodeItemInfo, registerItem, changeItemStatus};
+export {getItems, getItem, barcodeItemInfo, registerItem, changeItemStatus};

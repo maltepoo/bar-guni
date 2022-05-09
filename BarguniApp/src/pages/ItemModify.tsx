@@ -17,6 +17,7 @@ import {
 import {RootStackParamList} from '../../AppInner';
 import {Button, TextInput} from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import {Item} from '../api/item';
 
 function ItemModify() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -25,33 +26,36 @@ function ItemModify() {
   const [expOpen, setExpOpen] = useState(false);
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
-  console.log(route.params);
-
+  const propsItem = route.params as Item;
+  const [item, setItem] = useState(propsItem);
   return (
     <View>
       <ScrollView>
         <View style={Style.imageBox}>
-          <Image
-            style={Style.image}
-            source={require('../assets/close.png')}></Image>
+          <Image style={Style.image} source={require('../assets/close.png')} />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>제품명 </Text>
-          <TextInput activeUnderlineColor={'#0094FF'} style={Style.description}>
-            마데카솔
-          </TextInput>
+          <TextInput
+            activeUnderlineColor={'#0094FF'}
+            value={item.name}
+            style={Style.description}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>바구니 </Text>
-          <TextInput activeUnderlineColor={'#0094FF'} style={Style.description}>
-            B202 바구니
-          </TextInput>
+          <TextInput
+            activeUnderlineColor={'#0094FF'}
+            value={item.basketName}
+            style={Style.description}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>카테고리 </Text>
-          <TextInput activeUnderlineColor={'#0094FF'} style={Style.description}>
-            냉장고
-          </TextInput>
+          <TextInput
+            activeUnderlineColor={'#0094FF'}
+            style={Style.description}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>등록일자 </Text>
@@ -72,7 +76,8 @@ function ItemModify() {
             }}
             onCancel={() => {
               setRegOpen(false);
-            }}></DateTimePicker>
+            }}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>유통기한 </Text>
@@ -93,7 +98,8 @@ function ItemModify() {
             }}
             onCancel={() => {
               setExpOpen(false);
-            }}></DateTimePicker>
+            }}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>상세설명</Text>
@@ -101,10 +107,9 @@ function ItemModify() {
             activeUnderlineColor={'#0094FF'}
             numberOfLines={5}
             style={Style.description}
-            multiline={true}>
-            언제 산지 모르겠음..언제 산지 모르겠음.. 언제 산지 모르겠음..언제
-            산지 모르겠음..
-          </TextInput>
+            multiline={true}
+            value={item.content}
+          />
         </View>
         <View style={Style.buttonContent}>
           <Button style={Style.modify} mode="contained">
@@ -142,7 +147,7 @@ const Style = StyleSheet.create({
   },
   buttonContent: {
     flexDirection: 'row',
-    marginLeft: 290,
+    marginLeft: '40%',
     marginTop: 20,
     marginBottom: 7,
   },
