@@ -34,17 +34,10 @@ public class PictureController {
         ResVO<PictureRes> result = new ResVO<>();
         HttpStatus status;
 
-        try {
-            Picture picture = pictureService.create(image, entity);
-            result.setData(new PictureRes(picture));
-            result.setMessage("이미지 등록에 성공했습니다.");
-            status = HttpStatus.CREATED;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.setMessage("서버 오류");
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        Picture picture = pictureService.create(image, entity);
+        result.setData(new PictureRes(picture));
+        result.setMessage("이미지 등록에 성공했습니다.");
+        status = HttpStatus.CREATED;
 
         return new ResponseEntity<ResVO<PictureRes>>(result, status);
     }
