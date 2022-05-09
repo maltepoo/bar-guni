@@ -8,6 +8,7 @@ export interface User {
   refreshToken: string;
   name: string;
   email: string;
+  newName: string;
 }
 export enum SocialType {
   KAKAO = 'kakao',
@@ -24,11 +25,22 @@ async function login(type: SocialType, token: string): Promise<User> {
 
 async function getProfile(): Promise<User> {
   const loginAxios = LoginApiInstance();
-  return (await loginAxios.get('/user/')).data.data;
+  return (await loginAxios.get('/user')).data.data;
 }
+
+async function changeName(newName: string): Promise<User> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.put(`/user?name=${newName}`)).data.data;
+}
+
+async function signOut(): Promise<User> {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.delete(`/user`)).data.data;
+}
+
 async function getBaskets(): Promise<Basket[]> {
   const loginAxios = LoginApiInstance();
   return (await loginAxios.get('/user/basket')).data.data;
 }
 
-export {login, getProfile, getBaskets};
+export {login, getProfile, changeName, signOut, getBaskets};

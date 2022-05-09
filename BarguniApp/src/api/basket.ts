@@ -14,7 +14,6 @@ async function registerBasket(
   basketImg?: string,
 ): Promise<void> {
   const axios = LoginApiInstance();
-  console.log(basketName, ' 바구니 이름 ');
   await axios.post(`/basket/?name=${encodeURI(basketName)}`, {
     basketImg: basketImg,
   });
@@ -25,4 +24,9 @@ async function getBasketInfo(basketId: number) {
   return (await axios.get(`/basket/${basketId}`)).data.data;
 }
 
-export {registerBasket, getBasketInfo};
+async function deleteBasket(basketId: number) {
+  const axios = LoginApiInstance();
+  return (await axios.delete(`/basket/${basketId}`)).data.data;
+}
+
+export {registerBasket, getBasketInfo, deleteBasket};

@@ -10,4 +10,18 @@ async function getCategory(basketId: number): Promise<Category[]> {
   return (await axios.get(`/basket/category/${basketId}`)).data.data;
 }
 
-export {getCategory};
+async function registerCategory(
+  basketId: number,
+  categoryName: string,
+): Promise<Category[]> {
+  const axios = LoginApiInstance();
+  return (await axios.post(`basket/category/${basketId}?name=${categoryName}`))
+    .data.data;
+}
+
+async function deleteCategory(categoryId: number) {
+  const axios = LoginApiInstance();
+  return (await axios.delete(`basket/category/${categoryId}`)).data.data;
+}
+
+export {getCategory, registerCategory, deleteCategory};

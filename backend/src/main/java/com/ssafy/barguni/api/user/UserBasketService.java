@@ -1,7 +1,11 @@
 package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.repository.BasketRepository;
 import com.ssafy.barguni.api.basket.service.BasketService;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.error.Exception.UsersException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,22 +13,34 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.barguni.api.error.ErrorCode.BASKET_NOT_FOUNDED;
+import static com.ssafy.barguni.api.error.ErrorCode.USER_NOT_FOUNDED;
 
+import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class UserBasketService {
 
+    private final UserRepository userRepository;
     private final UserBasketRepository userBasketRepository;
     private final BasketService basketService;
+    private final BasketRepository basketRepository;
 
     public List<UserBasket> findByUserId(Long userId) {
-        return userBasketRepository.findByUserId(userId);
+        User user = userRepository.getById(userId);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+
+        List<UserBasket> userBaskets = userBasketRepository.findByUserId(userId);
+
+        return userBaskets;
     }
 
-    public Optional<UserBasket> addBasket(User user, Long bkt_id) {
-        UserBasket userBasket = new UserBasket();
+    public Optional<UserBasket> addBasket(Long user_id, Long bkt_id) {
+        User user = userRepository.getById(user_id);
         Basket basket = basketService.getBasket(bkt_id);
+        UserBasket userBasket = new UserBasket();
 
         userBasket.setUser(user);
         userBasket.setBasket(basket);
@@ -35,12 +51,17 @@ public class UserBasketService {
         return Optional.ofNullable(userBasket);
     }
 
-    public void deleteBybktId(User user, Long bkt_id) {
-        userBasketRepository.deleteById(user.getId(), bkt_id);
-    }
-
     public UserBasket findByUserAndBasket(Long userId, Long basketId){
-        return userBasketRepository.findByUserIdAndBasketId(userId, basketId);
+        if(!userRepository.existsById(userId))
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        if(!basketRepository.existsById(basketId))
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
+
+        UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
+        if(userBasket == null)
+            throw new UsersException(new ErrorResVO(USER_BASKET_NOT_FOUNDED));
+
+        return userBasket;
     }
 
     public Boolean existsByUserAndBasket(Long userId, Long basketId){
@@ -54,10 +75,22 @@ public class UserBasketService {
     }
 
     public boolean existsBybktId(Long user_id, Long bkt_id) {
+        if(!userRepository.existsById(user_id))
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        if(!basketRepository.existsById(bkt_id))
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
+
         return userBasketRepository.existsBybktId(user_id, bkt_id);
     }
 
-    public void deleteById(Long u_b_id) {
+    public void deleteById(Long user_id, Long u_b_id) {
+        User user = userRepository.getById(user_id);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+
+        // 바구니 탈퇴시 갖고 있던 것들 다 사라지게 해야함.
+
+
         userBasketRepository.deleteById(u_b_id);
     }
 }

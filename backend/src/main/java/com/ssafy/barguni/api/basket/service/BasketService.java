@@ -1,9 +1,12 @@
 package com.ssafy.barguni.api.basket.service;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureEntity;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
+import com.ssafy.barguni.api.basket.repository.CategoryRepository;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.ItemRepository;
@@ -19,27 +22,29 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Random;
 
 import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BasketService {
     private final BasketRepository basketRepository;
     private final UserBasketRepository userBasketRepository;
     private final PictureRepository pictureRepository;
     private final ItemRepository itemRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public Long createBasket(String name, MultipartFile multipartFile, User user) {
         Basket basket = new Basket();
         basket.setName(name);
-
         // 그림도 넣기
         if(multipartFile != null
                 && !multipartFile.isEmpty())
         {
-            Picture picture = ImageUtil.create(multipartFile, "Basket");
+            Picture picture = ImageUtil.create(multipartFile, PictureEntity.BASKET);
             pictureRepository.save(picture);
             basket.setPicture(picture);
         }
@@ -51,18 +56,20 @@ public class BasketService {
         } while(basketRepository.existsByJoinCode(joinCode));
         basket.setJoinCode(joinCode);
 
+        basket = basketRepository.save(basket);
 
-        Basket save = basketRepository.save(basket);
+        // 기본 카테고리 생성
+        categoryRepository.save(new Categories(basket, "기본"));
 
         // UserBasket 중계 테이블에 기록
         UserBasket userBasket = new UserBasket();
-        userBasket.setBasket(save);
+        userBasket.setBasket(basket);
         userBasket.setUser(user);
         userBasket.setAuthority(UserAuthority.ADMIN);
         userBasketRepository.save(userBasket);
 
 
-        return save.getId();
+        return basket.getId();
     }
 
     public Basket getBasket(Long id){
@@ -86,6 +93,7 @@ public class BasketService {
         }
     }
 
+    @Transactional
     public Boolean deleteBasket(Long basketId, Long userId) {
         // 관리자가 아닌 경우
         UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
@@ -101,6 +109,9 @@ public class BasketService {
         Basket basket = basketRepository.getById(basketId);
         // 관계 삭제
         userBasketRepository.delete(userBasket);
+        // 카테고리 삭제
+        categoryRepository.deleteByBasketId(basketId);
+        // 바구니 삭제
         basketRepository.deleteById(basketId);
         // 이미지 삭제
         if(basket.getPicture() != null)
@@ -123,4 +134,7 @@ public class BasketService {
         return basketRepository.findByJoinCode(joinCode).get();
     }
 
+    public List<UserBasket> getUsers(Long basketId) {
+        return userBasketRepository.findAllUserByBasketId(basketId);
+    }
 }

@@ -30,16 +30,14 @@ import TrashCan from './src/pages/TrashCan';
 import Alarm from './src/pages/Alarm';
 import BasketDetail from './src/pages/BasketDetail';
 import * as RootNavigation from './RootNavigation';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import Login from './src/pages/Login';
 import RegisterModal from './src/pages/RegisterModal';
-import {getBaskets, getBaskets2, getTest, setJwtToken} from './src/api/basket';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import HeaderRight from './src/components/HeaderRight';
+import Barcode from './src/pages/Barcode';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -58,6 +56,7 @@ export type RootStackParamList = {
   ItemList: undefined;
   ItemModify: Object;
   RegisterModal: undefined;
+  Barcode: undefined;
 };
 
 function AppInner() {
@@ -65,12 +64,7 @@ function AppInner() {
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
-  const goAlarm = useCallback(() => {
-    RootNavigation.navigate('Alarm');
-  }, []);
-  const goSearch = useCallback(() => {
-    RootNavigation.navigate('Search');
-  }, []);
+
   const Tab = createBottomTabNavigator();
   function BottomTab() {
     return (
@@ -80,8 +74,16 @@ function AppInner() {
           component={Home}
           options={{
             title: '홈',
-            tabBarActiveTintColor: 'blue',
-            headerShown: false,
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: true,
+            headerRight: () => <HeaderRight />,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="home"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
           }}
         />
         <Tab.Screen
@@ -89,8 +91,16 @@ function AppInner() {
           component={RegisterModal}
           options={{
             title: '등록',
-            tabBarActiveTintColor: 'blue',
-            headerShown: false,
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: true,
+            headerRight: () => <HeaderRight />,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="inbox"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
           }}
         />
         <Tab.Screen
@@ -98,8 +108,16 @@ function AppInner() {
           component={Settings}
           options={{
             title: '설정',
-            tabBarActiveTintColor: 'blue',
-            headerShown: false,
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: true,
+            headerRight: () => <HeaderRight />,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="ellipsis1"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
           }}
         />
         <Tab.Screen
@@ -107,8 +125,15 @@ function AppInner() {
           component={Search}
           options={{
             title: '검색',
-            tabBarActiveTintColor: 'blue',
-            headerShown: false,
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: true,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="search1"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
           }}
         />
       </Tab.Navigator>
@@ -117,26 +142,19 @@ function AppInner() {
   const Stack = createNativeStackNavigator();
   return isLogin ? (
     <>
-      <View style={style.header}>
-        <Pressable onPress={back}>
-          <Image
-            style={style.tinyLogo}
-            source={require('./src/assets/back.png')}
-          />
-        </Pressable>
-        <Pressable onPress={goSearch}>
-          <Image
-            style={style.tinyLogoLeft}
-            source={require('./src/assets/search.png')}
-          />
-        </Pressable>
-        <Pressable onPress={goAlarm}>
-          <Image
-            style={style.tinyLogo}
-            source={require('./src/assets/bell.png')}
-          />
-        </Pressable>
-      </View>
+      {/*<View style={style.header}>*/}
+      {/*  <Pressable onPress={back}>*/}
+      {/*    <AntDesign name="left" size={20} style={style.topBarIcon} />*/}
+      {/*  </Pressable>*/}
+      {/*  <View>*/}
+      {/*    <Pressable onPress={goSearch}>*/}
+      {/*      <AntDesign name="search1" size={20} style={style.topBarIcon} />*/}
+      {/*    </Pressable>*/}
+      {/*    <Pressable onPress={goAlarm}>*/}
+      {/*      <AntDesign name="bells" size={20} style={style.topBarIcon} />*/}
+      {/*    </Pressable>*/}
+      {/*  </View>*/}
+      {/*</View>*/}
       <Stack.Navigator>
         <Stack.Screen
           name="BottomTab"
@@ -146,47 +164,63 @@ function AppInner() {
         <Stack.Screen
           name="Search"
           component={Search}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="SearchResult"
           component={SearchResult}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="AlarmSetting"
           component={AlarmSetting}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="MyPage"
           component={MyPage}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="BasketSetting"
           component={BasketSetting}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="TrashCan"
           component={TrashCan}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="Alarm"
           component={Alarm}
-          options={{headerShown: false}}
+          options={{
+            title: '알림',
+            headerLeft: () => (
+              <AntDesign
+                name="left"
+                size={20}
+                style={style.topBarIcon}
+                onPress={back}
+              />
+            ),
+            headerShown: true,
+          }}
         />
         <Stack.Screen
           name="BasketDetail"
           component={BasketDetail}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
         />
         <Stack.Screen
           name="Register"
           component={Register}
-          options={{headerShown: false}}
+          options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="Barcode"
+          component={Barcode}
+          options={{title: '바코드로 등록하기', headerShown: true}}
         />
       </Stack.Navigator>
     </>
@@ -213,6 +247,10 @@ const style = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  topBarIcon: {
+    color: 'black',
   },
 });
 

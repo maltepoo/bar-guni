@@ -27,7 +27,7 @@ public class PictureService {
     }
 
     @Transactional
-    public Picture create(MultipartFile multipartFile, String entity){
+    public Picture create(MultipartFile multipartFile, PictureEntity entity){
         return picRepository.save(ImageUtil.create(multipartFile, entity));
     }
 
@@ -44,9 +44,5 @@ public class PictureService {
         Picture picture = picRepository.getById(pictureId);
         return ImageUtil.update(picture, multipartFile);
     }
-
-//    public Picture createPicByProdName(String prodName) {
-//
-//    }
 
 }

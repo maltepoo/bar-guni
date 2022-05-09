@@ -40,8 +40,20 @@ public class ItemService {
         }
 
         Basket bkt = basketService.getBasket(req.getBktId());
-        Picture pic = pictureService.getById(req.getPicId());
-        Categories cate = categoryService.getById(req.getCateId());
+
+        Picture pic;
+        if (req.getPicId() != null) {
+            pic = pictureService.getById(req.getPicId());
+        } else {
+            pic = pictureService.getById((long) 1);
+        }
+
+        Categories cate;
+        if (req.getCateId() != null){
+            cate = categoryService.getById(req.getCateId());
+        } else {
+            cate = categoryService.getByBasketId(req.getBktId()).get(0);
+        }
 
         Item item = Item.createItem(bkt, pic, cate, req);
         return itemRepository.save(item);
@@ -108,7 +120,7 @@ public class ItemService {
         itemRepository.deleteById(id);
     }
 
-    public List<Item> getAllInBasket(Long basketId, Long userId){
+    public List<Item> getAllInBasket(Long basketId, Long userId, Boolean used){
 
         // 참여 중인 바구니 전체 조회인 경우
         if(basketId == -1){
@@ -116,13 +128,13 @@ public class ItemService {
                     .stream()
                     .map(e -> e.getBasket().getId())
                     .collect(Collectors.toList());
-            return itemRepository.getMyAllItems(basketIds);
+            return itemRepository.getMyAllItems(basketIds, used);
         }
         else {
             // 해당 바구니 접근 권한이 없는 경우
             if(!userBasketService.existsByUserAndBasket(userId, basketId))
                 throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
-            return itemRepository.getAllInBasket(basketId);
+            return itemRepository.getAllInBasket(basketId, used);
         }
     }
 
@@ -164,5 +176,9 @@ public class ItemService {
         Long bktId = item.getBasket().getId();
         if (userBasketService.findByUserAndBasket(userId, bktId) != null) return true;
         return false;
+    }
+
+    public Integer deleteUsedItemInBasket(Long bktId) {
+        return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
     }
 }

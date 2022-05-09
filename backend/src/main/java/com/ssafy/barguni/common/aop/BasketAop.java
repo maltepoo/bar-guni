@@ -39,7 +39,7 @@ public class BasketAop {
         log.debug("basket aop 출력");
 
         // 바구니 생성일 땐, 접근성 검사 제외
-        if(method.equals("createBasket"))
+        if(method.getName().equals("createBasket"))
             return;
 
         Object[] args = joinPoint.getArgs();

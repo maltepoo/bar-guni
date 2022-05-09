@@ -12,12 +12,12 @@ type RegisterModalScreenProps = NativeStackScreenProps<
 function RegisterModal({navigation}: RegisterModalScreenProps) {
   const byReceipt = useCallback(() => {
     RootNavigation.navigate('Register');
-  }, [navigation]);
+  }, []);
   const byBarcode = useCallback(() => {
-    // navigation.navigate('');
-  }, [navigation]);
+    navigation.navigate('Barcode');
+  }, []);
   const bySelf = useCallback(() => {
-    // navigation.navigate('');
+    RootNavigation.navigate('Register');
   }, []);
   return (
     <View style={styles.container}>

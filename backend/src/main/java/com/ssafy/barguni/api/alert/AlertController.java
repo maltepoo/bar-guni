@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class AlertController {
     private final AlertService alertService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "알림 조회", description = "알림을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),

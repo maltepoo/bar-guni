@@ -4,11 +4,13 @@ import {RootStackParamList} from '../../AppInner';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Divider} from '@rneui/base';
 import {Item} from '../api/item';
+import {getCategory} from '../api/category';
 interface HomeItem {
   item: Item;
+  category: string;
 }
+
 function HomeItems(props: HomeItem) {
-  console.log(props, 'props');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const deleteItem = useCallback(() => {
     // Todo : 삭제 할 아이템
@@ -17,7 +19,7 @@ function HomeItems(props: HomeItem) {
   //   // navigation.navigate('ItemDetail', test);
   // }, [navigation]);
   const item = props.item;
-  return (
+  return item.category === props.category ? (
     <Pressable>
       <View style={Style.container}>
         <View style={Style.row}>
@@ -32,9 +34,7 @@ function HomeItems(props: HomeItem) {
         </View>
         <View style={Style.row3}>
           <Text style={Style.dDay}>D - {item.dday}</Text>
-          <Text style={Style.lifetime}>
-            유통기한: {item.usedDate.toString()}
-          </Text>
+          <Text style={Style.lifetime}>유통기한: {item.shelfLife}</Text>
         </View>
         <View style={Style.container}>
           <Pressable onPress={deleteItem}>
@@ -53,6 +53,8 @@ function HomeItems(props: HomeItem) {
         />
       </View>
     </Pressable>
+  ) : (
+    <></>
   );
 }
 const Style = StyleSheet.create({
@@ -102,7 +104,7 @@ const Style = StyleSheet.create({
     fontSize: 15,
   },
   cancel: {
-    marginTop: 5,
+    marginTop: 15,
     width: 13,
     height: 13,
   },

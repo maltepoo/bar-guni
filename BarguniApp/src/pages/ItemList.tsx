@@ -1,7 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import HomeItems from '../components/HomeItems';
 import {Picker} from '@react-native-picker/picker';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
@@ -9,50 +17,187 @@ import {RootState} from '../store/reducer';
 import {getBaskets, getProfile} from '../api/user';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
-import {Basket, getBasketInfo} from '../api/basket';
-import {Button} from '@rneui/base';
-import {getCategory} from '../api/category';
+import {
+  Basket,
+  deleteBasket,
+  getBasketInfo,
+  registerBasket,
+} from '../api/basket';
+import {Button, Icon, Input, SpeedDial} from '@rneui/base';
+import {
+  Category,
+  deleteCategory,
+  getCategory,
+  registerCategory,
+} from '../api/category';
 import {getItems, Item} from '../api/item';
+import {Dialog} from '@rneui/themed';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
 >;
 
 function ItemList({navigation}: ItemListScreenProps) {
+  const user = useSelector((state: RootState) => state.user);
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
-  const [category, setCategory] = useState([{cateId: -1, name: '전체'}]);
-  const [selectedBasket, setSelectedBasket] = useState(basket[0]);
+  const [category, setCategory] = useState([] as Category[]);
+  const [selectedBasket, setSelectedBasket] = useState({
+    bkt_id: 0,
+  });
   const [selectedCategory, setselectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
+  const [open, setOpen] = useState(false);
+  const [basketDialog, setBasketDialog] = useState(false);
+  const [categoryDialog, setCategoryDialog] = useState(false);
+  const [categoryName, setCategoryName] = useState('');
+  const [basketName, setBasketName] = useState('');
+  const dispatch = useAppDispatch();
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState(0);
+  const [deleteMode, setDeleteMode] = useState('');
+
+  const toggleDeleteDialog = useCallback(() => {
+    setDeleteDialog(!deleteDialog);
+  }, [deleteDialog]);
+
+  const toggleBasketDialog = useCallback(() => {
+    setBasketDialog(!basketDialog);
+  }, [basketDialog]);
+
+  const toggleCategoryDialog = useCallback(() => {
+    setCategoryDialog(!categoryDialog);
+  }, [categoryDialog]);
+
+  const onChangeBasketName = useCallback(text => {
+    setBasketName(text);
+  }, []);
+
+  const onChangeCategoryName = useCallback(text => {
+    setCategoryName(text);
+  }, []);
+
   const selectCategory = useCallback(index => {
-    // console.log(index);
     setselectedCategory(index);
     // Todo:카테고리를 바꾸면 아래 항목 리스트도 바뀌어야함
   }, []);
-  const renderItem = useCallback(({item}: {item: Item}) => {
-    console.log('renderItem', item);
-    return <HomeItems item={item} />;
-  }, []);
 
-  const dispatch = useAppDispatch();
+  const renderItem = useCallback(
+    ({item}: {item: Item}) => {
+      return (
+        <HomeItems item={item} category={category[selectedCategory].name} />
+      );
+    },
+    [category, selectedCategory],
+  );
+
   useEffect(() => {
     async function init(): Promise<void> {
-      console.log('init');
-      const user = await getProfile();
-      await dispatch(userSlice.actions.setUserName(user));
-      const baskets = await getBaskets();
-      setBasket(baskets);
-      const categoryRes = await getCategory(baskets[0].bkt_id);
-      console.log(categoryRes);
-      const categoryList = [...category, ...categoryRes];
-      setCategory(categoryList);
-      const itemRes = await getItems(baskets[0].bkt_id);
-      setItems(itemRes);
+      try {
+        console.log('init');
+        const userRes = await getProfile();
+        await dispatch(userSlice.actions.setUserName(userRes));
+        const baskets = await getBaskets();
+        console.log(baskets, 'baskets');
+        setBasket(baskets);
+        setSelectedBasket(baskets[0]);
+        const categoryRes = await getCategory(baskets[0].bkt_id);
+        setCategory(categoryRes);
+        const itemRes = await getItems(baskets[0].bkt_id);
+        setItems(itemRes);
+      } catch (e) {}
     }
     init();
   }, [dispatch]);
-  const user = useSelector((state: RootState) => state.user);
+
+  const addBasket = useCallback(async () => {
+    try {
+      await registerBasket(basketName);
+      const res = await getBaskets();
+      setBasket(res);
+      setBasketName('');
+      setBasketDialog(false);
+    } catch (e) {}
+  }, [basketName]);
+
+  const addCategory = useCallback(async () => {
+    try {
+      await registerCategory(selectedBasket.bkt_id, categoryName);
+      const res = await getCategory(selectedBasket.bkt_id);
+      setCategory(res);
+      setCategoryDialog(false);
+      setCategoryName('');
+    } catch (e) {}
+  }, [selectedBasket.bkt_id, categoryName, setCategory]);
+
+  const changeBasket = useCallback(
+    async (id: number) => {
+      try {
+        console.log(id);
+        const res = await getCategory(id);
+        console.log(res, ' 카테고리 목록들');
+        setCategory(res);
+        const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
+        setSelectedBasket(selectBasket);
+        const itemRes = await getItems(id);
+        setItems(itemRes);
+      } catch (e) {}
+    },
+    [basket],
+  );
+
+  const showDeleteDialog = useCallback(
+    (index: number, mode: string) => {
+      setDeleteMode(mode);
+      console.log(index);
+      setDeleteIndex(index);
+      toggleDeleteDialog();
+    },
+    [toggleDeleteDialog],
+  );
+
+  const removeItem = useCallback(async () => {
+    console.log(basket[deleteIndex]);
+    try {
+      if (deleteMode === 'basket') {
+        const res2 = await deleteBasket(basket[deleteIndex].bkt_id);
+        console.log(res2, ' res2');
+        const res = await getBaskets();
+        setBasket(res);
+      } else if (deleteMode === 'category') {
+        console.log(category[deleteIndex], ' 카테고리 ');
+        await deleteCategory(category[deleteIndex].cateId);
+        console.log(selectedBasket, ' selected Basket');
+        const res = await getCategory(selectedBasket.bkt_id);
+        console.log(res, 'category list');
+        setCategory(res);
+      }
+      toggleDeleteDialog();
+    } catch (e) {
+      console.log(e);
+    }
+  }, [basket, deleteIndex, deleteMode, selectedBasket, toggleDeleteDialog]);
+
+  const DeleteConfirm = () => {
+    return (
+      <Dialog isVisible={deleteDialog} onBackdropPress={toggleDeleteDialog}>
+        <Dialog.Title title="정말로 삭제하시겠습니까?" />
+        <View style={Style.row}>
+          <View style={Style.buttonBox}>
+            <Button
+              title="삭제"
+              onPress={removeItem}
+              buttonStyle={Style.buttonBox2}
+            />
+          </View>
+          <View style={Style.buttonBox}>
+            <Button title="취소" onPress={toggleDeleteDialog} />
+          </View>
+        </View>
+      </Dialog>
+    );
+  };
+
   return (
     <View style={Style.container}>
       <View>
@@ -61,10 +206,10 @@ function ItemList({navigation}: ItemListScreenProps) {
         <Text style={Style.topText}>{count}개가 있어요</Text>
       </View>
       <Picker
-        selectedValue={selectedBasket}
+        selectedValue={selectedBasket.bkt_id}
         onValueChange={itemValue => {
+          changeBasket(itemValue).then();
           //Todo: 바구니 선택시 해당 카테고리로 바꿔줘야함
-          setSelectedBasket(itemValue);
         }}
         style={Style.dropdown}>
         {basket.map(item => (
@@ -96,18 +241,107 @@ function ItemList({navigation}: ItemListScreenProps) {
             />
           ))
         ) : (
-          <></>
+          <View />
         )}
       </ScrollView>
       <FlatList
+        style={Style.list}
         data={items}
         keyExtractor={item => item.itemId as any}
-        renderItem={renderItem}></FlatList>
+        renderItem={renderItem}
+      />
+      <SpeedDial
+        style={Style.modal}
+        isOpen={open}
+        icon={{name: 'edit', color: '#fff'}}
+        openIcon={{name: 'close', color: '#fff'}}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}
+        buttonStyle={{backgroundColor: '#32A3F5'}}>
+        <SpeedDial.Action
+          icon={{name: 'folder', color: '#fff'}}
+          title="카테고리 관리"
+          buttonStyle={{backgroundColor: '#32A3F5'}}
+          onPress={() => setCategoryDialog(true)}
+        />
+        <SpeedDial.Action
+          icon={{name: 'shopping-basket', color: '#fff'}}
+          title="바구니 관리"
+          buttonStyle={{backgroundColor: '#32A3F5'}}
+          onPress={() => {
+            setBasketDialog(true);
+          }}
+        />
+      </SpeedDial>
+      <Dialog isVisible={basketDialog} onBackdropPress={toggleBasketDialog}>
+        <Dialog.Title title="바구니 관리" />
+        <ScrollView style={Style.scroll}>
+          {basket.length > 0 ? (
+            basket.map((item, index) => (
+              <View style={Style.row} key={item.bkt_id}>
+                <Text style={Style.text}>{item.bkt_name}</Text>
+                <Pressable
+                  onPress={() => {
+                    showDeleteDialog(index, 'basket');
+                  }}>
+                  <Icon name={'cancel'} />
+                </Pressable>
+              </View>
+            ))
+          ) : (
+            <></>
+          )}
+        </ScrollView>
+        <Input
+          value={basketName}
+          onChangeText={onChangeBasketName}
+          placeholder="바구니 이름을 입력하세요"
+        />
+        <Button onPress={addBasket} title="완료" />
+        <DeleteConfirm />
+      </Dialog>
+
+      <Dialog isVisible={categoryDialog} onBackdropPress={toggleCategoryDialog}>
+        <Dialog.Title title="카테고리 관리" />
+        <ScrollView style={Style.scroll}>
+          {category.length > 0 ? (
+            category.map((item, index) => (
+              <View style={Style.row} key={item.cateId}>
+                <Text style={Style.text}>{item.name}</Text>
+                <Pressable
+                  onPress={() => {
+                    showDeleteDialog(index, 'category');
+                  }}>
+                  <Icon name={'cancel'} />
+                </Pressable>
+              </View>
+            ))
+          ) : (
+            <></>
+          )}
+        </ScrollView>
+        <Input
+          value={categoryName}
+          onChangeText={onChangeCategoryName}
+          placeholder="카테고리 이름을 입력하세요"
+        />
+        <Button onPress={addCategory} title="완료" />
+        <DeleteConfirm />
+      </Dialog>
     </View>
   );
 }
 
 const Style = StyleSheet.create({
+  modal: {
+    position: 'absolute',
+    flex: 0.1,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    height: 750,
+    alignItems: 'center',
+  },
   topText: {
     marginLeft: 12,
     marginTop: 3,
@@ -125,9 +359,8 @@ const Style = StyleSheet.create({
     color: 'black',
   },
   container: {
-    marginTop: 10,
-    marginLeft: 1,
-    marginRight: 1,
+    flex: 1,
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: 'rgba(0, 148, 255, 0.15)',
@@ -135,7 +368,7 @@ const Style = StyleSheet.create({
     marginRight: 4,
     borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
-    marginLeft: 2,
+    marginLeft: 4,
     height: 30,
     borderRadius: 20,
   },
@@ -149,10 +382,9 @@ const Style = StyleSheet.create({
   selectButton: {
     backgroundColor: 'rgba(0, 148, 255, 0.6)',
     marginTop: 3,
-    marginRight: 4,
+    marginLeft: 4,
     borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
-    marginLeft: 2,
     height: 30,
     borderRadius: 20,
   },
@@ -165,7 +397,29 @@ const Style = StyleSheet.create({
   category: {
     flexDirection: 'row',
     marginTop: 5,
-    height: 35,
+    marginLeft: 10,
+  },
+  list: {
+    height: '55%',
+  },
+  scroll: {
+    height: 100,
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  text: {
+    width: '90%',
+  },
+  buttonBox: {
+    marginRight: 20,
+    width: '45%',
+  },
+  buttonBox2: {
+    marginRight: 20,
+    width: '100%',
+    backgroundColor: 'red',
   },
 });
 
