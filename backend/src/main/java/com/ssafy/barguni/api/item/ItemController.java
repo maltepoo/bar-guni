@@ -59,7 +59,7 @@ public class ItemController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("/{itemId}")
     @Operation(summary = "물품 상세 조회", description = "물품 한개의 내용을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -80,7 +80,7 @@ public class ItemController {
     }
 
 
-    @PutMapping("")
+    @PutMapping("/{itemId}")
     @Operation(summary = "물품 수정", description = "물품 내용을 수정한다. 수정할 필드만 값을 채워 보낸다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -108,7 +108,7 @@ public class ItemController {
         return new ResponseEntity<ResVO<Item>>(result, status);
     }
 
-    @PutMapping("/status")
+    @PutMapping("/status/{itemId}/{used}")
     @Operation(summary = "물품 상태변경", description = "물품을 휴지통으로 보내거나 복구한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -128,7 +128,7 @@ public class ItemController {
         return new ResponseEntity<ResVO<Item>>(result, status);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/{itemId}")
     @Operation(summary = "물품 삭제", description = "물품을 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
