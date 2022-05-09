@@ -8,25 +8,27 @@ import {getCategory} from '../api/category';
 interface HomeItem {
   item: Item;
   category: string;
+  remove: Function;
 }
 
 function HomeItems(props: HomeItem) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const item = props.item;
   const deleteItem = useCallback(async () => {
     // Todo : 삭제 할 아이템
     try {
       console.log(item.itemId, 'itemid');
-      const res = await changeItemStatus(item.itemId, true);
-      console.log(res, 'res');
+      await changeItemStatus(item.itemId, true);
+      props.remove(item.itemId);
     } catch (error) {
       console.log(error, 'error');
     }
     // console.log(item);
-  }, []);
+  }, [item.itemId, props]);
+  const shelfLife = new Date();
   // const onClick = useCallback(() => {
   //   // navigation.navigate('ItemDetail', test);
   // }, [navigation]);
-  const item = props.item;
   return item.category === props.category ? (
     <View>
       <View style={Style.container}>
@@ -41,8 +43,23 @@ function HomeItems(props: HomeItem) {
           <Text style={Style.date2}> {item.category}</Text>
         </Pressable>
         <View style={Style.row3}>
-          <Text style={Style.dDay}>D - {item.dday}</Text>
-          <Text style={Style.lifetime}>유통기한: {item.shelfLife}</Text>
+          <Text style={Style.dDay}>
+            D -{' '}
+            {item.dday === null
+              ? Math.abs(
+                  (new Date(item.shelfLife).getTime() - new Date().getTime()) /
+                    (1000 * 3600 * 24),
+                ).toFixed(0)
+              : item.dday}
+          </Text>
+          <Text style={Style.lifetime}>
+            유통기한:
+            {item.shelfLife === null
+              ? new Date(shelfLife.setDate(new Date().getDate() + item.dday))
+                  .toJSON()
+                  .substring(0, 10)
+              : item.shelfLife}
+          </Text>
         </View>
         <View style={Style.container}>
           <Pressable onPress={deleteItem}>
