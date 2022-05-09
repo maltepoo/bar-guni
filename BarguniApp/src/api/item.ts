@@ -53,16 +53,22 @@ async function barcodeItemInfo(barcode: number): Promise<Item> {
 
 async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   const loginAxios = LoginApiInstance();
-  console.log(itemId, used);
   return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
 async function modifyItem(itemId: number, item: ItemReq) {
   const axios = LoginApiInstance();
   await axios.put(`/item/${itemId}`, JSON.stringify(item));
 }
+
+async function deleteItem(itemId: number): Promise<void> {
+  const axios = LoginApiInstance();
+  await axios.delete(`/item/${itemId}`);
+}
+
 export {
   getItems,
   getItem,
+  deleteItem,
   barcodeItemInfo,
   registerItem,
   changeItemStatus,

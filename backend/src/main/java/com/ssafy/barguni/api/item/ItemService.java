@@ -135,6 +135,7 @@ public class ItemService {
             if(!userBasketService.existsByUserAndBasket(userId, basketId))
                 throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
             return itemRepository.getAllInBasket(basketId, used);
+//            return itemRepository.findItemsByBasket_IdAndUsed(basketId, used);
         }
     }
 
