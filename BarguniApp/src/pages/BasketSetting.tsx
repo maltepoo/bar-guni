@@ -15,7 +15,7 @@ function BasketSetting() {
   const getBasketList = useCallback(async () => {
     const res = await getBaskets();
     setBasketList(res);
-  });
+  }, [basketList]);
 
   const moveToSettingDetail = useCallback(item => {
     console.log('clicked!');
