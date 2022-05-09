@@ -26,9 +26,13 @@ export interface ItemReq {
   dday?: number;
 }
 
-async function getItems(basketId: number): Promise<Item[]> {
+async function getItems(basketId: number, used?: boolean): Promise<Item[]> {
   const axios = LoginApiInstance();
-  return (await axios.get(`/item/list/${basketId}`)).data.data;
+  if (used === undefined) {
+    return (await axios.get(`/item/list/${basketId}`)).data.data;
+  } else {
+    return (await axios.get(`/item/list/${basketId}?used=${used}`)).data.data;
+  }
 }
 
 async function registerItem(item: ItemReq): Promise<void> {
