@@ -38,6 +38,7 @@ import RegisterModal from './src/pages/RegisterModal';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import HeaderRight from './src/components/HeaderRight';
 import BasketSettingDetail from './src/pages/BasketSettingDetail';
+import Barcode from './src/pages/Barcode';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -56,6 +57,7 @@ export type RootStackParamList = {
   ItemList: undefined;
   ItemModify: Object;
   RegisterModal: undefined;
+  Barcode: undefined;
 };
 
 function AppInner() {
@@ -220,6 +222,11 @@ function AppInner() {
           name="Register"
           component={Register}
           options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="Barcode"
+          component={Barcode}
+          options={{title: '바코드로 등록하기', headerShown: true}}
         />
       </Stack.Navigator>
     </>

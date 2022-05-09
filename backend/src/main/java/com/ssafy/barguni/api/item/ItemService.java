@@ -177,4 +177,8 @@ public class ItemService {
         if (userBasketService.findByUserAndBasket(userId, bktId) != null) return true;
         return false;
     }
+
+    public Integer deleteUsedItemInBasket(Long bktId) {
+        return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
+    }
 }

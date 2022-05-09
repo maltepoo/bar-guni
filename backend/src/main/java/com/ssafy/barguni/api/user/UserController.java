@@ -59,22 +59,22 @@ public class UserController {
             return new ResponseEntity<ResVO<TokenRes>>(result, status);
         }
 
-        //
         User user = userService.findByEmail(email);
-        status = HttpStatus.OK;
+
         String accessToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.ACCESS);
         String refreshToken = JwtTokenUtil.getToken(user.getId().toString(), TokenType.REFRESH);
 
         TokenRes tokenRes = new TokenRes(accessToken, refreshToken);
         result.setData(tokenRes);
         result.setMessage("성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<TokenRes>>(result, status);
     }
 
     /**
      * 사용자로부터 SNS 로그인 요청을 Social Login Type 을 받아 처리
-     * @param socialLoginType (GOOGLE, FACEBOOK, NAVER, KAKAO)
+     * @param socialLoginType (GOOGLE, KAKAO)
      */
     @GetMapping("/oauth-login/{socialLoginType}")
     @Operation(summary = "SNS 로그인 폼", description = "SNS 로그인 폼을 요쳥한다.")
@@ -86,7 +86,6 @@ public class UserController {
     })
     public void socialLoginType(
             @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType) {
-        log.info(">> 사용자로부터 SNS 로그인 요청을 받음 :: {} Social Login", socialLoginType);
         oauthService.request(socialLoginType);
     }
 
@@ -107,7 +106,6 @@ public class UserController {
     public ResponseEntity<ResVO<TokenRes>> snsLogin(
             @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
             @RequestParam(name = "code") String code) throws Exception {
-        log.info(">> 소셜 로그인 API 서버로부터 받은 code :: {}", code);
 
         ResVO<TokenRes> result = new ResVO<>();
         HttpStatus status = null;
@@ -215,17 +213,11 @@ public class UserController {
         ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User nowUser = userService.findById(userDetails.getUserId());
-            status = HttpStatus.OK;
-            result.setData(UserRes.convertTo(nowUser));
-            result.setMessage("조회 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("조회 실패");
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        User nowUser = userService.findById(userDetails.getUserId());
+        status = HttpStatus.OK;
+        result.setData(UserRes.convertTo(nowUser));
+        result.setMessage("사용자 조회 성공");
 
         return new ResponseEntity<ResVO<UserRes>>(result, status);
     }
@@ -244,18 +236,13 @@ public class UserController {
         ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
-        try{
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-            User user = userService.changeUser(userDetails.getUserId(), name).get();
-//            User user = userService.modifyUser(userDetails.getUserId(), name);
-            result.setData(UserRes.convertTo(user));
-            result.setMessage("유저 정보 수정 성공");
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-        }
+        User user = userService.changeUser(userDetails.getUserId(), name).get();
+        result.setData(UserRes.convertTo(user));
+        result.setMessage("유저 정보 수정 성공");
+        status = HttpStatus.OK;
+
         return new ResponseEntity<ResVO<UserRes>>(result, status);
     }
 
@@ -269,17 +256,10 @@ public class UserController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User user = userService.findById(userDetails.getUserId());
-            userService.deleteById(user.getId());
-            resultMap.put("message", "성공");
-            status = HttpStatus.OK;
-
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            resultMap.put("message", "서버 오류");
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        userService.deleteById(userDetails.getUserId());
+        resultMap.put("message", "성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
@@ -295,18 +275,12 @@ public class UserController {
         ResVO<List<UserBasketRes>> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            List<UserBasket> bktOfUser = userBasketService.findByUserId(userDetails.getUserId());
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        List<UserBasket> bktOfUser = userBasketService.findByUserId(userDetails.getUserId());
 
-
-            result.setMessage("바구니 리스트 조회 성공");
-            result.setData(UserBasketRes.convertToUbResList(bktOfUser));
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("서버 오류");
-        }
+        result.setMessage("바구니 리스트 조회 성공");
+        result.setData(UserBasketRes.convertToUbResList(bktOfUser));
+        status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<List<UserBasketRes>>>(result, status);
     }
@@ -319,31 +293,22 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<Map<String, Object>> joinBasket(
-//            @PathVariable @Parameter(description = "바구니 ID") Long bkt_id,
             @RequestParam String joinCode ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User user = userService.findById(userDetails.getUserId());
-            Basket basket = basketService.findByJoinCode(joinCode);
-            System.out.println("~~~~~");
-            boolean check = userBasketService.existsBybktId(user.getId(), basket.getId());
-            System.out.println("~~~~~" + check);
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Basket basket = basketService.findByJoinCode(joinCode);
 
-            if ( !userBasketService.existsBybktId(user.getId(), basket.getId()) && userBasketService.addBasket(user, basket.getId()).isPresent()) {
-                resultMap.put("message", "성공");
-            } else {
-                resultMap.put("message", "이미 참여한 바구니입니다.");
-            }
-            status = HttpStatus.OK;
+        // 이미 참여되어 있는지 확인
+        boolean check = userBasketService.existsBybktId(userDetails.getUserId(), basket.getId());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            resultMap.put("message", "서버 오류");
+        if ( !check && userBasketService.addBasket(userDetails.getUserId(), basket.getId()).isPresent()) {
+            resultMap.put("message", "성공");
+        } else {
+            resultMap.put("message", "이미 참여한 바구니입니다.");
         }
+        status = HttpStatus.OK;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
@@ -360,18 +325,10 @@ public class UserController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            User user = userService.findById(userDetails.getUserId());
-            userBasketService.deleteById(u_b_id);
-//            userBasketService.deleteBybktId(user, bkt_id);
-            resultMap.put("message", "성공");
-            status = HttpStatus.OK;
-
-        } catch (Exception e) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            resultMap.put("message", "서버 오류");
-        }
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        userBasketService.deleteById(userDetails.getUserId(), u_b_id);
+        resultMap.put("message", "성공");
+        status = HttpStatus.OK;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
@@ -389,28 +346,19 @@ public class UserController {
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            Long reqUserId = userDetails.getUserId();
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        UserBasket ub = userBasketService.findByUserAndBasket(userDetails.getUserId(), basketId);
 
-            UserBasket ub = userBasketService.findByUserAndBasket(reqUserId, basketId);
-
-            if(ub.getAuthority() != UserAuthority.ADMIN){
-                status = HttpStatus.UNAUTHORIZED;
-                result.setMessage("권한 변경 실패");
-                result.setData(false);
-            }
-            else {
-                userBasketService.modifyAuthority(basketId, userId, authority);
-                status = HttpStatus.OK;
-                result.setMessage("권한 변경 성공");
-                result.setData(true);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        if(ub.getAuthority() != UserAuthority.ADMIN){
+            status = HttpStatus.UNAUTHORIZED;
             result.setMessage("권한 변경 실패");
             result.setData(false);
+        }
+        else {
+            userBasketService.modifyAuthority(basketId, userId, authority);
+            status = HttpStatus.OK;
+            result.setMessage("권한 변경 성공");
+            result.setData(true);
         }
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);
@@ -428,23 +376,13 @@ public class UserController {
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 
-        try {
-            AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-            Long userId = userDetails.getUserId();
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Basket defaultBasket = basketService.getBasket(basketId);
 
-            Basket defaultBasket = basketService.getBasket(basketId);
-
-            userService.modifyDefault(userId, defaultBasket);
-            status = HttpStatus.OK;
-            result.setMessage("기본 바구니 변경 성공");
-            result.setData(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            result.setMessage("기본 바구니 변경 실패");
-            result.setData(false);
-        }
+        userService.modifyDefault(userDetails.getUserId(), defaultBasket);
+        status = HttpStatus.OK;
+        result.setMessage("기본 바구니 변경 성공");
+        result.setData(true);
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);
     }
