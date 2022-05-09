@@ -24,7 +24,10 @@ public enum ErrorCode {
     OAUTH_INVALID_ACCESS_TOKEN("ACCESS TOKEN 이 유효하지 않습니다.", "O002", HttpStatus.UNAUTHORIZED),
     OAUTH_EMAIL_NOT_ALLOWED("이메일 정보 제공 동의가 필요합니다.","O003", HttpStatus.NOT_ACCEPTABLE),
 
-    CATEGOTY_DUPLICATED("이미 등록된 카테고리입니다.", "C001", HttpStatus.NOT_ACCEPTABLE)
+    CATEGOTY_DUPLICATED("이미 등록된 카테고리입니다.", "C001", HttpStatus.NOT_ACCEPTABLE),
+
+    USER_NOT_FOUNDED("해당 유저가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND),
+    USER_BASKET_NOT_FOUNDED("해당 유저-바구니가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND)
     ;
 
     private final String message;

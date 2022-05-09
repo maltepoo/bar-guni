@@ -4,10 +4,9 @@ import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.error.Exception.CategoryException;
 import com.ssafy.barguni.api.error.Exception.JwtException;
 import com.ssafy.barguni.api.error.Exception.OauthException;
+import com.ssafy.barguni.api.error.Exception.UsersException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,11 +41,17 @@ public class CommonErrorHandler {
         log.error("handleOauthException 핸들");
         return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
     }
-
     // Category 관련 오류
     @ExceptionHandler(CategoryException.class)
     protected ResponseEntity<ErrorResVO> handleCategoryException(CategoryException e) {
         log.error("handleCategoryException 핸들");
+        return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
+    }
+
+    // 유저 관련 오류
+    @ExceptionHandler(UsersException.class)
+    protected ResponseEntity<ErrorResVO> handleUserException(UsersException e) {
+        log.error("handleBasketException 핸들");
         return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
     }
 

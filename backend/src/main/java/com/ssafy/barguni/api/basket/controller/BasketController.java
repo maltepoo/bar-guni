@@ -4,6 +4,7 @@ import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.basket.vo.BasketRes;
 import com.ssafy.barguni.api.common.ResVO;
+import com.ssafy.barguni.api.user.UserRes;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -113,5 +117,26 @@ public class BasketController {
         return new ResponseEntity<ResVO<Boolean>>(result, status);
     }
 
+    @GetMapping("/user/{basketId}")
+    @Operation(summary = "바구니 참여자 조회", description = "바구니 참여자를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<List<UserRes>>> getUsers(@PathVariable Long basketId){
+        ResVO<List<UserRes>> result = new ResVO<>();
+        HttpStatus status = null;
+
+        result.setData(basketService.getUsers(basketId)
+                .stream()
+                .map(ub->UserRes.convertTo(ub.getUser()))
+                .collect(Collectors.toList()));
+        result.setMessage("바구니 참여자 조회 성공");
+        status = HttpStatus.OK;
+
+        return new ResponseEntity<ResVO<List<UserRes>>>(result, status);
+    }
 
 }

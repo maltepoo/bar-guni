@@ -1,4 +1,4 @@
-package com.ssafy.barguni.api.basket;
+package com.ssafy.barguni.api.alert.basket;
 
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.ItemRepository;

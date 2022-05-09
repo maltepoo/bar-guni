@@ -2,17 +2,20 @@ package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.error.Exception.UsersException;
 import com.ssafy.barguni.api.user.vo.OauthProfileinfo;
-import com.ssafy.barguni.api.user.vo.UserPostReq;
-import com.ssafy.barguni.common.util.GoogleOauthUtil;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
 import java.util.Optional;
 
+import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,7 +29,10 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).get();
+        User user = userRepository.getById(id);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        return user;
     }
 
     public Boolean isDuplicated(String email) {
@@ -37,11 +43,6 @@ public class UserService {
         User user = new User(email, name);
         userRepository.save(user);
         return user;
-    }
-
-    public User modifyUser(Long userId, String newName) {
-        System.out.println("~~~~ : " + newName);
-        return userRepository.modifyUser(userId, newName);
     }
 
     public Optional<User> changeUser(Long userId, String newName) {
@@ -55,10 +56,22 @@ public class UserService {
     }
 
     public void deleteById(Long id) {
+        User user = userRepository.getById(id);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+
+        // 유저 탈퇴시 참여한 바구니, 갖고있는 아이템 등등 다 삭제....???
         userRepository.deleteById(id);
     }
 
     public void modifyDefault(Long userId, Basket defaultBasket) {
+        User user = userRepository.getById(userId);
+
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        if(defaultBasket == null)
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
+
         userRepository.modifyDefault(userId, defaultBasket);
     }
 
