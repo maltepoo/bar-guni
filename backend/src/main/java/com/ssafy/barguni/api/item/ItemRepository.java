@@ -13,4 +13,5 @@ public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRep
     @Query("select i from Item i join fetch i.basket b")
     List<Item> findAllWithBasket();
     Integer deleteItemsByBasket_IdAndUsed(Long bktId, Boolean used);
+    List<Item> getItemsByUsed(Boolean used);
 }

@@ -181,4 +181,12 @@ public class ItemService {
     public Integer deleteUsedItemInBasket(Long bktId) {
         return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
     }
+
+    public List<Item> findAllUsed(){
+        return itemRepository.getItemsByUsed(true);
+    }
+
+    public void deleteItem(Item item) {
+        itemRepository.delete(item);
+    }
 }
