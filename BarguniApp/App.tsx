@@ -8,6 +8,7 @@ import store from './src/store';
 import {StyleSheet, View} from 'react-native';
 import {useEffect} from 'react';
 import PushNotification from 'react-native-push-notification';
+import CodePush from 'react-native-code-push';
 
 function App() {
   const createChannels = () => {
@@ -35,6 +36,5 @@ function App() {
     </Provider>
   );
 }
-const style = StyleSheet.create({});
 
-export default App;
+export default CodePush(App);
