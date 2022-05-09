@@ -26,10 +26,12 @@ function Alarm() {
   const goBasket = useCallback(() => {}, []);
 
   const alarmTest = useCallback(() => {
-    PushNotification.localNotification({
+    PushNotification.localNotificationSchedule({
       title: 'My Notification Title', // (optional)
       message: 'My Notification Message', // (required)
       channelId: 'test',
+      date: new Date(new Date().getHours()),
+      repeatType: 'day',
     });
   }, []);
 
