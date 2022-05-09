@@ -198,29 +198,6 @@ public class ItemController {
         return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
     }
 
-    @GetMapping("/used/{bktId}/{used}")
-    @Operation(summary = "사용된/안된 아이템 목록 조회", description = "바구니의 사용된/안된 아이템만 가져온다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
-    public ResponseEntity<ResVO<List<ItemRes>>> getItemsByUsed(@PathVariable @Parameter Long bktId, @PathVariable @Parameter Boolean used){
-        ResVO<List<ItemRes>> result = new ResVO<>();
-        HttpStatus status = null;
-
-        result.setData(itemService
-                .findUsedItemInBasket(bktId, used)
-                .stream()
-                .map(ItemRes::new)
-                .collect(Collectors.toList()));
-        result.setMessage("아이템 목록 조회 성공");
-        status = HttpStatus.OK;
-
-        return new ResponseEntity<ResVO<List<ItemRes>>>(result, status);
-    }
-
     @DeleteMapping("/used/{bktId}")
     @Operation(summary = "휴지통 비우기", description = "바구니의 사용된 아이템을 전부 삭제한다.")
     @ApiResponses({

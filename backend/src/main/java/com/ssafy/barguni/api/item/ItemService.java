@@ -178,9 +178,6 @@ public class ItemService {
         return false;
     }
 
-    public List<Item> findUsedItemInBasket(Long bktId, Boolean used) {
-        return itemRepository.findItemsByBasket_IdAndUsed(bktId, used);
-    }
     public Integer deleteUsedItemInBasket(Long bktId) {
         return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
     }
