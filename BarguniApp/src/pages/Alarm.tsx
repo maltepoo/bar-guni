@@ -1,7 +1,14 @@
-import React, {useCallback, useState} from 'react';
-import {FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AlarmItem from '../components/AlarmItem';
-import PushNotification from "react-native-push-notification";
+import PushNotification from 'react-native-push-notification';
 
 function Alarm() {
   const [count, setCount] = useState(0);
@@ -20,10 +27,11 @@ function Alarm() {
 
   const alarmTest = useCallback(() => {
     PushNotification.localNotification({
-      title: "My Notification Title", // (optional)
-      message: "My Notification Message", // (required)
+      title: 'My Notification Title', // (optional)
+      message: 'My Notification Message', // (required)
+      channelId: 'test',
     });
-  });
+  }, []);
 
   return (
     <View>
