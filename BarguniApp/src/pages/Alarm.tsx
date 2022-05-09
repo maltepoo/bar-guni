@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AlarmItem from '../components/AlarmItem';
+import PushNotification from "react-native-push-notification";
 
 function Alarm() {
   const [count, setCount] = useState(0);
@@ -16,8 +17,19 @@ function Alarm() {
   }, []);
   // Todo: 해당 바구니로 이동
   const goBasket = useCallback(() => {}, []);
+
+  const alarmTest = useCallback(() => {
+    PushNotification.localNotification({
+      title: "My Notification Title", // (optional)
+      message: "My Notification Message", // (required)
+    });
+  });
+
   return (
     <View>
+      <TouchableOpacity onPress={alarmTest}>
+        <Text>알림테스트</Text>
+      </TouchableOpacity>
       <Text style={Style.content}>
         읽지않은 알림 <Text style={Style.count}>{count}</Text>개
       </Text>

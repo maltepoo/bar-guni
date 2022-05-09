@@ -1,52 +1,41 @@
-import * as React from 'react';
-import {NavigationContainer, ParamListBase} from '@react-navigation/native';
-import AppInner from './AppInner';
-import {Provider as PaperProvider} from 'react-native-paper';
-import {navigationRef} from './RootNavigation';
-import {Provider} from 'react-redux';
-import store from './src/store';
-import {StyleSheet, View} from 'react-native';
-
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 
-function App() {
-
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
-  PushNotification.configure({
+PushNotification.configure({
     // (optional) Called when Token is generated (iOS and Android)
     onRegister: function (token) {
-      console.log("TOKEN:", token);
+        console.log("TOKEN:", token);
     },
 
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
-      console.log("NOTIFICATION:", notification);
+        console.log("NOTIFICATION:", notification);
 
-      // process the notification
+        // process the notification
 
-      // (required) Called when a remote is received or opened, or local notification is opened
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
+        // (required) Called when a remote is received or opened, or local notification is opened
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
     },
 
     // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
     onAction: function (notification) {
-      console.log("ACTION:", notification.action);
-      console.log("NOTIFICATION:", notification);
+        console.log("ACTION:", notification.action);
+        console.log("NOTIFICATION:", notification);
 
-      // process the action
+        // process the action
     },
 
     // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
     onRegistrationError: function(err) {
-      console.error(err.message, err);
+        console.error(err.message, err);
     },
 
     // IOS ONLY (optional): default: all - Permissions to register.
     permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
+        alert: true,
+        badge: true,
+        sound: true,
     },
 
     // Should the initial notification be popped automatically
@@ -61,18 +50,4 @@ function App() {
      *     requestPermissions: Platform.OS === 'ios'
      */
     requestPermissions: true,
-  });
-
-  return (
-    <Provider store={store}>
-      <NavigationContainer ref={navigationRef}>
-        <PaperProvider>
-          <AppInner />
-        </PaperProvider>
-      </NavigationContainer>
-    </Provider>
-  );
-}
-const style = StyleSheet.create({});
-
-export default App;
+});
