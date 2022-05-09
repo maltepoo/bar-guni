@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.error;
 
 import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.error.Exception.CategoryException;
 import com.ssafy.barguni.api.error.Exception.JwtException;
 import com.ssafy.barguni.api.error.Exception.OauthException;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +40,13 @@ public class CommonErrorHandler {
     @ExceptionHandler(OauthException.class)
     protected ResponseEntity<ErrorResVO> handleOuathException(OauthException e) {
         log.error("handleOauthException 핸들");
+        return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
+    }
+
+    // Category 관련 오류
+    @ExceptionHandler(CategoryException.class)
+    protected ResponseEntity<ErrorResVO> handleCategoryException(CategoryException e) {
+        log.error("handleCategoryException 핸들");
         return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
     }
 
