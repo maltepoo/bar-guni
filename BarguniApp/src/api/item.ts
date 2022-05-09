@@ -36,7 +36,7 @@ async function getItems(basketId: number, used?: boolean): Promise<Item[]> {
   }
 }
 
-async function getItem(itemId: any): Promise<T> {
+async function getItem(itemId: any) {
   const axios = LoginApiInstance();
   return await axios.get(`/item/${itemId}`);
 }
@@ -56,5 +56,15 @@ async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   console.log(itemId, used);
   return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
-
-export {getItems, getItem, barcodeItemInfo, registerItem, changeItemStatus};
+async function modifyItem(itemId: number, item: ItemReq) {
+  const axios = LoginApiInstance();
+  await axios.put(`/item/${itemId}`, JSON.stringify(item));
+}
+export {
+  getItems,
+  getItem,
+  barcodeItemInfo,
+  registerItem,
+  changeItemStatus,
+  modifyItem,
+};
