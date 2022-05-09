@@ -6,7 +6,7 @@ import {navigationRef} from './RootNavigation';
 import {Provider} from 'react-redux';
 import store from './src/store';
 import {StyleSheet, View} from 'react-native';
-
+import CodePush from 'react-native-code-push';
 function App() {
   return (
     <Provider store={store}>
@@ -18,6 +18,5 @@ function App() {
     </Provider>
   );
 }
-const style = StyleSheet.create({});
 
-export default App;
+export default CodePush(App);
