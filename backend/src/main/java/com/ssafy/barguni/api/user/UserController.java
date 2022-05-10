@@ -285,7 +285,7 @@ public class UserController {
         return new ResponseEntity<ResVO<List<UserBasketRes>>>(result, status);
     }
 
-    @PostMapping("/basket/{joinCode}")
+    @PostMapping("/basket")
     @Operation(summary = "바구니 참여", description = "다른 바구니에 참여한다. (로그인필요)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
