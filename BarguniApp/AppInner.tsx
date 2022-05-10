@@ -39,6 +39,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import HeaderRight from './src/components/HeaderRight';
 import BasketSettingDetail from './src/pages/BasketSettingDetail';
 import Barcode from './src/pages/Barcode';
+import SplashScreen from 'react-native-splash-screen';
 
 export type RootStackParamList = {
   SignIn: undefined;

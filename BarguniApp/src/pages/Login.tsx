@@ -13,6 +13,7 @@ import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {setJwtToken} from '../api/instance';
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+import SplashScreen from 'react-native-splash-screen';
 
 function Login({navigation}: LoginScreenProps) {
   const dispatch = useAppDispatch();
@@ -53,10 +54,12 @@ function Login({navigation}: LoginScreenProps) {
         const token = await EncryptedStorage.getItem('accessToken');
         console.log(token, '초기 토큰');
         if (!token) {
+          SplashScreen.hide();
           try {
             await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
           } catch (e) {
             console.log(e, '카카오 로그인 세팅 중 에러');
+            SplashScreen.hide();
           }
         } else {
           const user = {name: '', email: '', accessToken: token};
@@ -79,12 +82,14 @@ function Login({navigation}: LoginScreenProps) {
       <TouchableOpacity onPress={kakaoLogin}>
         <Image
           style={styles.kakao}
-          source={require('../assets/kakao-login.png')}></Image>
+          source={require('../assets/kakao-login.png')}
+        />
       </TouchableOpacity>
       <TouchableOpacity>
         <Image
           style={styles.google}
-          source={require('../assets/google-login.png')}></Image>
+          source={require('../assets/google-login.png')}
+        />
       </TouchableOpacity>
     </View>
   );
