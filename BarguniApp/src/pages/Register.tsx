@@ -19,9 +19,10 @@ import {getItems, ItemReq, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
 import {Basket, getBasketInfo} from '../api/basket';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
-import {CommonActions} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'Register'
@@ -38,7 +39,6 @@ function Register({navigation}: RegisterScreenProps) {
   }, []);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
-
   const [selectedBasket, setSelectedBasket] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [checked, setChecked] = React.useState(true);
@@ -47,6 +47,7 @@ function Register({navigation}: RegisterScreenProps) {
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
   const [shelfLife, setShelfLife] = useState(new Date());
+  const route = useRoute<RouteProp<RootStackParamList>>();
   const onSubmit = useCallback(async () => {
     try {
       if (alertBy === 'D_DAY') {
@@ -78,15 +79,16 @@ function Register({navigation}: RegisterScreenProps) {
     selectedCategory,
     shelfLife,
   ]);
-
   useEffect(() => {
     async function init(): Promise<void> {
+      console.log(route.params, 'params');
       const basketRes = await getBaskets();
       setBasket(basketRes);
       console.log(basketRes, 'basketRes');
       const categoryRes = await getCategory(basketRes[0].bkt_id);
       console.log(categoryRes, 'categoryRes');
       setCategory(categoryRes);
+      setName(route.params.name);
     }
     init();
   }, []);

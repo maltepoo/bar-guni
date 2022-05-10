@@ -2,8 +2,12 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Alert, StyleSheet, Vibration, View} from 'react-native';
 import {Camera, CameraType} from 'react-native-camera-kit';
 import {barcodeItemInfo} from '../api/item';
+import {AxiosError} from 'axios';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../AppInner';
 
-function Barcode(props) {
+type BarcodeScreenProp = NativeStackScreenProps<RootStackParamList, 'Barcode'>;
+function Barcode({navigation}: BarcodeScreenProp) {
   const [scaned, setScaned] = useState(true);
   const ref = useRef(null);
 
@@ -20,8 +24,10 @@ function Barcode(props) {
     try {
       const res = await barcodeItemInfo(event.nativeEvent.codeStringValue);
       console.log(res);
-    } catch (e) {
+      navigation.navigate('Register', res);
+    } catch (e: AxiosError | any) {
       console.log(e);
+      console.log(e.code);
     }
     Alert.alert('QR Code', event.nativeEvent.codeStringValue, [
       {text: 'OK', onPress: () => setScaned(true)},
@@ -46,7 +52,7 @@ function Barcode(props) {
 }
 const style = StyleSheet.create({
   scanner: {
-    height: '80%',
+    height: '100%',
   },
 });
 export default Barcode;
