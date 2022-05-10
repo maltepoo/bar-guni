@@ -59,6 +59,7 @@ dependencies {
 
 	// JsonParser
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.vaadin.external.google:android-json:0.0.20131108.vaadin1'
 
 	// imageIO -> multipartfile
 	implementation 'org.springframework:spring-test:5.3.2'
