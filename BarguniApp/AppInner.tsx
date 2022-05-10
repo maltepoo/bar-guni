@@ -39,6 +39,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import HeaderRight from './src/components/HeaderRight';
 import BasketSettingDetail from './src/pages/BasketSettingDetail';
 import Barcode from './src/pages/Barcode';
+import BasketInvite from "./src/pages/BasketInvite";
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -217,6 +218,12 @@ function AppInner() {
           name="BasketDetail"
           component={BasketDetail}
           options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="BasketInvite"
+          component={BasketInvite}
+          options={{headerShown: true,
+          headerTitle: "바구니 멤버초대"}}
         />
         <Stack.Screen
           name="Register"
