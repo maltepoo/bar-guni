@@ -33,6 +33,7 @@ import {
 import {getItems, Item} from '../api/item';
 import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
+import SplashScreen from 'react-native-splash-screen';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
@@ -103,7 +104,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         />
       );
     },
-    [category, remove, selectedCategory],
+    [category, remove, selectedBasket.bkt_name, selectedCategory],
   );
 
   useEffect(() => {
@@ -113,12 +114,13 @@ function ItemList({navigation}: ItemListScreenProps) {
         const userRes = await getProfile();
         await dispatch(userSlice.actions.setUserName(userRes));
         const baskets = await getBaskets();
-        setBasket(baskets);
-        setSelectedBasket(baskets[0]);
+        await setBasket(baskets);
+        await setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
-        setCategory(categoryRes);
+        await setCategory(categoryRes);
         const itemRes = await getItems(baskets[0].bkt_id, false);
-        setItems(itemRes);
+        await setItems(itemRes);
+        SplashScreen.hide();
       } catch (e) {
         console.log(e);
       }
