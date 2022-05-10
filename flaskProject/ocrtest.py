@@ -6,8 +6,8 @@ import json
 # 읽어온 Json 형식의 결과를 Json 파일로 저장하는 것 까지
 # General OCR (기본)
 
-api_url = 'https://s742r9t1yc.apigw.ntruss.com/custom/v1/15683/6fd5d03d9f623ad06f5c19e27191c1fa2596c6c69c1a05d239cd6d6f15c0f348/general'
-secret_key = 'T29hdUZSZGpZY0NMZllqWElQVlJZR3FFRGdMVE1YRnI='
+api_url = ''
+secret_key = ''
 
 image_file = 'static/img_2.png'
 output_file = 'output/output2.json'

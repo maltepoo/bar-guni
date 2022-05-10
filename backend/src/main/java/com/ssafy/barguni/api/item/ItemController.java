@@ -229,8 +229,6 @@ public class ItemController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public void socialLoginType() throws JSONException {
-//            @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType) {
-
 
         ClovaOcrUtil clovaOcrUtil = new ClovaOcrUtil();
         clovaOcrUtil.ocrTest();

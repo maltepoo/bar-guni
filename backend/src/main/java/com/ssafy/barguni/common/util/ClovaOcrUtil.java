@@ -27,15 +27,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ClovaOcrUtil {
-//    @Value("${ocr.clova.url}")
-    private String apiURL = "https://xvxvhj3jlz.apigw.ntruss.com/custom/v1/15719/c102fdb7db1d1ee6c6a4226b604dab4fe2c8eb114b4e5b971fadc1ed25b8a629/document/receipt";
-//    @Value("${ocr.clova.key}")
-    private String secretKey = "ellkZGFHUlNmQUJoSmVFTGpwSFlBaGtqVWhhcFJ1WGQ=";
+    @Value("${ocr.clova.url}")
+    private String apiURL;
+    @Value("${ocr.clova.key}")
+    private String secretKey;
 
-    private String imageFile = "img/test.jpg";
+    private String imageFile = "img/test1.jpg";
 
     public void getOcr() {
-//        ResponseEntity<String> response = null;
         try {
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -56,7 +55,6 @@ public class ClovaOcrUtil {
             image.put("format", "jpg");
             image.put("name", "demo");
             JSONArray images = new JSONArray();
-//            images.put(image);
             json.put("images", images);
             String postParams = json.toString();
 
