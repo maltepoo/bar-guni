@@ -5,6 +5,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import logo from '../assets/loginlogo.png';
 import {RootStackParamList} from '../../AppInner';
 import KakaoSDK from '@actbase/react-kakaosdk';
+import Config from 'react-native-config';
 import {AccessTokenType} from '@actbase/react-kakaosdk/lib/types';
 import {SocialType, login} from '../api/user';
 import {useAppDispatch} from '../store';
@@ -12,10 +13,14 @@ import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {setJwtToken} from '../api/instance';
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+import SplashScreen from 'react-native-splash-screen';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/reducer';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-function Login({navigation}: LoginScreenProps) {
+function Login() {
   const dispatch = useAppDispatch();
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const kakaoLogin = useCallback(async () => {
     try {
       const res = (await KakaoSDK.login()) as AccessTokenType;
@@ -44,6 +49,18 @@ function Login({navigation}: LoginScreenProps) {
       console.log(e, '카카오 로그인 중 에러');
     }
     navigation.navigate('ItemList');
+  }, [dispatch, navigation]);
+  const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  useEffect(() => {
+    console.log('로그인 페이지');
+    const init = async () => {
+      try {
+        await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
+      } catch (e) {
+        console.log(e, '카카오 로그인 세팅 중 에러');
+      }
+    };
+    init();
   }, [dispatch, navigation]);
 
   return (

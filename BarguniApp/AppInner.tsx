@@ -71,39 +71,32 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
-  console.log(isLogin, 'isLogin@@@@@@@@@');
+  // const [isLogin, setIsLogin] = useState(false);
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
-
   const Tab = createBottomTabNavigator();
+
   useEffect(() => {
-    console.log('로그인!!');
     const init = async () => {
       try {
         const token = await EncryptedStorage.getItem('accessToken');
+        console.log(token);
+        console.log(!token, 'token 확인!!!!!!!!!!!');
         if (!token) {
+          console.log('token True');
           SplashScreen.hide();
-          try {
-            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
-          } catch (e) {
-            console.log(e, '카카오 로그인 세팅 중 에러');
-          }
           return;
         }
         const user = {name: '', email: '', accessToken: token};
         setJwtToken(token);
-        console.log('setting');
         dispatch(userSlice.actions.setUser(user));
       } catch (e) {
         console.log(e);
-      } finally {
-        SplashScreen.hide();
       }
     };
     init();
   }, [dispatch, navigation]);
-
   function BottomTab() {
     return (
       <Tab.Navigator>
@@ -179,99 +172,84 @@ function AppInner() {
   }
   const Stack = createNativeStackNavigator();
   return isLogin ? (
-    <>
-      {/*<View style={style.header}>*/}
-      {/*  <Pressable onPress={back}>*/}
-      {/*    <AntDesign name="left" size={20} style={style.topBarIcon} />*/}
-      {/*  </Pressable>*/}
-      {/*  <View>*/}
-      {/*    <Pressable onPress={goSearch}>*/}
-      {/*      <AntDesign name="search1" size={20} style={style.topBarIcon} />*/}
-      {/*    </Pressable>*/}
-      {/*    <Pressable onPress={goAlarm}>*/}
-      {/*      <AntDesign name="bells" size={20} style={style.topBarIcon} />*/}
-      {/*    </Pressable>*/}
-      {/*  </View>*/}
-      {/*</View>*/}
-      <Stack.Navigator initialRouteName={'ItemList'}>
-        <Stack.Screen
-          name="BottomTab"
-          component={BottomTab}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Search"
-          component={Search}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="SearchResult"
-          component={SearchResult}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="AlarmSetting"
-          component={AlarmSetting}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="MyPage"
-          component={MyPage}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="BasketSetting"
-          component={BasketSetting}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="BasketSettingDetail"
-          component={BasketSettingDetail}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="TrashCan"
-          component={TrashCan}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="Alarm"
-          component={Alarm}
-          options={{
-            title: '알림',
-            headerLeft: () => (
-              <AntDesign
-                name="left"
-                size={20}
-                style={style.topBarIcon}
-                onPress={back}
-              />
-            ),
-            headerShown: true,
-          }}
-        />
-        <Stack.Screen
-          name="BasketDetail"
-          component={BasketDetail}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="BasketInvite"
-          component={BasketInvite}
-          options={{headerShown: true, headerTitle: '바구니 멤버초대'}}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="Barcode"
-          component={Barcode}
-          options={{title: '바코드로 등록하기', headerShown: true}}
-        />
-      </Stack.Navigator>
-    </>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="BottomTab"
+        component={BottomTab}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="SearchResult"
+        component={SearchResult}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="AlarmSetting"
+        component={AlarmSetting}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="MyPage"
+        component={MyPage}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="BasketSetting"
+        component={BasketSetting}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="BasketSettingDetail"
+        component={BasketSettingDetail}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="TrashCan"
+        component={TrashCan}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Alarm"
+        component={Alarm}
+        options={{
+          title: '알림',
+          headerLeft: () => (
+            <AntDesign
+              name="left"
+              size={20}
+              style={style.topBarIcon}
+              onPress={back}
+            />
+          ),
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="BasketDetail"
+        component={BasketDetail}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="BasketInvite"
+        component={BasketInvite}
+        options={{headerShown: true, headerTitle: '바구니 멤버초대'}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Barcode"
+        component={Barcode}
+        options={{title: '바코드로 등록하기', headerShown: true}}
+      />
+    </Stack.Navigator>
   ) : (
     <Stack.Navigator>
       <Stack.Screen

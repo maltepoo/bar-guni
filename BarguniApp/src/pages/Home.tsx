@@ -13,11 +13,7 @@ function Home() {
         component={ItemList}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="ItemDetail"
-        component={ItemDetail}
-        options={{headerShown: false}}
-      />
+
       <Stack.Screen
         name="ItemModify"
         component={ItemModify}
