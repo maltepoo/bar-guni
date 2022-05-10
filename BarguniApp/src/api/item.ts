@@ -13,6 +13,7 @@ export interface Item {
   dday: number;
   barcode: number;
   used: boolean;
+  basketName: string;
 }
 
 export interface ItemReq {
@@ -35,6 +36,11 @@ async function getItems(basketId: number, used?: boolean): Promise<Item[]> {
   }
 }
 
+async function getItem(itemId: any) {
+  const axios = LoginApiInstance();
+  return await axios.get(`/item/${itemId}`);
+}
+
 async function registerItem(item: ItemReq): Promise<void> {
   const axios = LoginApiInstance();
   await axios.post('/item', JSON.stringify(item));
@@ -49,10 +55,22 @@ async function changeItemStatus(itemId: number, used: boolean): Promise<Item> {
   const loginAxios = LoginApiInstance();
   return (await loginAxios.put(`/item/status/${itemId}/${used}`)).data.data;
 }
+async function modifyItem(itemId: number, item: ItemReq) {
+  const axios = LoginApiInstance();
+  await axios.put(`/item/${itemId}`, JSON.stringify(item));
+}
 
 async function deleteItem(itemId: number): Promise<void> {
   const axios = LoginApiInstance();
   await axios.delete(`/item/${itemId}`);
 }
 
-export {getItems, deleteItem, barcodeItemInfo, registerItem, changeItemStatus};
+export {
+  getItems,
+  getItem,
+  deleteItem,
+  barcodeItemInfo,
+  registerItem,
+  changeItemStatus,
+  modifyItem,
+};

@@ -43,9 +43,7 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
-  const [selectedBasket, setSelectedBasket] = useState({
-    bkt_id: 0,
-  });
+  const [selectedBasket, setSelectedBasket] = useState({} as Basket);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
   const [open, setOpen] = useState(false);
@@ -100,6 +98,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         <HomeItems
           item={item}
           remove={remove}
+          basketName={selectedBasket.bkt_name}
           category={category[selectedCategory].name}
         />
       );
