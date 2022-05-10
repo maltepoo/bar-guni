@@ -45,6 +45,7 @@ import Config from 'react-native-config';
 import {setJwtToken} from './src/api/instance';
 import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
+import BasketInvite from './src/pages/BasketInvite';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -253,6 +254,11 @@ function AppInner() {
           name="BasketDetail"
           component={BasketDetail}
           options={{headerShown: true}}
+        />
+        <Stack.Screen
+          name="BasketInvite"
+          component={BasketInvite}
+          options={{headerShown: true, headerTitle: '바구니 멤버초대'}}
         />
         <Stack.Screen
           name="Register"

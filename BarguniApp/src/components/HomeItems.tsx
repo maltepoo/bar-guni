@@ -9,6 +9,7 @@ interface HomeItem {
   item: Item;
   category: string;
   remove: Function;
+  basketName: string;
 }
 
 function HomeItems(props: HomeItem) {
@@ -26,16 +27,16 @@ function HomeItems(props: HomeItem) {
     // console.log(item);
   }, [item.itemId, props]);
   const shelfLife = new Date();
-  // const onClick = useCallback(() => {
-  //   // navigation.navigate('ItemDetail', test);
-  // }, [navigation]);
+  const onClick = useCallback(() => {
+    navigation.navigate('ItemDetail', {...item, basketName: props.basketName});
+  }, [item, navigation]);
   return item.category === props.category ? (
     <View>
       <View style={Style.container}>
         <View style={Style.row}>
           <Image style={Style.picture} source={require('../assets/bell.png')} />
         </View>
-        <Pressable style={Style.row2}>
+        <Pressable style={Style.row2} onPress={onClick}>
           <Text style={Style.date}> {item.name}</Text>
           <Text style={Style.date2}>
             {item.regDate.toString().substring(0, 10)}

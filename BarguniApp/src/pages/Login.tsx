@@ -5,7 +5,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import logo from '../assets/loginlogo.png';
 import {RootStackParamList} from '../../AppInner';
 import KakaoSDK from '@actbase/react-kakaosdk';
-import Config from 'react-native-config';
 import {AccessTokenType} from '@actbase/react-kakaosdk/lib/types';
 import {SocialType, login} from '../api/user';
 import {useAppDispatch} from '../store';
@@ -13,7 +12,6 @@ import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {setJwtToken} from '../api/instance';
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
-import SplashScreen from 'react-native-splash-screen';
 
 function Login({navigation}: LoginScreenProps) {
   const dispatch = useAppDispatch();

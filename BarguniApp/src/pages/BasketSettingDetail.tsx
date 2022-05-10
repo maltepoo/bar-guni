@@ -7,24 +7,44 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {deleteBasket, updateBasketName} from '../api/basket';
+import {deleteBasket, getBasketMembers, updateBasketName} from '../api/basket';
 import {deleteCategory, getCategory, updateCategory} from '../api/category';
+import {navigate} from "../../RootNavigation";
 
 function BasketSettingDetail({route}) {
   const basketInfo = route.params;
   const [newBasketName, setNewBasketName] = useState('');
   const [newCategoryName, setNewCategoryName] = useState('');
   const [basketCategories, setBasketCategories] = useState([]);
+  const [basketMembers, setBasketMembers] = useState([]);
 
   useEffect(() => {
     init();
   }, []);
 
   const init = useCallback(async () => {
-    const category = await getCategory(basketInfo.bkt_id);
-    await setBasketCategories(category);
-    console.log(category, '카테고리목록조회');
+    initCategories();
+    initMembers();
   });
+
+  const initCategories = useCallback(async () => {
+    try {
+      const category = await getCategory(basketInfo.bkt_id);
+      await setBasketCategories(category);
+      console.log(category, '카테고리목록조회');
+    } catch (e) {
+      console.log(e, "카테고리 목록조회 에러")
+    }
+  })
+
+  const initMembers = useCallback(async () => {
+    try {
+      const members = await getBasketMembers(basketInfo.bkt_id);
+      await setBasketMembers(members, "바스켓멤버조회")
+    } catch (e) {
+      console.log(e, "바스켓 참여멤버조회 에러")
+    }
+  })
 
   const handleNewBasketName = useCallback(name => {
     console.log(name, 'newBasketName');
@@ -115,9 +135,17 @@ function BasketSettingDetail({route}) {
     );
   });
 
+  const moveToInvite = useCallback(() => {
+    navigate("BasketInvite", basketInfo);
+  })
+
   return (
     <View>
       <Text>{JSON.stringify(basketInfo)}</Text>
+      <Text>바구니 참여자 목록 : {JSON.stringify(basketMembers)}</Text>
+      <TouchableOpacity onPress={moveToInvite}>
+        <Text>바구니 초대하기(초대코드 페이지로 이동)</Text>
+      </TouchableOpacity>
       <TextInput
         placeholder="바꿀바구니이름입력하기"
         onChangeText={handleNewBasketName}
