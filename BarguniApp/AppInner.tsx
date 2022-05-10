@@ -93,9 +93,6 @@ function AppInner() {
         dispatch(userSlice.actions.setUser(user));
       } catch (e) {
         console.log(e);
-      } finally {
-        // setIsLogin(true);
-        // SplashScreen.hide();
       }
     };
     init();
