@@ -123,11 +123,11 @@ public class BasketService {
     }
 
     private String getJoinCode(){
-        final int codeLength = 10;
+        final int codeLength = 16;
         StringBuilder sb = new StringBuilder();
 
         for(int i=0; i < codeLength; i++) {
-            char c = (char) ('A' + new Random().nextInt('z' - 'A'));
+            char c = (char) ('A' + new Random().nextInt('Z' - 'A'));
             sb.append(c);
         }
         return sb.toString();
