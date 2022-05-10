@@ -1,12 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Image, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
+import { Snackbar } from 'react-native-paper';
+import Clipboard from '@react-native-clipboard/clipboard';
 import Feather from "react-native-vector-icons/Feather";
 import {getBasketInfo} from "../api/basket";
 
 function BasketInvite({route}) {
   const basketInfo = route.params;
   console.log(basketInfo, "invite basket Info")
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState("join code here");
+  const [onCopied, setOnCopied] = useState(false);
 
   useEffect(() => {
     init();
@@ -23,8 +26,14 @@ function BasketInvite({route}) {
   });
 
   const copyInviteCode = useCallback(() => {
-    Alert.alert('초대코드가 복사되었습니다', "구라지만...")
+    Clipboard.setString(inviteCode);
+    // Alert.alert("초대코드가 복사되었습니다", "스낵바로 바꿔보기");
+    setOnCopied(true)
   });
+
+  const onDismissSnackBar = useCallback(() => {
+    setOnCopied(false)
+  })
 
   return (
     <View style={styles.container}>
@@ -40,6 +49,19 @@ function BasketInvite({route}) {
       <Pressable onPress={copyInviteCode} style={styles.inviteBtn}>
         <Text style={styles.inviteBtnText}>초대코드 복사</Text>
       </Pressable>
+      <Snackbar
+        visible={onCopied}
+        onDismiss={onDismissSnackBar}
+        duration={3000}
+        action={{
+          label: '확인',
+          onPress: () => {
+            setOnCopied(false)
+          }
+        }}
+      >
+        초대코드가 복사되었습니다
+      </Snackbar>
     </View>
   );
 }
@@ -79,7 +101,7 @@ const styles = StyleSheet.create({
   },
   linkIcon: {
     position: 'absolute',
-    top: '35%',
+    top: '37%',
     right: 18,
   },
   inviteBtn: {
