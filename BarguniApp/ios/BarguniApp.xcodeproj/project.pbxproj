@@ -30,6 +30,13 @@
 		D9F0AABB788E43F58269BEC7 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08951959F4A64C40A47C0439 /* Octicons.ttf */; };
 		3F8C5BFA71A441CB85F6C5BA /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7BE0641BACE04AC9ACFBCBA7 /* SimpleLineIcons.ttf */; };
 		1D8054C5EC5A4043BB859C11 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38207B5624ED424A8D24EAB4 /* Zocial.ttf */; };
+		88DCC2ECA13642EE98C7CE66 /* NotoSansKR-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5F97B03281044110A11D633D /* NotoSansKR-Black.otf */; };
+		C573724496F74D80A205E205 /* NotoSansKR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 38F64BE9AD5846D4AD7204A9 /* NotoSansKR-Bold.otf */; };
+		E8E58CF571B34B30AB33B0D5 /* NotoSansKR-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = D21E7A86AE5D4FFD9D0D2F48 /* NotoSansKR-Light.otf */; };
+		75F916FC82A543119C7976A0 /* NotoSansKR-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 32F13E30A9B545A9A0BED669 /* NotoSansKR-Medium.otf */; };
+		68A6E2AA5BEB45FE80875393 /* NotoSansKR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0B7F189FC6204002869F9B89 /* NotoSansKR-Regular.otf */; };
+		FF5A3167F7A7478E894AC7FF /* NotoSansKR-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 79AECB8BA04D44F193DA1187 /* NotoSansKR-Thin.otf */; };
+		B1F2D8C981D64A888299288B /* Jua Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6C5D6088ECA4A2CA02707F0 /* Jua Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +83,13 @@
 		08951959F4A64C40A47C0439 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7BE0641BACE04AC9ACFBCBA7 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		38207B5624ED424A8D24EAB4 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5F97B03281044110A11D633D /* NotoSansKR-Black.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Black.otf"; path = "../src/assets/fonts/NotoSansKR-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		38F64BE9AD5846D4AD7204A9 /* NotoSansKR-Bold.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Bold.otf"; path = "../src/assets/fonts/NotoSansKR-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D21E7A86AE5D4FFD9D0D2F48 /* NotoSansKR-Light.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Light.otf"; path = "../src/assets/fonts/NotoSansKR-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		32F13E30A9B545A9A0BED669 /* NotoSansKR-Medium.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Medium.otf"; path = "../src/assets/fonts/NotoSansKR-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0B7F189FC6204002869F9B89 /* NotoSansKR-Regular.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Regular.otf"; path = "../src/assets/fonts/NotoSansKR-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		79AECB8BA04D44F193DA1187 /* NotoSansKR-Thin.otf */ = {isa = PBXFileReference; name = "NotoSansKR-Thin.otf"; path = "../src/assets/fonts/NotoSansKR-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B6C5D6088ECA4A2CA02707F0 /* Jua Regular.ttf */ = {isa = PBXFileReference; name = "Jua Regular.ttf"; path = "../src/assets/fonts/Jua Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +214,13 @@
 				08951959F4A64C40A47C0439 /* Octicons.ttf */,
 				7BE0641BACE04AC9ACFBCBA7 /* SimpleLineIcons.ttf */,
 				38207B5624ED424A8D24EAB4 /* Zocial.ttf */,
+				5F97B03281044110A11D633D /* NotoSansKR-Black.otf */,
+				38F64BE9AD5846D4AD7204A9 /* NotoSansKR-Bold.otf */,
+				D21E7A86AE5D4FFD9D0D2F48 /* NotoSansKR-Light.otf */,
+				32F13E30A9B545A9A0BED669 /* NotoSansKR-Medium.otf */,
+				0B7F189FC6204002869F9B89 /* NotoSansKR-Regular.otf */,
+				79AECB8BA04D44F193DA1187 /* NotoSansKR-Thin.otf */,
+				B6C5D6088ECA4A2CA02707F0 /* Jua Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -317,6 +338,13 @@
 				D9F0AABB788E43F58269BEC7 /* Octicons.ttf in Resources */,
 				3F8C5BFA71A441CB85F6C5BA /* SimpleLineIcons.ttf in Resources */,
 				1D8054C5EC5A4043BB859C11 /* Zocial.ttf in Resources */,
+				88DCC2ECA13642EE98C7CE66 /* NotoSansKR-Black.otf in Resources */,
+				C573724496F74D80A205E205 /* NotoSansKR-Bold.otf in Resources */,
+				E8E58CF571B34B30AB33B0D5 /* NotoSansKR-Light.otf in Resources */,
+				75F916FC82A543119C7976A0 /* NotoSansKR-Medium.otf in Resources */,
+				68A6E2AA5BEB45FE80875393 /* NotoSansKR-Regular.otf in Resources */,
+				FF5A3167F7A7478E894AC7FF /* NotoSansKR-Thin.otf in Resources */,
+				B1F2D8C981D64A888299288B /* Jua Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

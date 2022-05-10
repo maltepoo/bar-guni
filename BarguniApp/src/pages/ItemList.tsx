@@ -222,7 +222,7 @@ function ItemList({navigation}: ItemListScreenProps) {
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
-        <Text style={Style.topText}>{count}개가 있어요</Text>
+        <Text style={Style.topText2}>{count}개가 있어요</Text>
       </View>
       <Picker
         selectedValue={selectedBasket.bkt_id}
@@ -367,6 +367,15 @@ const Style = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
+    fontFamily: 'NotoSansKR-Black',
+  },
+  topText2: {
+    marginLeft: 12,
+    marginTop: 3,
+    fontSize: 20,
+    // fontWeight: 'bold',
+    color: 'black',
+    fontFamily: 'Jua Regular',
   },
   dropdown: {
     marginTop: 20,

@@ -3,6 +3,7 @@ import {
   FlatList,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -24,13 +25,24 @@ function BasketSetting() {
 
   const renderBasketList = useCallback(({item}) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          moveToSettingDetail(item);
-        }}>
-        <Text>{item.bkt_name} / 바스켓이름</Text>
-        <Text>{item.bkt_id} / 바스켓아이디</Text>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            moveToSettingDetail(item);
+          }}>
+          <Text
+            style={{
+              fontSize: 30,
+              color: 'black',
+              fontFamily: 'Jua Regular',
+              marginLeft: '2%',
+            }}>
+            {item.bkt_name}
+          </Text>
+          {/*<Text>{item.bkt_id} / 바스켓아이디</Text>*/}
+        </TouchableOpacity>
+        <View style={style.line} />
+      </>
     );
   });
 
@@ -39,12 +51,32 @@ function BasketSetting() {
   }, []);
 
   return (
-    <ScrollView>
-      <Text>바구니 관리페이지</Text>
-      <Text>바구니목록</Text>
+    <ScrollView style={style.container}>
+      <Text
+        style={{
+          fontSize: 20,
+          color: 'grey',
+          marginTop: '5%',
+          marginBottom: '5%',
+          marginLeft: '2%',
+          fontFamily: 'Jua Regular',
+        }}>
+        바구니목록
+      </Text>
       <FlatList data={basketList} renderItem={renderBasketList} />
     </ScrollView>
   );
 }
-
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    // alignItems: 'center',
+  },
+  line: {
+    height: 0.7,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    marginTop: 30,
+  },
+});
 export default BasketSetting;
