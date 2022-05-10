@@ -5,7 +5,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import logo from '../assets/loginlogo.png';
 import {RootStackParamList} from '../../AppInner';
 import KakaoSDK from '@actbase/react-kakaosdk';
-import Config from 'react-native-config';
 import {AccessTokenType} from '@actbase/react-kakaosdk/lib/types';
 import {SocialType, login} from '../api/user';
 import {useAppDispatch} from '../store';
@@ -44,31 +43,9 @@ function Login({navigation}: LoginScreenProps) {
     } catch (e) {
       console.log(e, '카카오 로그인 중 에러');
     }
-    navigation.navigate('SignUp');
-  }, [navigation]);
+    navigation.navigate('ItemList');
+  }, [dispatch, navigation]);
 
-  useEffect(() => {
-    async function init(): Promise<void> {
-      try {
-        const token = await EncryptedStorage.getItem('accessToken');
-        console.log(token, '초기 토큰');
-        if (!token) {
-          try {
-            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
-          } catch (e) {
-            console.log(e, '카카오 로그인 세팅 중 에러');
-          }
-        } else {
-          const user = {name: '', email: '', accessToken: token};
-          setJwtToken(token);
-          dispatch(userSlice.actions.setUser(user));
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    init();
-  }, []);
   return (
     <View style={styles.container}>
       <Image
@@ -79,12 +56,14 @@ function Login({navigation}: LoginScreenProps) {
       <TouchableOpacity onPress={kakaoLogin}>
         <Image
           style={styles.kakao}
-          source={require('../assets/kakao-login.png')}></Image>
+          source={require('../assets/kakao-login.png')}
+        />
       </TouchableOpacity>
       <TouchableOpacity>
         <Image
           style={styles.google}
-          source={require('../assets/google-login.png')}></Image>
+          source={require('../assets/google-login.png')}
+        />
       </TouchableOpacity>
     </View>
   );
