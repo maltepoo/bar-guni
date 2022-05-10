@@ -1,5 +1,4 @@
 import {LoginApiInstance} from './instance';
-import {Item} from './item';
 
 export interface Basket {
   id: number;
@@ -7,6 +6,22 @@ export interface Basket {
   bkt_id: number;
   authority: string;
   bkt_name: string;
+}
+
+export interface AlarmI {
+  id: number;
+  basketId: number;
+  itemId: number;
+  basketName: string;
+  itemName: string;
+  title: string;
+  content: string;
+  status: string;
+  createdAt: string;
+}
+export interface Response<T> {
+  message: string;
+  data: T | T[];
 }
 
 async function registerBasket(
@@ -44,4 +59,22 @@ async function joinBasket(joinCode: string) {
   return (await axios.post(`/user/basket?joinCode=${joinCode}`)).data.data;
 }
 
-export {registerBasket, getBasketInfo, updateBasketName, deleteBasket, getBasketMembers, joinBasket};
+async function getAlarms(): Promise<AlarmI[]> {
+  const axios = LoginApiInstance();
+  return (await axios.get('/alert')).data.data;
+}
+async function changeAlarm(id: number) {
+  const axios = LoginApiInstance();
+  return (await axios.put(`/alert/${id}?alertStatus=CHECKED`)).data.data;
+}
+
+export {
+  changeAlarm,
+  registerBasket,
+  getBasketInfo,
+  updateBasketName,
+  deleteBasket,
+  getBasketMembers,
+  getAlarms,
+  joinBasket,
+};

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   DatePickerAndroid,
   Image,
@@ -14,6 +14,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../AppInner';
 import {ParamListBase} from '@react-navigation/native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,7 +41,28 @@ function Settings({navigation}: SettingsScreenProps) {
 
   const handleAlarmOn = useCallback(() => {
     setAlarmOn(true);
-  });
+  }, []);
+
+  const confirmAlarm = useCallback(async (time: any) => {
+    const newTime = new Date(time);
+    const hour = newTime.getHours();
+    const min = newTime.getMinutes();
+    setAlarmTime({hour: hour, min: min});
+    console.log(hour, min);
+    await EncryptedStorage.setItem('hour', hour.toString());
+    await EncryptedStorage.setItem('min', min.toString());
+    setAlarmOn(false);
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      const hour = await EncryptedStorage.getItem('hour');
+      const min = await EncryptedStorage.getItem('min');
+      console.log(hour, min);
+      setAlarmTime({hour: Number(hour), min: Number(min)});
+    };
+    init();
+  }, []);
 
   return (
     <ScrollView
@@ -55,9 +77,7 @@ function Settings({navigation}: SettingsScreenProps) {
           mode="time"
           isVisible={alarmOn}
           onConfirm={time => {
-            const newTime = new Date(time);
-            setAlarmTime({hour: newTime.getHours(), min: newTime.getMinutes()});
-            setAlarmOn(false);
+            confirmAlarm(time);
           }}
           onCancel={() => {
             setAlarmOn(false);

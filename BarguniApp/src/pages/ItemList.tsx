@@ -156,8 +156,10 @@ function ItemList({navigation}: ItemListScreenProps) {
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
-        const itemRes = await getItems(id);
+        const itemRes = await getItems(id, false);
         setItems(itemRes);
+        console.log(id);
+        console.log(itemRes);
       } catch (e) {}
     },
     [basket],
