@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
@@ -40,6 +40,11 @@ import HeaderRight from './src/components/HeaderRight';
 import BasketSettingDetail from './src/pages/BasketSettingDetail';
 import Barcode from './src/pages/Barcode';
 import SplashScreen from 'react-native-splash-screen';
+import KakaoSDK from '@actbase/react-kakaosdk';
+import Config from 'react-native-config';
+import {setJwtToken} from './src/api/instance';
+import userSlice from './src/slices/user';
+import {useAppDispatch} from './src/store';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -62,12 +67,42 @@ export type RootStackParamList = {
 };
 
 function AppInner() {
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  console.log(isLogin, 'isLogin@@@@@@@@@');
   const back = useCallback(() => {
     RootNavigation.pop();
   }, []);
 
   const Tab = createBottomTabNavigator();
+  useEffect(() => {
+    console.log('로그인!!');
+    const init = async () => {
+      try {
+        const token = await EncryptedStorage.getItem('accessToken');
+        if (!token) {
+          SplashScreen.hide();
+          try {
+            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
+          } catch (e) {
+            console.log(e, '카카오 로그인 세팅 중 에러');
+          }
+          return;
+        }
+        const user = {name: '', email: '', accessToken: token};
+        setJwtToken(token);
+        console.log('setting');
+        dispatch(userSlice.actions.setUser(user));
+      } catch (e) {
+        console.log(e);
+      } finally {
+        SplashScreen.hide();
+      }
+    };
+    init();
+  }, [dispatch, navigation]);
+
   function BottomTab() {
     return (
       <Tab.Navigator>
@@ -232,7 +267,7 @@ function AppInner() {
       </Stack.Navigator>
     </>
   ) : (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator>
       <Stack.Screen
         name="Login"
         component={Login}

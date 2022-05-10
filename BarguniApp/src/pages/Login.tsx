@@ -48,33 +48,6 @@ function Login({navigation}: LoginScreenProps) {
     navigation.navigate('ItemList');
   }, [dispatch, navigation]);
 
-  useEffect(() => {
-    console.log('로그인!!');
-    async function init(): Promise<void> {
-      try {
-        const token = await EncryptedStorage.getItem('accessToken');
-        console.log(token, '초기 토큰');
-        if (!token) {
-          SplashScreen.hide();
-          try {
-            await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
-          } catch (e) {
-            console.log(e, '카카오 로그인 세팅 중 에러');
-          }
-        } else {
-          const user = {name: '', email: '', accessToken: token};
-          setJwtToken(token);
-          console.log('setting');
-          dispatch(userSlice.actions.setUser(user));
-          // navigation.navigate('ItemList');
-          SplashScreen.hide();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    init();
-  }, [dispatch, navigation]);
   return (
     <View style={styles.container}>
       <Image
