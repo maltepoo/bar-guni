@@ -45,10 +45,11 @@ function Login({navigation}: LoginScreenProps) {
     } catch (e) {
       console.log(e, '카카오 로그인 중 에러');
     }
-    navigation.navigate('SignUp');
-  }, [navigation]);
+    navigation.navigate('ItemList');
+  }, [dispatch, navigation]);
 
   useEffect(() => {
+    console.log('로그인!!');
     async function init(): Promise<void> {
       try {
         const token = await EncryptedStorage.getItem('accessToken');
@@ -59,19 +60,21 @@ function Login({navigation}: LoginScreenProps) {
             await KakaoSDK.init(Config.KAKAO).catch(e => console.log(e));
           } catch (e) {
             console.log(e, '카카오 로그인 세팅 중 에러');
-            SplashScreen.hide();
           }
         } else {
           const user = {name: '', email: '', accessToken: token};
           setJwtToken(token);
+          console.log('setting');
           dispatch(userSlice.actions.setUser(user));
+          // navigation.navigate('ItemList');
+          SplashScreen.hide();
         }
       } catch (e) {
         console.log(e);
       }
     }
     init();
-  }, []);
+  }, [dispatch, navigation]);
   return (
     <View style={styles.container}>
       <Image

@@ -157,7 +157,7 @@ function AppInner() {
       {/*    </Pressable>*/}
       {/*  </View>*/}
       {/*</View>*/}
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName={'ItemList'}>
         <Stack.Screen
           name="BottomTab"
           component={BottomTab}

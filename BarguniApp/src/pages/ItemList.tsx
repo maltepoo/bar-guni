@@ -114,15 +114,12 @@ function ItemList({navigation}: ItemListScreenProps) {
         const userRes = await getProfile();
         await dispatch(userSlice.actions.setUserName(userRes));
         const baskets = await getBaskets();
-        console.log(baskets, 'baskets');
         setBasket(baskets);
         setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
-        console.log(categoryRes);
         setCategory(categoryRes);
         const itemRes = await getItems(baskets[0].bkt_id, false);
         setItems(itemRes);
-        console.log(itemRes, '아이템 리스트');
       } catch (e) {
         console.log(e);
       }
@@ -153,14 +150,11 @@ function ItemList({navigation}: ItemListScreenProps) {
   const changeBasket = useCallback(
     async (id: number) => {
       try {
-        console.log(id);
         const res = await getCategory(id);
-        console.log(res, ' 카테고리 목록들');
         setCategory(res);
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
-        console.log(selectBasket);
         const itemRes = await getItems(id);
         setItems(itemRes);
       } catch (e) {}
@@ -171,7 +165,6 @@ function ItemList({navigation}: ItemListScreenProps) {
   const showDeleteDialog = useCallback(
     (index: number, mode: string) => {
       setDeleteMode(mode);
-      console.log(index);
       setDeleteIndex(index);
       toggleDeleteDialog();
     },
@@ -183,22 +176,25 @@ function ItemList({navigation}: ItemListScreenProps) {
     try {
       if (deleteMode === 'basket') {
         const res2 = await deleteBasket(basket[deleteIndex].bkt_id);
-        console.log(res2, ' res2');
         const res = await getBaskets();
         setBasket(res);
       } else if (deleteMode === 'category') {
-        console.log(category[deleteIndex], ' 카테고리 ');
         await deleteCategory(category[deleteIndex].cateId);
-        console.log(selectedBasket, ' selected Basket');
         const res = await getCategory(selectedBasket.bkt_id);
-        console.log(res, 'category list');
         setCategory(res);
       }
       toggleDeleteDialog();
     } catch (e) {
       console.log(e);
     }
-  }, [basket, deleteIndex, deleteMode, selectedBasket, toggleDeleteDialog]);
+  }, [
+    basket,
+    category,
+    deleteIndex,
+    deleteMode,
+    selectedBasket.bkt_id,
+    toggleDeleteDialog,
+  ]);
 
   const DeleteConfirm = () => {
     return (
