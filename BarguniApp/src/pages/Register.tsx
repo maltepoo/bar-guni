@@ -64,6 +64,7 @@ function Register({navigation}: RegisterScreenProps) {
         picId: null,
         dday: day,
       };
+      console.log(item);
       await registerItem(item);
       navigation.navigate('ItemList');
     } catch (error) {
@@ -74,7 +75,7 @@ function Register({navigation}: RegisterScreenProps) {
     content,
     day,
     name,
-    regDate,
+    navigation,
     selectedBasket,
     selectedCategory,
     shelfLife,

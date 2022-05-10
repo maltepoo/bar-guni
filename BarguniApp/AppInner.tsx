@@ -90,6 +90,12 @@ function AppInner() {
         }
         const user = {name: '', email: '', accessToken: token};
         setJwtToken(token);
+        const alramSetting = await EncryptedStorage.getItem('hour');
+        console.log('초기', alramSetting);
+        if (alramSetting === null) {
+          await EncryptedStorage.setItem('hour', '9');
+          await EncryptedStorage.setItem('min', '0');
+        }
         dispatch(userSlice.actions.setUser(user));
       } catch (e) {
         console.log(e);

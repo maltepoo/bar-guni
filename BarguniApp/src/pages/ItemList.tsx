@@ -20,6 +20,7 @@ import {useAppDispatch} from '../store';
 import {
   Basket,
   deleteBasket,
+  getAlarms,
   getBasketInfo,
   registerBasket,
 } from '../api/basket';
@@ -34,6 +35,7 @@ import {getItems, Item} from '../api/item';
 import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import PushNotification from 'react-native-push-notification';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
@@ -81,12 +83,6 @@ function ItemList({navigation}: ItemListScreenProps) {
     setSelectedCategory(index);
   }, []);
 
-  // const remove = useCallback(index: number => {
-  //   console.log(index);
-  //   console.log(items, ' 아이템 들');
-  //   setItems(items.filter(item => item.itemId !== index));
-  // },[]);
-
   const remove = useCallback(
     (index: number) => {
       setItems(items.filter(item => item.itemId !== index));
@@ -107,6 +103,12 @@ function ItemList({navigation}: ItemListScreenProps) {
     [category, remove, selectedBasket.bkt_name, selectedCategory],
   );
 
+  const start = useCallback(() => {
+    setInterval(() => {
+      console.log('time out');
+    }, 1);
+  }, []);
+
   useEffect(() => {
     async function init(): Promise<void> {
       try {
@@ -120,11 +122,18 @@ function ItemList({navigation}: ItemListScreenProps) {
         await setCategory(categoryRes);
         const itemRes = await getItems(baskets[0].bkt_id, false);
         await setItems(itemRes);
+        PushNotification.localNotificationSchedule({
+          title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
+          message: '유통 기한이 지난 물품이 있는지 확인하러가주세요!.', // (required)
+          channelId: 'test',
+          date: new Date(Date.now() + 60 * 1000 * 60 * 12),
+        });
         SplashScreen.hide();
       } catch (e) {
         console.log(e);
       }
     }
+
     init();
   }, [dispatch, isFocused]);
 
@@ -156,8 +165,10 @@ function ItemList({navigation}: ItemListScreenProps) {
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
-        const itemRes = await getItems(id);
+        const itemRes = await getItems(id, false);
         setItems(itemRes);
+        console.log(id);
+        console.log(itemRes);
       } catch (e) {}
     },
     [basket],
@@ -219,6 +230,9 @@ function ItemList({navigation}: ItemListScreenProps) {
 
   return (
     <View style={Style.container}>
+      <Pressable onPress={start}>
+        <Text>스타트제발</Text>
+      </Pressable>
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>

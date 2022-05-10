@@ -1,27 +1,47 @@
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {AlarmI, changeAlarm} from '../api/basket';
+import {Button} from '@rneui/base';
 interface Props {
-  message: string;
+  item: AlarmI;
+  remove: Function;
 }
-function AlarmItem({message}: Props) {
-  console.log(message);
-
+function AlarmItem({item, remove}: Props) {
+  console.log(item);
+  const removeAlarm = useCallback(async () => {
+    try {
+      await changeAlarm(item.id);
+      remove(item.id);
+    } catch (e) {}
+  }, [item.id]);
   return (
     <View style={Style.container}>
       <Text
-        key={message}
+        key={item.itemId}
         ellipsizeMode="tail"
         numberOfLines={2}
         style={Style.multiline}>
-        알람아이템 {message}
+        {item.title}
       </Text>
-      <Text style={Style.time}> 18일 전</Text>
+      <Text style={Style.time}>
+        {Math.ceil(
+          (new Date().getTime() - new Date(item.createdAt).getTime()) /
+            (1000 * 3600 * 24),
+        )}
+        일 전
+      </Text>
+      <Button
+        title={'읽음'}
+        titleStyle={{fontSize: 9}}
+        buttonStyle={{marginTop: 5, marginLeft: 5}}
+        onPress={removeAlarm}
+      />
     </View>
   );
 }
 const Style = StyleSheet.create({
   multiline: {
-    width: '80%',
+    width: '65%',
     marginTop: 10,
     marginLeft: 5,
     fontSize: 15,
