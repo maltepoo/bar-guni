@@ -12,15 +12,7 @@ import PushNotification from 'react-native-push-notification';
 import {AlarmI, getAlarms} from '../api/basket';
 
 function Alarm() {
-  const [count, setCount] = useState(0);
   const [alarms, setAlarms] = useState([] as AlarmI[]);
-  // const alarms: any[] | null = [
-  //   {
-  //     message:
-  //       '바구니에 상한 음식이 있습니다., 바구니에 상한 음식이 있습니다.바구니에 상한 음식이 있습니다.바구니에 상한 음식이 있습니다.바구니에 상한 음식이 있습니다.',
-  //   },
-  //   {message: '유통기한이 10일 남았습니다.'},
-  // ];
 
   const removeAlarm = useCallback(
     (id: number) => {
@@ -37,16 +29,6 @@ function Alarm() {
   );
   // Todo: 해당 바구니로 이동
   const goBasket = useCallback(() => {}, []);
-
-  const alarmTest = useCallback(() => {
-    PushNotification.localNotificationSchedule({
-      title: 'My Notification Title', // (optional)
-      message: 'My Notification Message', // (required)
-      channelId: 'test',
-      date: new Date(new Date().getHours()),
-      repeatType: 'day',
-    });
-  }, []);
 
   useEffect(() => {
     const init = async () => {
