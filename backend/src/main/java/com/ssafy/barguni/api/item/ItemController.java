@@ -88,9 +88,9 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Item>> putItem(
+    public ResponseEntity<ResVO<ItemRes>> putItem(
             @PathVariable @Parameter Long itemId, @RequestBody @Parameter ItemPostReq req) {
-        ResVO<Item> result = new ResVO<>();
+        ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -100,12 +100,12 @@ public class ItemController {
         }
 
         Item item = itemService.changeItem(itemId, req);
-        result.setData(item);
+        result.setData(new ItemRes(item));
         result.setMessage("물품 수정에 성공했습니다.");
         status = HttpStatus.OK;
 
 
-        return new ResponseEntity<ResVO<Item>>(result, status);
+        return new ResponseEntity<ResVO<ItemRes>>(result, status);
     }
 
     @PutMapping("/status/{itemId}/{used}")

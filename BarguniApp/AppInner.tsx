@@ -46,7 +46,7 @@ export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
   Search: undefined;
-  Register: undefined;
+  Register: undefined | Object;
   Settings: undefined;
   SignUp: undefined;
   AlarmSetting: undefined;
