@@ -39,4 +39,9 @@ async function getBasketMembers(basketId: number) {
   return (await axios.delete(`/basket/user/${basketId}`)).data.data;
 }
 
-export {registerBasket, getBasketInfo, updateBasketName, deleteBasket, getBasketMembers};
+async function joinBasket(joinCode: string) {
+  const axios = LoginApiInstance();
+  return (await axios.post(`/user/basket?joinCode=${joinCode}`)).data.data;
+}
+
+export {registerBasket, getBasketInfo, updateBasketName, deleteBasket, getBasketMembers, joinBasket};
