@@ -123,11 +123,14 @@ public class BasketService {
     }
 
     private String getJoinCode(){
-        byte[] array = new byte[20]; // length is bounded by 20
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
+        final int codeLength = 10;
+        StringBuilder sb = new StringBuilder();
 
-        return generatedString;
+        for(int i=0; i < codeLength; i++) {
+            char c = (char) ('A' + new Random().nextInt('z' - 'A'));
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     public Basket findByJoinCode(String joinCode){

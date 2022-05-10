@@ -67,16 +67,16 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Item>> getItem(@PathVariable @Parameter Long itemId) {
-        ResVO<Item> result = new ResVO<>();
+    public ResponseEntity<ResVO<ItemRes>> getItem(@PathVariable @Parameter Long itemId) {
+        ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
 
         Item findItem = itemService.getById(itemId);
-        result.setData(findItem);
+        result.setData(new ItemRes(findItem));
         result.setMessage("물품 조회에 성공했습니다.");
         status = HttpStatus.OK;
 
-        return new ResponseEntity<ResVO<Item>>(result, status);
+        return new ResponseEntity<ResVO<ItemRes>>(result, status);
     }
 
 
@@ -116,16 +116,17 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Item>> checkUsedItem(
+    public ResponseEntity<ResVO<ItemRes>> checkUsedItem(
             @PathVariable @Parameter Long itemId, @PathVariable @Parameter Boolean used) {
-        ResVO<Item> result = new ResVO<>();
+        ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
 
-        itemService.changeStatus(itemId, used);
+        Item item = itemService.changeStatus(itemId, used);
+        result.setData(new ItemRes(item));
         result.setMessage("물품 수정에 성공했습니다.");
         status = HttpStatus.NO_CONTENT;
 
-        return new ResponseEntity<ResVO<Item>>(result, status);
+        return new ResponseEntity<ResVO<ItemRes>>(result, status);
     }
 
     @DeleteMapping("/{itemId}")
@@ -136,8 +137,8 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Item>> deleteItem(@PathVariable @Parameter Long itemId) {
-        ResVO<Item> result = new ResVO<>();
+    public ResponseEntity<ResVO<String>> deleteItem(@PathVariable @Parameter Long itemId) {
+        ResVO<String> result = new ResVO<>();
         HttpStatus status;
 
         itemService.deleteById(itemId);
@@ -145,7 +146,7 @@ public class ItemController {
         status = HttpStatus.NO_CONTENT;
 
 
-        return new ResponseEntity<ResVO<Item>>(result, status);
+        return new ResponseEntity<ResVO<String>>(result, status);
     }
 
 
@@ -206,14 +207,14 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Integer>> deleteUsedItems(@PathVariable @Parameter Long bktId){
-        ResVO<Integer> result = new ResVO<>();
+    public ResponseEntity<ResVO<String>> deleteUsedItems(@PathVariable @Parameter Long bktId){
+        ResVO<String> result = new ResVO<>();
         HttpStatus status = null;
 
-        result.setData(itemService.deleteUsedItemInBasket(bktId));
+        result.setData(itemService.deleteUsedItemInBasket(bktId) + "개의 아이템을 삭제했습니다.");
         result.setMessage("휴지통 비우기 성공");
         status = HttpStatus.OK;
 
-        return new ResponseEntity<ResVO<Integer>>(result, status);
+        return new ResponseEntity<ResVO<String>>(result, status);
     }
 }
