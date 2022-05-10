@@ -14,7 +14,7 @@ interface HomeItem {
 
 function HomeItems(props: HomeItem) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const item = props.item;
+  let item = props.item;
   const deleteItem = useCallback(async () => {
     // Todo : 삭제 할 아이템
     try {
@@ -29,8 +29,8 @@ function HomeItems(props: HomeItem) {
   const shelfLife = new Date();
   const onClick = useCallback(() => {
     navigation.navigate('ItemDetail', {...item, basketName: props.basketName});
-  }, [item, navigation]);
-  return item.category === props.category ? (
+  }, [item, navigation, props.basketName]);
+  return item.category === props.category || props.category === '전체' ? (
     <View>
       <View style={Style.container}>
         <View style={Style.row}>

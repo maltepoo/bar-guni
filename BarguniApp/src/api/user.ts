@@ -43,4 +43,18 @@ async function getBaskets(): Promise<Basket[]> {
   return (await loginAxios.get('/user/basket')).data.data;
 }
 
-export {login, getProfile, changeName, signOut, getBaskets};
+async function changeDefaultBasket(id: number) {
+  const loginAxios = LoginApiInstance();
+  return (
+    await loginAxios.put(`/user/basket/default/{basketId}?basketId=${id}`)
+  ).data.data;
+}
+
+export {
+  login,
+  changeDefaultBasket,
+  getProfile,
+  changeName,
+  signOut,
+  getBaskets,
+};

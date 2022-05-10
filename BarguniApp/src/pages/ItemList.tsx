@@ -14,7 +14,7 @@ import {RootStackParamList} from '../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
-import {getBaskets, getProfile} from '../api/user';
+import {changeDefaultBasket, getBaskets, getProfile} from '../api/user';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
 import {
@@ -103,12 +103,6 @@ function ItemList({navigation}: ItemListScreenProps) {
     [category, remove, selectedBasket.bkt_name, selectedCategory],
   );
 
-  const start = useCallback(() => {
-    setInterval(() => {
-      console.log('time out');
-    }, 1);
-  }, []);
-
   useEffect(() => {
     async function init(): Promise<void> {
       try {
@@ -119,15 +113,19 @@ function ItemList({navigation}: ItemListScreenProps) {
         await setBasket(baskets);
         await setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
-        await setCategory(categoryRes);
+        console.log(categoryRes);
+        await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
         const itemRes = await getItems(baskets[0].bkt_id, false);
         await setItems(itemRes);
-        PushNotification.localNotificationSchedule({
-          title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
-          message: '유통 기한이 지난 물품이 있는지 확인하러가주세요!.', // (required)
-          channelId: 'test',
-          date: new Date(Date.now() + 60 * 1000 * 60 * 12),
-        });
+        // PushNotification.localNotificationSchedule({
+        //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
+        //   message: '유통 기한이 지난 물품이 있는지 확인하러가주세요!.', // (required)
+        //   channelId: 'test',
+        //   date: new Date(Date.now() + 60 * 1000 * 60 * 12),
+        // });
+        const res = await getAlarms();
+        const list = res.filter(item => item.status === 'UNCHECKED');
+        setCount(list.length);
         SplashScreen.hide();
       } catch (e) {
         console.log(e);
@@ -161,7 +159,7 @@ function ItemList({navigation}: ItemListScreenProps) {
     async (id: number) => {
       try {
         const res = await getCategory(id);
-        setCategory(res);
+        setCategory([{cateId: -1, name: '전체'}, ...res]);
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
@@ -227,11 +225,21 @@ function ItemList({navigation}: ItemListScreenProps) {
       </Dialog>
     );
   };
+  const setDefault = useCallback(async () => {
+    try {
+      console.log(selectedBasket);
+      await changeDefaultBasket(selectedBasket.bkt_id);
+      const res = await getBaskets();
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [selectedBasket]);
 
   return (
     <View style={Style.container}>
-      <Pressable onPress={start}>
-        <Text>스타트제발</Text>
+      <Pressable onPress={setDefault}>
+        <Text>테스트</Text>
       </Pressable>
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
