@@ -71,20 +71,17 @@ public class ItemService {
     public Item changeItem(Long id, ItemPostReq req) {
         Item item = itemRepository.getById(id);
 
-//        Basket bkt = basketRepository.findById(req.getBkt_id()).get();
-//        Picture pic = pictureRepository.findById(req.getPic_id()).get();
-//        Categories cate = categoriesRepository.findById(req.getCate_id()).get();
-        Basket bkt = new Basket();
-        Picture pic = new Picture();
-        Categories cate = new Categories();
 
         if (req.getBktId() != null) {
+            Basket bkt = basketService.getBasket(req.getBktId());
             item.setBasket(bkt);
         }
         if (req.getPicId() != null) {
+            Picture pic = pictureService.getById(req.getPicId());
             item.setPicture(pic);
         }
         if (req.getCateId() != null) {
+            Categories cate = categoryService.getById(req.getCateId());
             item.setCategory(cate);
         }
         if (req.getName() != null) {
@@ -135,6 +132,7 @@ public class ItemService {
             if(!userBasketService.existsByUserAndBasket(userId, basketId))
                 throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
             return itemRepository.getAllInBasket(basketId, used);
+//            return itemRepository.findItemsByBasket_IdAndUsed(basketId, used);
         }
     }
 
@@ -176,5 +174,9 @@ public class ItemService {
         Long bktId = item.getBasket().getId();
         if (userBasketService.findByUserAndBasket(userId, bktId) != null) return true;
         return false;
+    }
+
+    public Integer deleteUsedItemInBasket(Long bktId) {
+        return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
     }
 }
