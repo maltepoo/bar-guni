@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^1.8.1",
     "@rneui/base": "^4.0.0-rc.2",
     "@rneui/themed": "^4.0.0-rc.2",
+    "@types/react-native-push-notification": "^8.1.0",
     "appcenter": "4.4.4",
     "appcenter-analytics": "4.4.4",
     "appcenter-crashes": "4.4.4",
