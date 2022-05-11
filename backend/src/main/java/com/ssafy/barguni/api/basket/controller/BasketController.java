@@ -4,7 +4,7 @@ import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.basket.vo.BasketRes;
 import com.ssafy.barguni.api.common.ResVO;
-import com.ssafy.barguni.api.user.UserRes;
+import com.ssafy.barguni.api.user.vo.UserRes;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
