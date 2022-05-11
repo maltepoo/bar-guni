@@ -17,6 +17,7 @@ import {RootState} from '../store/reducer';
 import {changeDefaultBasket, getBaskets, getProfile} from '../api/user';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
+
 import {
   Basket,
   deleteBasket,
@@ -106,9 +107,9 @@ function ItemList({navigation}: ItemListScreenProps) {
   useEffect(() => {
     async function init(): Promise<void> {
       try {
-        console.log('init');
         const userRes = await getProfile();
         await dispatch(userSlice.actions.setUserName(userRes));
+        console.log(userRes);
         const baskets = await getBaskets();
         await setBasket(baskets);
         await setSelectedBasket(baskets[0]);
@@ -116,6 +117,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         console.log(categoryRes);
         await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
         const itemRes = await getItems(baskets[0].bkt_id, false);
+        console.log(itemRes);
         await setItems(itemRes);
         // PushNotification.localNotificationSchedule({
         //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
@@ -185,7 +187,8 @@ function ItemList({navigation}: ItemListScreenProps) {
     console.log(basket[deleteIndex]);
     try {
       if (deleteMode === 'basket') {
-        const res2 = await deleteBasket(basket[deleteIndex].bkt_id);
+        // Todo: 기본 바구니면 삭제 막아야함
+        await deleteBasket(basket[deleteIndex].bkt_id);
         const res = await getBaskets();
         setBasket(res);
       } else if (deleteMode === 'category') {
@@ -227,10 +230,8 @@ function ItemList({navigation}: ItemListScreenProps) {
   };
   const setDefault = useCallback(async () => {
     try {
-      console.log(selectedBasket);
       await changeDefaultBasket(selectedBasket.bkt_id);
       const res = await getBaskets();
-      console.log(res);
     } catch (e) {
       console.log(e);
     }
@@ -238,9 +239,6 @@ function ItemList({navigation}: ItemListScreenProps) {
 
   return (
     <View style={Style.container}>
-      <Pressable onPress={setDefault}>
-        <Text>테스트</Text>
-      </Pressable>
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
@@ -321,6 +319,13 @@ function ItemList({navigation}: ItemListScreenProps) {
             basket.map((item, index) => (
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
+                <Pressable>
+                  {item.bkt_id === user.defaultBasket ? (
+                    <Icon name={'star-border'} />
+                  ) : (
+                    <Icon name={'star'} />
+                  )}
+                </Pressable>
                 <Pressable
                   onPress={() => {
                     showDeleteDialog(index, 'basket');
@@ -451,7 +456,7 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
   },
   text: {
-    width: '90%',
+    width: '80%',
   },
   buttonBox: {
     marginRight: 20,

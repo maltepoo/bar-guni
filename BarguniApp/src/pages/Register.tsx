@@ -9,11 +9,13 @@ import {
   TextInput,
   Button,
   Alert,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import {LoginApiInstance} from '../api/instance';
+import {fileApiInstance, LoginApiInstance} from '../api/instance';
 import Config from 'react-native-config';
 import {getItems, ItemReq, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
@@ -22,6 +24,8 @@ import {Basket, getBasketInfo} from '../api/basket';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import ImagePicker from 'react-native-image-crop-picker';
+import ImageResizer from 'react-native-image-resizer';
 
 type RegisterScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -48,12 +52,73 @@ function Register({navigation}: RegisterScreenProps) {
   const [regOpen, setRegOpen] = useState(false);
   const [shelfLife, setShelfLife] = useState(new Date());
   const route = useRoute<RouteProp<RootStackParamList>>();
+  const [image, setImage] = useState<{
+    uri: string;
+    name: string;
+    type: string;
+  }>();
+  const [preview, setPreview] = useState<{uri: string}>();
+
+  const onResponse = useCallback(async response => {
+    console.log(response.width, response.height, response.exif);
+    setPreview({uri: `data:${response.mime};base64,${response.data}`});
+    const orientation = (response.exif as any)?.Orientation;
+    console.log('orientation', orientation);
+    return ImageResizer.createResizedImage(
+      response.path,
+      600,
+      600,
+      response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
+      100,
+      0,
+    ).then(r => {
+      console.log(r.uri, r.name);
+      setImage({
+        uri: r.uri,
+        name: r.name,
+        type: response.mime,
+      });
+    });
+  }, []);
+  const onTakePhoto = useCallback(() => {
+    return ImagePicker.openCamera({
+      includeBase64: true,
+      includeExif: true,
+      cropping: true,
+    })
+      .then(onResponse)
+      .catch(console.log);
+  }, [onResponse]);
+
+  const onChangeFile = useCallback(() => {
+    return ImagePicker.openPicker({
+      includeExif: true,
+      includeBase64: true,
+      mediaType: 'photo',
+    })
+      .then(onResponse)
+      .catch(console.log);
+  }, [onResponse]);
+
   const onSubmit = useCallback(async () => {
     try {
+      let imgRes = {id: null, picUrl: '', title: ''};
+      if (image) {
+        const formData = new FormData();
+        formData.append('image', image);
+        try {
+          const axios = fileApiInstance();
+          console.log(formData, 'data!');
+          imgRes = (await axios.post('/picture?entity=ITEM', formData)).data
+            .data;
+        } catch (e) {
+          console.log(e, 'error!!');
+        }
+      }
+      console.log(imgRes);
       if (alertBy === 'D_DAY') {
         shelfLife.setDate(new Date().getDate() + day);
       }
-      console.log(shelfLife, '유효기간');
       const item: ItemReq = {
         bktId: selectedBasket,
         cateId: selectedCategory,
@@ -61,10 +126,10 @@ function Register({navigation}: RegisterScreenProps) {
         shelfLife: shelfLife.toJSON().substring(0, 10),
         alertBy: alertBy,
         content: content,
-        picId: null,
+        picId: imgRes.id,
         dday: day,
       };
-      console.log(item);
+      console.log(item, 'ItemReq');
       await registerItem(item);
       navigation.navigate('ItemList');
     } catch (error) {
@@ -74,6 +139,7 @@ function Register({navigation}: RegisterScreenProps) {
     alertBy,
     content,
     day,
+    image,
     name,
     navigation,
     selectedBasket,
@@ -95,7 +161,18 @@ function Register({navigation}: RegisterScreenProps) {
   }, []);
 
   return (
-    <View>
+    <ScrollView style={Style.background}>
+      <View style={Style.preview}>
+        {preview && <Image style={Style.preview} source={preview} />}
+      </View>
+      <View style={Style.row}>
+        <Pressable style={Style.imageButton} onPress={onTakePhoto}>
+          <Text style={Style.imageText}>이미지 촬영</Text>
+        </Pressable>
+        <Pressable style={Style.imageButton} onPress={onChangeFile}>
+          <Text style={Style.imageText}>이미지 선택</Text>
+        </Pressable>
+      </View>
       <View style={Style.cont}>
         <Text style={{marginRight: '5%'}}>제품명 :</Text>
         <TextInput
@@ -217,15 +294,47 @@ function Register({navigation}: RegisterScreenProps) {
         />
       </View>
       <View style={{alignItems: 'center'}}>
-        <TouchableOpacity style={Style.button} onPress={onSubmit}>
-          <Text>등록</Text>
+        <TouchableOpacity style={Style.imageButton} onPress={onSubmit}>
+          <Text style={Style.imageText}>등록</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const Style = StyleSheet.create({
+  imageText: {
+    color: 'white',
+  },
+  imageButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    width: 120,
+    alignItems: 'center',
+    backgroundColor: '#0094FF',
+    borderRadius: 5,
+    margin: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    marginLeft: '15%',
+  },
+  background: {
+    backgroundColor: 'white',
+    height: '100%',
+  },
+  preview: {
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width - 30,
+    height: Dimensions.get('window').height / 3,
+    backgroundColor: '#D2D2D2',
+    marginBottom: 10,
+  },
+  previewImage: {
+    height: Dimensions.get('window').height / 3,
+    resizeMode: 'cover',
+  },
   cont: {
+    marginTop: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
