@@ -15,6 +15,8 @@ public interface UserBasketRepository extends JpaRepository<UserBasket, Long>, C
     @Query("delete from UserBasket ub where ub.user.id=:user_id and ub.basket.id=:bkt_id")
     void deleteById(Long user_id, Long bkt_id);
 
+    Integer deleteUserBasketsByUser(User user);
+
     UserBasket findByUserIdAndBasketId(Long userId, Long basketId);
     Boolean existsByUserIdAndBasketId(Long userId, Long basketId);
 
@@ -25,4 +27,7 @@ public interface UserBasketRepository extends JpaRepository<UserBasket, Long>, C
 
     @Query("select ub from UserBasket ub join fetch ub.user u where ub.basket.id = :basketId")
     List<UserBasket> findAllUserByBasketId(Long basketId);
+
+    @Query("select distinct ub.basket.id from UserBasket ub")
+    List<Long> getUsedBasketIds();
 }
