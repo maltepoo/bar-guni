@@ -2,6 +2,9 @@ package com.ssafy.barguni.api.product;
 
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.Picture.PictureEntity;
+import com.ssafy.barguni.api.error.ErrorCode;
+import com.ssafy.barguni.api.error.ErrorResVO;
+import com.ssafy.barguni.api.error.Exception.ProductException;
 import com.ssafy.barguni.common.util.barcodeSearch.BarcodeSearchUtil;
 import com.ssafy.barguni.common.util.NaverImgSearchUtil;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +47,9 @@ public class ProductService {
                     e.printStackTrace();
                 }
             }
-            System.out.println("제품명" + name);
+
+            if (name==null) throw new ProductException(new ErrorResVO(ErrorCode.PRODUCT_CODE_NOT_FOUND));
+
             Picture pic = searchImg(name);
             Product newProd = Product.createProduct(pic, barcode, name);
             return prodRepository.save(newProd);

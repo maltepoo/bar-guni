@@ -1,10 +1,6 @@
 package com.ssafy.barguni.api.error;
 
-import com.ssafy.barguni.api.error.Exception.BasketException;
-import com.ssafy.barguni.api.error.Exception.CategoryException;
-import com.ssafy.barguni.api.error.Exception.JwtException;
-import com.ssafy.barguni.api.error.Exception.OauthException;
-import com.ssafy.barguni.api.error.Exception.UsersException;
+import com.ssafy.barguni.api.error.Exception.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -52,6 +48,13 @@ public class CommonErrorHandler {
     @ExceptionHandler(UsersException.class)
     protected ResponseEntity<ErrorResVO> handleUserException(UsersException e) {
         log.error("handleBasketException 핸들");
+        return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
+    }
+
+    // Product 관련 오류
+    @ExceptionHandler(ProductException.class)
+    protected ResponseEntity<ErrorResVO> handleProductException(ProductException e) {
+        log.error("handleProductException 핸들");
         return new ResponseEntity<>(e.getErrorResVO(), e.getErrorResVO().getStatus());
     }
 
