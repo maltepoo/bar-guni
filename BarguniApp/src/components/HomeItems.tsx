@@ -5,6 +5,7 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Divider} from '@rneui/base';
 import {changeItemStatus, Item} from '../api/item';
 import {getCategory} from '../api/category';
+import Config from 'react-native-config';
 interface HomeItem {
   item: Item;
   category: string;
@@ -26,6 +27,7 @@ function HomeItems(props: HomeItem) {
     }
     // console.log(item);
   }, [item.itemId, props]);
+  console.log(Config.BASE_URL + item.pictureUrl);
   const shelfLife = new Date();
   const onClick = useCallback(() => {
     navigation.navigate('ItemDetail', {...item, basketName: props.basketName});
@@ -34,7 +36,10 @@ function HomeItems(props: HomeItem) {
     <View>
       <View style={Style.container}>
         <View style={Style.row}>
-          <Image style={Style.picture} source={require('../assets/bell.png')} />
+          <Image
+            style={Style.picture}
+            source={{uri: Config.BASE_URL + item.pictureUrl}}
+          />
         </View>
         <Pressable style={Style.row2} onPress={onClick}>
           <Text style={Style.date}> {item.name}</Text>
