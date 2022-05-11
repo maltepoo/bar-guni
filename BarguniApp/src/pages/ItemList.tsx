@@ -56,6 +56,7 @@ function ItemList() {
   const [deleteIndex, setDeleteIndex] = useState(0);
   const [deleteMode, setDeleteMode] = useState('');
   const isFocused = useIsFocused();
+  const [render, setRender] = useState(false);
   const toggleDeleteDialog = useCallback(() => {
     setDeleteDialog(!deleteDialog);
   }, [deleteDialog]);
@@ -103,17 +104,21 @@ function ItemList() {
   useEffect(() => {
     async function init(): Promise<void> {
       try {
+        console.log(init);
         const userRes = await getProfile();
-        await dispatch(userSlice.actions.setUserName(userRes));
+        await dispatch(userSlice.actions.setUserWithoutToken(userRes));
         console.log(userRes);
         const baskets = await getBaskets();
+        const index = baskets.findIndex(
+          item => item.bkt_name === userRes.defaultBasket.name,
+        );
+        baskets.unshift(baskets[index]);
+        baskets.splice(index + 1, 1);
         await setBasket(baskets);
         await setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
-        console.log(categoryRes);
         await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
         const itemRes = await getItems(baskets[0].bkt_id, false);
-        console.log(itemRes);
         await setItems(itemRes);
         // PushNotification.localNotificationSchedule({
         //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
@@ -131,8 +136,7 @@ function ItemList() {
     }
 
     init();
-  }, [dispatch, isFocused]);
-
+  }, [dispatch, isFocused, render]);
   const addBasket = useCallback(async () => {
     try {
       await registerBasket(basketName);
@@ -188,7 +192,10 @@ function ItemList() {
         const res = await getBaskets();
         setBasket(res);
       } else if (deleteMode === 'category') {
-        await deleteCategory(category[deleteIndex].cateId);
+        await deleteCategory(
+          selectedBasket.bkt_id,
+          category[deleteIndex].cateId,
+        );
         const res = await getCategory(selectedBasket.bkt_id);
         setCategory(res);
       }
@@ -224,21 +231,37 @@ function ItemList() {
       </Dialog>
     );
   };
-  const setDefault = useCallback(async () => {
-    try {
-      await changeDefaultBasket(selectedBasket.bkt_id);
-      const res = await getBaskets();
-    } catch (e) {
-      console.log(e);
-    }
-  }, [selectedBasket]);
-
+  const setDefaultBasket = useCallback(
+    async (bktId: number) => {
+      try {
+        console.log(bktId);
+        await changeDefaultBasket(bktId);
+        const res = await getProfile();
+        dispatch(userSlice.actions.setUserWithoutToken(res));
+        const baskets = await getBaskets();
+        const index = baskets.findIndex(
+          item => item.bkt_name === res.defaultBasket.name,
+        );
+        // baskets.unshift(baskets[index]);
+        // baskets.splice(index + 1, 1);
+        // console.log(baskets);
+        // setBasketDialog(false);
+        // setOpen(false);
+        // setBasket(baskets);
+        // console.log(res);
+        setRender(!render);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [dispatch, render],
+  );
   return (
     <View style={Style.container}>
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
-        <Text style={Style.topText2}>{count}개가 있어요</Text>
+        <Text style={Style.topText}>{count}개가 있어요</Text>
       </View>
       <Picker
         selectedValue={selectedBasket.bkt_id}
@@ -250,7 +273,7 @@ function ItemList() {
         {basket.map(item => (
           <Picker.Item
             key={item.bkt_id}
-            label={item.bkt_name}
+            label={item.count > 1 ? item.bkt_name + '(공유)' : item.bkt_name}
             value={item.bkt_id}
             style={Style.dropdownItem}
           />
@@ -309,17 +332,20 @@ function ItemList() {
         />
       </SpeedDial>
       <Dialog isVisible={basketDialog} onBackdropPress={toggleBasketDialog}>
-        <Dialog.Title title="바구니 관리" />
+        <Dialog.Title titleStyle={Style.fontStyle} title="바구니 관리" />
         <ScrollView style={Style.scroll}>
           {basket.length > 0 ? (
             basket.map((item, index) => (
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
-                <Pressable>
-                  {item.bkt_id === user.defaultBasket ? (
-                    <Icon name={'star-border'} />
-                  ) : (
+                <Pressable
+                  onPress={() => {
+                    setDefaultBasket(item.bkt_id).then();
+                  }}>
+                  {item.bkt_name === user.defaultBasket.name ? (
                     <Icon name={'star'} />
+                  ) : (
+                    <Icon name={'star-border'} />
                   )}
                 </Pressable>
                 <Pressable
@@ -344,20 +370,24 @@ function ItemList() {
       </Dialog>
 
       <Dialog isVisible={categoryDialog} onBackdropPress={toggleCategoryDialog}>
-        <Dialog.Title title="카테고리 관리" />
+        <Dialog.Title titleStyle={Style.fontStyle} title="카테고리 관리" />
         <ScrollView style={Style.scroll}>
           {category.length > 0 ? (
-            category.map((item, index) => (
-              <View style={Style.row} key={item.cateId}>
-                <Text style={Style.text}>{item.name}</Text>
-                <Pressable
-                  onPress={() => {
-                    showDeleteDialog(index, 'category');
-                  }}>
-                  <Icon name={'cancel'} />
-                </Pressable>
-              </View>
-            ))
+            category.map((item, index) =>
+              item.cateId !== -1 ? (
+                <View style={Style.row} key={item.cateId}>
+                  <Text style={Style.text}>{item.name}</Text>
+                  <Pressable
+                    onPress={() => {
+                      showDeleteDialog(index, 'category');
+                    }}>
+                    <Icon name={'cancel'} />
+                  </Pressable>
+                </View>
+              ) : (
+                <></>
+              ),
+            )
           ) : (
             <></>
           )}
@@ -375,6 +405,9 @@ function ItemList() {
 }
 
 const Style = StyleSheet.create({
+  fontStyle: {
+    fontFamily: 'Pretendard-Black',
+  },
   modal: {
     position: 'absolute',
     flex: 0.1,
@@ -388,17 +421,9 @@ const Style = StyleSheet.create({
     marginLeft: 12,
     marginTop: 3,
     fontSize: 20,
+    fontFamily: 'Pretendard-Black',
     fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'NotoSansKR-Black',
-  },
-  topText2: {
-    marginLeft: 12,
-    marginTop: 3,
-    fontSize: 20,
-    // fontWeight: 'bold',
-    color: 'black',
-    fontFamily: 'Jua Regular',
   },
   dropdown: {
     marginTop: 20,
@@ -408,6 +433,7 @@ const Style = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
+    fontFamily: 'Pretendard-Black',
   },
   container: {
     flex: 1,
@@ -429,6 +455,7 @@ const Style = StyleSheet.create({
     height: 20,
     alignItems: 'center',
     fontSize: 13,
+    fontFamily: 'Pretendard-Light',
   },
   selectButton: {
     backgroundColor: 'rgba(0, 148, 255, 0.6)',
@@ -444,6 +471,7 @@ const Style = StyleSheet.create({
     alignItems: 'center',
     height: 20,
     fontSize: 13,
+    fontFamily: 'Pretendard-Light',
   },
   category: {
     flexDirection: 'row',
