@@ -15,8 +15,8 @@ insert_sql = "INSERT INTO item (item_id, dday, alert_by, content, name, reg_date
 
 
 
-for i in range(100):
-    next_id = 500+i
+for i in range(10000):
+    next_id = 10000+i
 
 
 

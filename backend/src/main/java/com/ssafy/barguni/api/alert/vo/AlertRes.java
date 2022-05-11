@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 public class AlertRes {
     private Long id;
@@ -16,6 +18,7 @@ public class AlertRes {
     private String title;
     private String content;
     private AlertStatus status;
+    private LocalDate createdAt;
 
     public AlertRes(Alert alert){
         this.id = alert.getId();
@@ -26,5 +29,6 @@ public class AlertRes {
         this.title = alert.getTitle();
         this.content = alert.getContent();
         this.status = alert.getStatus();
+        this.createdAt = alert.getCreatedAt();
     }
 }

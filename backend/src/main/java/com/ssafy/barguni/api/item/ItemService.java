@@ -131,8 +131,8 @@ public class ItemService {
             // 해당 바구니 접근 권한이 없는 경우
             if(!userBasketService.existsByUserAndBasket(userId, basketId))
                 throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
-//            return itemRepository.getAllInBasket(basketId, used);
-            return itemRepository.findItemsByBasket_IdAndUsed(basketId, used);
+            return itemRepository.getAllInBasket(basketId, used);
+//            return itemRepository.findItemsByBasket_IdAndUsed(basketId, used); // used 동적 쿼리 불가능
         }
     }
 

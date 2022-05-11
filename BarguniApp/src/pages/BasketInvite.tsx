@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Image, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
 import { Snackbar } from 'react-native-paper';
 import Clipboard from '@react-native-clipboard/clipboard';
-import Feather from "react-native-vector-icons/Feather";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {getBasketInfo} from "../api/basket";
 
 function BasketInvite({route}) {
@@ -44,7 +44,7 @@ function BasketInvite({route}) {
       </View>
       <View style={styles.inviteContainer}>
         <TextInput value={inviteCode} editable={false} selectTextOnFocus={true} style={styles.inviteText}/>
-        <Feather name="link" style={styles.linkIcon}/>
+        <FontAwesome5 name="link" style={styles.linkIcon}/>
       </View>
       <Pressable onPress={copyInviteCode} style={styles.inviteBtn}>
         <Text style={styles.inviteBtnText}>초대코드 복사</Text>

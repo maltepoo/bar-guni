@@ -34,6 +34,8 @@ public class Alert {
     @Enumerated(value = EnumType.STRING)
     private AlertStatus status;
 
+    private LocalDate createdAt;
+
     public Alert(){}
 
     public Alert(Item item, String msg) {
@@ -41,6 +43,7 @@ public class Alert {
         this.status = AlertStatus.UNCHECKED;
         this.basket = item.getBasket();
         this.item = item;
+        this.createdAt = LocalDate.now();
 
         LocalDate expirationDate = item.getAlertBy() == AlertBy.SHELF_LIFE ?
                 item.getShelfLife() : item.getRegDate().plusDays(item.getDDAY());

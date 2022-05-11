@@ -14,12 +14,14 @@ import {RootStackParamList} from '../../AppInner';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
-import {getBaskets, getProfile} from '../api/user';
+import {changeDefaultBasket, getBaskets, getProfile} from '../api/user';
 import userSlice from '../slices/user';
 import {useAppDispatch} from '../store';
+
 import {
   Basket,
   deleteBasket,
+  getAlarms,
   getBasketInfo,
   registerBasket,
 } from '../api/basket';
@@ -34,6 +36,7 @@ import {getItems, Item} from '../api/item';
 import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
+import PushNotification from 'react-native-push-notification';
 type ItemListScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'ItemList'
@@ -81,12 +84,6 @@ function ItemList({navigation}: ItemListScreenProps) {
     setSelectedCategory(index);
   }, []);
 
-  // const remove = useCallback(index: number => {
-  //   console.log(index);
-  //   console.log(items, ' 아이템 들');
-  //   setItems(items.filter(item => item.itemId !== index));
-  // },[]);
-
   const remove = useCallback(
     (index: number) => {
       setItems(items.filter(item => item.itemId !== index));
@@ -110,21 +107,33 @@ function ItemList({navigation}: ItemListScreenProps) {
   useEffect(() => {
     async function init(): Promise<void> {
       try {
-        console.log('init');
         const userRes = await getProfile();
         await dispatch(userSlice.actions.setUserName(userRes));
+        console.log(userRes);
         const baskets = await getBaskets();
         await setBasket(baskets);
         await setSelectedBasket(baskets[0]);
         const categoryRes = await getCategory(baskets[0].bkt_id);
-        await setCategory(categoryRes);
+        console.log(categoryRes);
+        await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
         const itemRes = await getItems(baskets[0].bkt_id, false);
+        console.log(itemRes);
         await setItems(itemRes);
+        // PushNotification.localNotificationSchedule({
+        //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
+        //   message: '유통 기한이 지난 물품이 있는지 확인하러가주세요!.', // (required)
+        //   channelId: 'test',
+        //   date: new Date(Date.now() + 60 * 1000 * 60 * 12),
+        // });
+        const res = await getAlarms();
+        const list = res.filter(item => item.status === 'UNCHECKED');
+        setCount(list.length);
         SplashScreen.hide();
       } catch (e) {
         console.log(e);
       }
     }
+
     init();
   }, [dispatch, isFocused]);
 
@@ -152,12 +161,14 @@ function ItemList({navigation}: ItemListScreenProps) {
     async (id: number) => {
       try {
         const res = await getCategory(id);
-        setCategory(res);
+        setCategory([{cateId: -1, name: '전체'}, ...res]);
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
         setSelectedBasket(selectBasket);
-        const itemRes = await getItems(id);
+        const itemRes = await getItems(id, false);
         setItems(itemRes);
+        console.log(id);
+        console.log(itemRes);
       } catch (e) {}
     },
     [basket],
@@ -176,7 +187,8 @@ function ItemList({navigation}: ItemListScreenProps) {
     console.log(basket[deleteIndex]);
     try {
       if (deleteMode === 'basket') {
-        const res2 = await deleteBasket(basket[deleteIndex].bkt_id);
+        // Todo: 기본 바구니면 삭제 막아야함
+        await deleteBasket(basket[deleteIndex].bkt_id);
         const res = await getBaskets();
         setBasket(res);
       } else if (deleteMode === 'category') {
@@ -216,6 +228,14 @@ function ItemList({navigation}: ItemListScreenProps) {
       </Dialog>
     );
   };
+  const setDefault = useCallback(async () => {
+    try {
+      await changeDefaultBasket(selectedBasket.bkt_id);
+      const res = await getBaskets();
+    } catch (e) {
+      console.log(e);
+    }
+  }, [selectedBasket]);
 
   return (
     <View style={Style.container}>
@@ -299,6 +319,13 @@ function ItemList({navigation}: ItemListScreenProps) {
             basket.map((item, index) => (
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
+                <Pressable>
+                  {item.bkt_id === user.defaultBasket ? (
+                    <Icon name={'star-border'} />
+                  ) : (
+                    <Icon name={'star'} />
+                  )}
+                </Pressable>
                 <Pressable
                   onPress={() => {
                     showDeleteDialog(index, 'basket');
@@ -438,7 +465,7 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
   },
   text: {
-    width: '90%',
+    width: '80%',
   },
   buttonBox: {
     marginRight: 20,
