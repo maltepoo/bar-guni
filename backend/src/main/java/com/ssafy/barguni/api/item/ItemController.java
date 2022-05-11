@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -229,10 +230,10 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public void socialLoginType() throws JSONException {
+    public void clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile image) throws JSONException {
 
         ClovaOcrUtil clovaOcrUtil = new ClovaOcrUtil();
-        clovaOcrUtil.ocrTest();
-//        clovaOcrUtil.getOcr();
+//        clovaOcrUtil.ocrTest();
+//        clovaOcrUtil.getOcr(image);
     }
 }
