@@ -7,26 +7,27 @@ import {RootStackParamList} from '../../AppInner';
 function Manual() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const next = useCallback(() => {
-    navigation.navigate('Manual2');
+    navigation.navigate('Login');
   }, [navigation]);
   return (
     <View style={Style.background}>
       <View style={Style.headerBox}>
-        <Text style={Style.header}>유통기한을 관리하는</Text>
-        <Text style={Style.header}>가장 효율적인 방법</Text>
+        <Text style={Style.header}>유통기한 임박 상품</Text>
+        <Text style={Style.header}>알림을 보내드려요</Text>
       </View>
       <View style={Style.contentBox}>
-        <Text style={Style.content}>제품들을 바구니에 등록하여 유통기한을</Text>
-        <Text style={Style.content}>관리할 수 있어요</Text>
+        <Text style={Style.content}>
+          깜빡 잊고 유통기한을 넘겨 물건을 버려보신적이
+        </Text>
+        <Text style={Style.content}>
+          있지 않으신가요? 바구니에서는 유통기한이
+        </Text>
+        <Text style={Style.content}>
+          임박한 상품들에 대한 알림을 보내드려요
+        </Text>
       </View>
       <View style={Style.imageBox}>
-        <Image style={Style.image} source={require('../assets/expired.png')} />
-        <Button
-          title={'다음'}
-          titleStyle={Style.buttonTitle}
-          buttonStyle={Style.button}
-          onPress={next}
-        />
+        <Button title={'바구니 시작하기'} onPress={next} />
       </View>
     </View>
   );
@@ -49,7 +50,7 @@ const Style = StyleSheet.create({
   },
   header: {
     fontFamily: 'Pretendard-Bold',
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   contentBox: {
@@ -67,7 +68,7 @@ const Style = StyleSheet.create({
     flex: 1,
   },
   imageBox: {
-    alignItems: 'center',
+    marginTop: '85%',
   },
   image: {
     width: '70%',
