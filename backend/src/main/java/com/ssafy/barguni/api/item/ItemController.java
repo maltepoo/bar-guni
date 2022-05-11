@@ -11,12 +11,15 @@ import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
+import com.ssafy.barguni.common.util.ClovaOcrUtil;
+import com.ssafy.barguni.common.util.SocialLoginType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -216,5 +219,20 @@ public class ItemController {
         status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<String>>(result, status);
+    }
+
+    @GetMapping("/ocr")
+    @Operation(summary = "OCR 진행", description = "사진 파일로 해당 정보를 받아온다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public void socialLoginType() throws JSONException {
+
+        ClovaOcrUtil clovaOcrUtil = new ClovaOcrUtil();
+        clovaOcrUtil.ocrTest();
+//        clovaOcrUtil.getOcr();
     }
 }
