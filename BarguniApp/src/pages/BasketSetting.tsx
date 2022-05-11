@@ -27,7 +27,7 @@ function BasketSetting() {
   const moveToSettingDetail = useCallback(item => {
     console.log('clicked!');
     navigate('BasketSettingDetail', item);
-  });
+  }, []);
 
   const renderBasketList = useCallback(({item}) => {
     return (
@@ -50,7 +50,7 @@ function BasketSetting() {
         <View style={style.line} />
       </>
     );
-  });
+  }, []);
 
   useEffect(() => {
     getBasketList();
@@ -70,7 +70,7 @@ function BasketSetting() {
       console.log(e, '바구니가입 잘 안댐');
       Alert.alert('API통신 중 오류', JSON.stringify(e));
     }
-  });
+  }, []);
 
   return (
     <ScrollView>
