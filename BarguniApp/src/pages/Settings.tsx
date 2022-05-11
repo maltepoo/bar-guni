@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Alert,
   DatePickerAndroid,
   Image,
   Pressable,
@@ -15,6 +16,8 @@ import {RootStackParamList} from '../../AppInner';
 import {ParamListBase} from '@react-navigation/native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {useAppDispatch} from '../store';
+import userSlice from '../slices/user';
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -25,7 +28,7 @@ function Settings({navigation}: SettingsScreenProps) {
   const [on, setOn] = useState(true);
   const [alarmOn, setAlarmOn] = useState(false);
   const [alarmTime, setAlarmTime] = useState({hour: 0, min: 0});
-
+  const dispatch = useAppDispatch();
   const goAlarm = useCallback(() => {
     navigation.navigate('AlarmSetting');
   }, [navigation]);
@@ -38,9 +41,20 @@ function Settings({navigation}: SettingsScreenProps) {
   const goBasketSetting = useCallback(() => {
     navigation.navigate('BasketSetting');
   }, [navigation]);
-
   const handleAlarmOn = useCallback(() => {
     setAlarmOn(true);
+  }, []);
+  const logout = useCallback(() => {
+    Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
+      {
+        text: '예',
+        onPress: async () => {
+          await EncryptedStorage.removeItem('accessToken');
+          dispatch(userSlice.actions.setUser({}));
+        },
+      },
+      {text: '아니오', onPress: () => {}},
+    ]);
   }, []);
 
   const confirmAlarm = useCallback(async (time: any) => {
@@ -105,7 +119,7 @@ function Settings({navigation}: SettingsScreenProps) {
       <Pressable onPress={goMyPage}>
         <Text style={style.content}>내 정보</Text>
       </Pressable>
-      <Pressable>
+      <Pressable onPress={logout}>
         <Text style={style.content}>로그아웃</Text>
       </Pressable>
       <Pressable>
