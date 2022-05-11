@@ -3,13 +3,16 @@ package com.ssafy.barguni.api.basket.service;
 import com.ssafy.barguni.api.Picture.Picture;
 import com.ssafy.barguni.api.Picture.PictureEntity;
 import com.ssafy.barguni.api.Picture.PictureRepository;
+import com.ssafy.barguni.api.alert.AlertRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
 import com.ssafy.barguni.api.basket.repository.CategoryRepository;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.item.Item;
 import com.ssafy.barguni.api.item.ItemRepository;
+import com.ssafy.barguni.api.product.ProductRepository;
 import com.ssafy.barguni.api.user.*;
 import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +36,8 @@ public class BasketService {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final AlertRepository alertRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public Long createBasket(String name, MultipartFile multipartFile, User user) {
@@ -92,6 +97,38 @@ public class BasketService {
     }
 
     @Transactional
+    public void deleteNotUsedBasket(Basket basket) {
+        // alert 삭제
+        alertRepository.deleteAllByBasket(basket);
+
+        List<Item> items = itemRepository.findAllByBasketId(basket.getId());
+        // item 삭제
+        itemRepository.deleteItemsByBasket(basket);
+
+        // item 관련 이미지
+        items.forEach((item)->{
+            if(item.getPicture() != null
+                    && item.getPicture().getId() != 1L
+                    && !productRepository.existsProductByPicture(item.getPicture()))
+            {
+                ImageUtil.delete(item.getPicture());
+                pictureRepository.delete(item.getPicture());
+            }
+        });
+
+        // 카테고리 삭제
+        categoryRepository.deleteCategoriesByBasket(basket);
+        // 바구니 삭제
+        basketRepository.deleteById(basket.getId());
+        // 바구니 이미지 삭제
+        if(basket.getPicture() != null)
+        {
+            ImageUtil.delete(basket.getPicture());
+            pictureRepository.delete(basket.getPicture());
+        }
+    }
+
+    @Transactional
     public Boolean deleteBasket(Long basketId, Long userId) {
         // 바구니가 존재하지 않는 경우
         if(!basketRepository.existsById(basketId))
@@ -146,5 +183,9 @@ public class BasketService {
 
     public List<UserBasket> getUsers(Long basketId) {
         return userBasketRepository.findAllUserByBasketId(basketId);
+    }
+
+    public List<Long> getAllIds(){
+        return basketRepository.getAllIds();
     }
 }
