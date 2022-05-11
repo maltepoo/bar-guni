@@ -27,7 +27,8 @@ public enum ErrorCode {
     CATEGOTY_DUPLICATED("이미 등록된 카테고리입니다.", "C001", HttpStatus.NOT_ACCEPTABLE),
 
     USER_NOT_FOUNDED("해당 유저가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND),
-    USER_BASKET_NOT_FOUNDED("해당 유저-바구니가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND)
+    USER_BASKET_NOT_FOUNDED("해당 유저-바구니가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND),
+    PRODUCT_CODE_NOT_FOUND("저희가 사용하는 바코드 목록에 없는 제품입니다.", "P001", HttpStatus.NOT_FOUND)
     ;
 
     private final String message;
