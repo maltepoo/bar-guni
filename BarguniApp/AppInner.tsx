@@ -72,8 +72,8 @@ export type RootStackParamList = {
 function AppInner() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  // const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
-  const isLogin = true;
+  const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  // const isLogin = true;
   // const [isLogin, setIsLogin] = useState(false);
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -81,33 +81,33 @@ function AppInner() {
   const Tab = createBottomTabNavigator();
 
   useEffect(() => {
-    // const init = async () => {
-    //   try {
-    //     const token = await EncryptedStorage.getItem('accessToken');
-    //     console.log(token);
-    //     console.log(!token, 'token 확인!!!!!!!!!!!');
-    //     if (!token) {
-    //       console.log('token True');
-    //       SplashScreen.hide();
-    //       return;
-    //     }
-    //     const user = {name: '', email: '', accessToken: token};
-    //     setJwtToken(token);
-    //     const alramSetting = await EncryptedStorage.getItem('hour');
-    //     console.log('초기', alramSetting);
-    //     if (alramSetting === null) {
-    //       await EncryptedStorage.setItem('hour', '9');
-    //       await EncryptedStorage.setItem('min', '0');
-    //     }
-    //     dispatch(userSlice.actions.setUser(user));
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // };
     const init = async () => {
-      SplashScreen.hide();
-      navigation.navigate('Manual');
+      try {
+        const token = await EncryptedStorage.getItem('accessToken');
+        console.log(token);
+        console.log(!token, 'token 확인!!!!!!!!!!!');
+        if (!token) {
+          console.log('token True');
+          SplashScreen.hide();
+          return;
+        }
+        const user = {name: '', email: '', accessToken: token};
+        setJwtToken(token);
+        const alramSetting = await EncryptedStorage.getItem('hour');
+        console.log('초기', alramSetting);
+        if (alramSetting === null) {
+          await EncryptedStorage.setItem('hour', '9');
+          await EncryptedStorage.setItem('min', '0');
+        }
+        dispatch(userSlice.actions.setUser(user));
+      } catch (e) {
+        console.log(e);
+      }
     };
+    // const init = async () => {
+    //   SplashScreen.hide();
+    //   navigation.navigate('Manual');
+    // };
     init();
   }, [dispatch, navigation]);
 
