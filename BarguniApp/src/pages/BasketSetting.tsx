@@ -51,13 +51,14 @@ function BasketSetting() {
         <View style={style.line} />
       </>
     );
-  }, []);
+  }, [moveToSettingDetail]);
 
   useEffect(() => {
     getBasketList();
-  }, []);
+  }, [getBasketList]);
 
   const handleInputChange = useCallback(code => {
+    console.log(code, "입력코드");
     setInviteCode(code);
   }, []);
 
@@ -71,7 +72,7 @@ function BasketSetting() {
       console.log(e, '바구니가입 잘 안댐');
       Alert.alert('API통신 중 오류', JSON.stringify(e));
     }
-  }, []);
+  }, [inviteCode]);
 
   return (
     <ScrollView style={style.container}>
