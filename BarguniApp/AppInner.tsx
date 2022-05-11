@@ -46,6 +46,9 @@ import {setJwtToken} from './src/api/instance';
 import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import BasketInvite from './src/pages/BasketInvite';
+import Manual from './src/pages/Manual';
+import Manual2 from './src/pages/Manual2';
+import Manual3 from './src/pages/Manual3';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -65,12 +68,16 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
   Barcode: undefined;
+  Manual: undefined;
+  Manual2: undefined;
+  Manual3: undefined;
 };
 
 function AppInner() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  // const isLogin = false;
   // const [isLogin, setIsLogin] = useState(false);
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -84,7 +91,6 @@ function AppInner() {
         console.log(token);
         console.log(!token, 'token 확인!!!!!!!!!!!');
         if (!token) {
-          console.log('token True');
           SplashScreen.hide();
           return;
         }
@@ -103,6 +109,7 @@ function AppInner() {
     };
     init();
   }, [dispatch, navigation]);
+
   function BottomTab() {
     return (
       <Tab.Navigator>
@@ -258,6 +265,21 @@ function AppInner() {
     </Stack.Navigator>
   ) : (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Manual"
+        component={Manual}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Manual2"
+        component={Manual2}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Manual3"
+        component={Manual3}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="Login"
         component={Login}
