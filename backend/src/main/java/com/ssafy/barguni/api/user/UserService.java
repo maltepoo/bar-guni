@@ -35,6 +35,13 @@ public class UserService {
         return user;
     }
 
+    public User findByIdWithBasket(Long id) {
+        User user = userRepository.findByIdWithBasket(id);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        return user;
+    }
+
     public Boolean isDuplicated(String email) {
         return userRepository.existsByEmail(email);
     }

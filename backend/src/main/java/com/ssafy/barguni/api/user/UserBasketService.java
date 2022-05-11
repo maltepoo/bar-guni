@@ -2,10 +2,10 @@ package com.ssafy.barguni.api.user;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.repository.BasketRepository;
-import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.error.Exception.UsersException;
+import com.ssafy.barguni.api.user.vo.UserBasketWithCountRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +24,17 @@ public class UserBasketService {
 
     private final UserRepository userRepository;
     private final UserBasketRepository userBasketRepository;
-    private final BasketService basketService;
     private final BasketRepository basketRepository;
+
+    public List<UserBasketWithCountRes> findAllBasketWithCountByUser(Long userId) {
+        User user = userRepository.getById(userId);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+
+        List<UserBasketWithCountRes> userBaskets = userBasketRepository.findAllBasketWithCountByUser(userId);
+
+        return userBaskets;
+    }
 
     public List<UserBasket> findByUserId(Long userId) {
         User user = userRepository.getById(userId);
@@ -39,7 +48,7 @@ public class UserBasketService {
 
     public Optional<UserBasket> addBasket(Long user_id, Long bkt_id) {
         User user = userRepository.getById(user_id);
-        Basket basket = basketService.getBasket(bkt_id);
+        Basket basket = basketRepository.getById(bkt_id);
         UserBasket userBasket = new UserBasket();
 
         userBasket.setUser(user);

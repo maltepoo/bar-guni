@@ -94,7 +94,7 @@ public class CategoryController {
         return new ResponseEntity<ResVO<Long>>(result, status);
     }
 
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping("/{basketId}/{categoryId}")
     @Operation(summary = "카테고리 삭제", description = "해당 카테고리를 삭제한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -102,9 +102,17 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Boolean>> deleteCategory(@PathVariable Long categoryId){
+    public ResponseEntity<ResVO<Boolean>> deleteCategory(@PathVariable Long basketId, @PathVariable Long categoryId){
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
+
+        Categories category = categoryService.getById(categoryId);
+        if(category == null)
+            throw new CategoryException(new ErrorResVO(ErrorCode.CATEGORY_NOT_FOUNDED));
+
+        // 기본 카테고리 삭제 요청인 경우
+        if("기본".equals(category.getName()))
+            throw new CategoryException(new ErrorResVO(ErrorCode.CATEGORY_DEFAULT_NOT_DELETED));
 
         categoryService.delete(categoryId);
         result.setMessage("카테고리 삭제 성공");

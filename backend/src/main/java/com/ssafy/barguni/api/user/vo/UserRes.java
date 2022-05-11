@@ -1,6 +1,8 @@
-package com.ssafy.barguni.api.user;
+package com.ssafy.barguni.api.user.vo;
 
 import com.ssafy.barguni.api.basket.entity.Basket;
+import com.ssafy.barguni.api.basket.vo.BasketRes;
+import com.ssafy.barguni.api.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +12,13 @@ public class UserRes {
     private Long userId;
     private String email;
     private String name;
-    private Basket defaultBasket;
+    private BasketRes defaultBasket;
 
     public UserRes(Long userId, String email, String name, Basket defaultBasket) {
         this.userId = userId;
         this.email = email;
         this.name = name;
-        this.defaultBasket = defaultBasket instanceof Basket? null : defaultBasket;
+        this.defaultBasket = defaultBasket instanceof Basket? new BasketRes(defaultBasket) : null;
     }
 
     public static UserRes convertTo(User user) {

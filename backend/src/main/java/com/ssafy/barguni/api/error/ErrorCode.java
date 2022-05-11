@@ -14,6 +14,7 @@ public enum ErrorCode {
     BASKET_USED_BY_OTHERS("해당 바구니의 다른 이용자가 존재합니다.", "B003", HttpStatus.NOT_ACCEPTABLE),
     BASKET_NOT_EMPTY("바구니 내 아이템이 남아있습니다.", "B004", HttpStatus.NOT_ACCEPTABLE),
     BASKET_FORBIDDEN("접근할 수 없는 바구니입니다.", "B005", HttpStatus.FORBIDDEN),
+    BASKET_DEFAULT_NOT_DELETED("기본 바구니는 삭제할 수 없습니다.", "B006", HttpStatus.NOT_ACCEPTABLE),
 
     JWT_NOT_EXIST("로그인이 필요합니다.", "J001", HttpStatus.UNAUTHORIZED),
     JWT_INVALID("로그인이 필요합니다.","J002", HttpStatus.UNAUTHORIZED),
@@ -25,6 +26,8 @@ public enum ErrorCode {
     OAUTH_EMAIL_NOT_ALLOWED("이메일 정보 제공 동의가 필요합니다.","O003", HttpStatus.NOT_ACCEPTABLE),
 
     CATEGOTY_DUPLICATED("이미 등록된 카테고리입니다.", "C001", HttpStatus.NOT_ACCEPTABLE),
+    CATEGORY_DEFAULT_NOT_DELETED("기본 카테고리는 삭제할 수 없습니다.", "C002", HttpStatus.NOT_ACCEPTABLE),
+    CATEGORY_NOT_FOUNDED("해당 카테고리가 존재하지 않습니다.", "C003", HttpStatus.NOT_FOUND),
 
     USER_NOT_FOUNDED("해당 유저가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND),
     USER_BASKET_NOT_FOUNDED("해당 유저-바구니가 존재하지 않습니다.","U001", HttpStatus.NOT_FOUND),

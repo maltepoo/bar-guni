@@ -10,10 +10,7 @@ import com.ssafy.barguni.api.basket.repository.CategoryRepository;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.ItemRepository;
-import com.ssafy.barguni.api.user.User;
-import com.ssafy.barguni.api.user.UserAuthority;
-import com.ssafy.barguni.api.user.UserBasket;
-import com.ssafy.barguni.api.user.UserBasketRepository;
+import com.ssafy.barguni.api.user.*;
 import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,7 @@ public class BasketService {
     private final PictureRepository pictureRepository;
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long createBasket(String name, MultipartFile multipartFile, User user) {
@@ -95,6 +93,15 @@ public class BasketService {
 
     @Transactional
     public Boolean deleteBasket(Long basketId, Long userId) {
+        // 바구니가 존재하지 않는 경우
+        if(!basketRepository.existsById(basketId))
+            throw new BasketException(new ErrorResVO(BASKET_NOT_FOUNDED));
+
+        // 기본 바구니인 경우
+        Basket defaultBasket = userRepository.findByIdWithBasket(userId).getDefaultBasket();
+        if(defaultBasket != null && basketId.equals(defaultBasket.getId()))
+            throw new BasketException(new ErrorResVO(BASKET_DEFAULT_NOT_DELETED));
+
         // 관리자가 아닌 경우
         UserBasket userBasket = userBasketRepository.findByUserIdAndBasketId(userId, basketId);
         if(userBasket.getAuthority() != UserAuthority.ADMIN)
