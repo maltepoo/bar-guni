@@ -438,6 +438,7 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingTop: '10%'
   },
   button: {
     backgroundColor: 'rgba(0, 148, 255, 0.15)',
