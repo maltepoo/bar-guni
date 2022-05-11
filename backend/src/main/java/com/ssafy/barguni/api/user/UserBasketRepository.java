@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface UserBasketRepository extends JpaRepository<UserBasket, Long> {
+public interface UserBasketRepository extends JpaRepository<UserBasket, Long>, CustomUserBasketRepository {
 
     @Query("select ub from UserBasket ub join fetch ub.basket b where ub.user.id = ?1")
     List<UserBasket> findByUserId(Long id);

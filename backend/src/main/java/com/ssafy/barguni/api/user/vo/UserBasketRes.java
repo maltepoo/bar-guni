@@ -1,5 +1,7 @@
-package com.ssafy.barguni.api.user;
+package com.ssafy.barguni.api.user.vo;
 
+import com.ssafy.barguni.api.user.UserAuthority;
+import com.ssafy.barguni.api.user.UserBasket;
 import lombok.Getter;
 import lombok.Setter;
 
