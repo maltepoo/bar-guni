@@ -120,7 +120,7 @@ function AppInner() {
             title: '홈',
             tabBarActiveTintColor: '#0094FF',
             headerShown: true,
-            headerRight: () => <HeaderRight />,
+            headerTitle: '',
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="home"
@@ -137,10 +137,41 @@ function AppInner() {
             title: '등록',
             tabBarActiveTintColor: '#0094FF',
             headerShown: true,
-            headerRight: () => <HeaderRight />,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="inbox"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="alarm"
+          component={Alarm}
+          options={{
+            title: '알림',
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: true,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="bells"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={Search}
+          options={{
+            title: '검색',
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="search1"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -154,26 +185,9 @@ function AppInner() {
             title: '설정',
             tabBarActiveTintColor: '#0094FF',
             headerShown: true,
-            headerRight: () => <HeaderRight />,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="ellipsis1"
-                size={20}
-                style={{color: focused ? '#0094FF' : ''}}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Search"
-          component={Search}
-          options={{
-            title: '검색',
-            tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
-            tabBarIcon: ({focused}) => (
-              <AntDesign
-                name="search1"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
