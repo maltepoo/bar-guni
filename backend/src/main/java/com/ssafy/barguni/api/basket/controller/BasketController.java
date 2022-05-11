@@ -108,6 +108,8 @@ public class BasketController {
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 
+
+
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         basketService.deleteBasket(basketId, userDetails.getUserId());
         result.setMessage("바구니 삭제 성공");

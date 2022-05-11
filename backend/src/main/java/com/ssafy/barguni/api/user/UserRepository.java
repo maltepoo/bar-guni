@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
     Optional<User> findById(Long id);
     Boolean existsByEmail(String email);
 
-    @Query("SELECT u FROM User u join fetch u.defaultBasket b WHERE u.id = :id")
+    @Query("SELECT u FROM User u left join fetch u.defaultBasket b WHERE u.id = :id")
     User findByIdWithBasket(Long id);
 
     @Modifying
