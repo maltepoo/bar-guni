@@ -38,10 +38,11 @@ function BasketSetting() {
           }}>
           <Text
             style={{
-              fontSize: 30,
+              fontSize: 15,
               color: 'black',
-              fontFamily: 'Jua Regular',
-              marginLeft: '2%',
+              fontFamily: 'Pretendard-Light',
+              marginLeft: '10%',
+              marginBottom: '3%',
             }}>
             {item.bkt_name}
           </Text>
@@ -73,20 +74,30 @@ function BasketSetting() {
   }, []);
 
   return (
-    <ScrollView>
-      <Text>바구니 관리페이지</Text>
+    <ScrollView style={style.container}>
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 20,
+          fontFamily: 'Pretendard-Bold',
+          margin: '5%',
+        }}>
+        바구니 목록
+      </Text>
+      <FlatList data={basketList} renderItem={renderBasketList} />
       <View>
         <TextInput
           value={inviteCode}
           onChangeText={handleInputChange}
-          placeholder="초대코드를 입력해주세요"
+          style={{textAlign: 'center'}}
+          placeholder="초대코드를 입력해서 바구니에 참여해보세요"
         />
-        <TouchableHighlight onPress={handleJoinBasket}>
-          <Text>바구니 들어가기</Text>
+        <TouchableHighlight
+          onPress={handleJoinBasket}
+          style={{alignItems: 'center'}}>
+          <Text style={{color: 'blue'}}>바구니 입장하기</Text>
         </TouchableHighlight>
       </View>
-      <Text>바구니목록</Text>
-      <FlatList data={basketList} renderItem={renderBasketList} />
     </ScrollView>
   );
 }
@@ -95,11 +106,6 @@ const style = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     // alignItems: 'center',
-  },
-  line: {
-    height: 0.7,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    marginTop: 30,
   },
 });
 export default BasketSetting;
