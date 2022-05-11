@@ -14,15 +14,13 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import userSlice from '../slices/user';
-import {getItem, Item} from '../api/item';
+import {Item} from '../api/item';
+import Config from 'react-native-config';
 
 function ItemDetail() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const item = route.params as Item;
-  console.log(item, 'item');
   const deleteItem = useCallback(() => {
     //Todo : 아이템 삭제 로직
   }, []);
@@ -31,10 +29,13 @@ function ItemDetail() {
   }, [navigation, item]);
 
   return (
-    <View>
+    <View style={Style.background}>
       <ScrollView>
         <View style={Style.imageBox}>
-          <Image style={Style.image} source={require('../assets/close.png')} />
+          <Image
+            style={Style.image}
+            source={{uri: Config.BASE_URL + item.pictureUrl}}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>제품명 </Text>
@@ -73,6 +74,10 @@ function ItemDetail() {
   );
 }
 const Style = StyleSheet.create({
+  background: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
   modify: {
     backgroundColor: 'green',
     width: 50,
@@ -99,6 +104,7 @@ const Style = StyleSheet.create({
   image: {
     width: '60%',
     height: '100%',
+    resizeMode: 'contain',
   },
   content: {
     flexDirection: 'row',

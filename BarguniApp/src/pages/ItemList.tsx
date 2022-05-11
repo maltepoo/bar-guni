@@ -37,12 +37,8 @@ import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
-type ItemListScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'ItemList'
->;
 
-function ItemList({navigation}: ItemListScreenProps) {
+function ItemList() {
   const user = useSelector((state: RootState) => state.user);
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);

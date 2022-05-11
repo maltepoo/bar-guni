@@ -126,6 +126,7 @@ const Style = StyleSheet.create({
     width: 70,
     height: 80,
     borderRadius: 30,
+    resizeMode: 'contain',
   },
   title: {
     marginTop: 5,
