@@ -118,6 +118,7 @@ const Style = StyleSheet.create({
   date: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Pretendard-Black',
     marginTop: 25,
     marginLeft: 4,
     color: 'black',
@@ -131,6 +132,7 @@ const Style = StyleSheet.create({
     marginTop: 5,
     marginLeft: 12,
     color: 'black',
+    fontFamily: 'Pretendard-Black',
     fontSize: 15,
   },
   cancel: {
@@ -145,10 +147,13 @@ const Style = StyleSheet.create({
     marginRight: 10,
     fontSize: 20,
     fontWeight: 'bold',
+    fontFamily: 'Pretendard-Black',
   },
   lifetime: {
     textAlign: 'center',
     fontSize: 10,
+    fontFamily: 'Pretendard-Light',
+    fontWeight: 'bold',
   },
 });
 export default HomeItems;

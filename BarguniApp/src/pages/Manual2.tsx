@@ -7,20 +7,24 @@ import {RootStackParamList} from '../../AppInner';
 function Manual() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const next = useCallback(() => {
-    navigation.navigate('Manual2');
+    navigation.navigate('Manual3');
   }, [navigation]);
   return (
     <View style={Style.background}>
       <View style={Style.headerBox}>
-        <Text style={Style.header}>유통기한을 관리하는</Text>
-        <Text style={Style.header}>가장 효율적인 방법</Text>
+        <Text style={Style.header}>함께 공유하는 스마트 바구니</Text>
       </View>
       <View style={Style.contentBox}>
-        <Text style={Style.content}>제품들을 바구니에 등록하여 유통기한을</Text>
-        <Text style={Style.content}>관리할 수 있어요</Text>
+        <Text style={Style.content}>
+          가족, 친구, 동료들끼리 공유하는 물품들을
+        </Text>
+        <Text style={Style.content}>바구니에 담아 한번에 관리할 수 있어요</Text>
       </View>
       <View style={Style.imageBox}>
-        <Image style={Style.image} source={require('../assets/expired.png')} />
+        <Image
+          style={Style.image}
+          source={require('../assets/wicker-basket.png')}
+        />
         <Button
           title={'다음'}
           titleStyle={Style.buttonTitle}
@@ -49,7 +53,7 @@ const Style = StyleSheet.create({
   },
   header: {
     fontFamily: 'Pretendard-Bold',
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   contentBox: {
@@ -68,6 +72,7 @@ const Style = StyleSheet.create({
   },
   imageBox: {
     alignItems: 'center',
+    marginTop: '15%',
   },
   image: {
     width: '70%',

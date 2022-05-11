@@ -6,6 +6,13 @@ export interface Basket {
   bkt_id: number;
   authority: string;
   bkt_name: string;
+  count: number;
+}
+
+export interface DefaultBasket {
+  name: string;
+  profileUrl: string;
+  joinCode: string;
 }
 
 export interface AlarmI {

@@ -4,7 +4,11 @@ const initialState = {
   name: '',
   email: '',
   accessToken: '',
-  defaultBasket: {},
+  defaultBasket: {
+    name: '',
+    profileUrl: '',
+    joinCode: '',
+  },
 };
 const userSlice = createSlice({
   name: 'user',
@@ -19,6 +23,11 @@ const userSlice = createSlice({
     setUserName(state, action) {
       state.email = action.payload.email;
       state.name = action.payload.name;
+    },
+    setUserWithoutToken(state, action) {
+      state.email = action.payload.email;
+      state.name = action.payload.name;
+      state.defaultBasket = action.payload.defaultBasket;
     },
   },
   extraReducers: builder => {},
