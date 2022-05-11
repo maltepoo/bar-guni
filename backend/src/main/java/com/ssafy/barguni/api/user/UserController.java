@@ -214,7 +214,7 @@ public class UserController {
         HttpStatus status = null;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        User nowUser = userService.findById(userDetails.getUserId());
+        User nowUser = userService.findByIdWithBasket(userDetails.getUserId());
         status = HttpStatus.OK;
         result.setData(UserRes.convertTo(nowUser));
         result.setMessage("사용자 조회 성공");
@@ -372,7 +372,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ResVO<Boolean>> modifyDefault(@RequestParam Long basketId){
+    public ResponseEntity<ResVO<Boolean>> modifyDefault(@PathVariable Long basketId){
         ResVO<Boolean> result = new ResVO<>();
         HttpStatus status = null;
 

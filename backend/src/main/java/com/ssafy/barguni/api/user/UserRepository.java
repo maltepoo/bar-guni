@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
     Optional<User> findById(Long id);
     Boolean existsByEmail(String email);
 
+    @Query("SELECT u FROM User u join fetch u.defaultBasket b WHERE u.id = :id")
+    User findByIdWithBasket(Long id);
+
     @Modifying
     @Query("UPDATE User u SET u.name = :name WHERE u.id = :id")
     User modifyUser(Long id, String name);
