@@ -61,6 +61,7 @@ function BasketSetting() {
   }, [getBasketList]);
 
   const handleInputChange = useCallback(code => {
+    console.log(code, "입력코드");
     setInviteCode(code);
   }, []);
 
