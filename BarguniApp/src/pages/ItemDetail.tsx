@@ -14,20 +14,25 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
-import {Item} from '../api/item';
+import {changeItemStatus, deleteItem, Item} from '../api/item';
 import Config from 'react-native-config';
 
 function ItemDetail() {
   const route = useRoute<RouteProp<RootStackParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const item = route.params as Item;
-  const deleteItem = useCallback(() => {
-    //Todo : 아이템 삭제 로직
+  const removeItem = useCallback(async () => {
+    try {
+      await changeItemStatus(item.itemId, true);
+      navigation.navigate('ItemList');
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
   const goModify = useCallback(() => {
     navigation.navigate('ItemModify', item);
   }, [navigation, item]);
-
+  console.log(item);
   return (
     <View style={Style.background}>
       <ScrollView>
@@ -39,33 +44,55 @@ function ItemDetail() {
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>제품명 </Text>
-          <Text style={Style.description}>{item.name}</Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>{item.name}</Text>
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>바구니 </Text>
-          <Text style={Style.description}>{item.basketName} </Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>{item.basketName} </Text>
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>카테고리 </Text>
-          <Text style={Style.description}>{item.category}</Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>{item.category}</Text>
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>등록일자 </Text>
-          <Text style={Style.description}>{item.regDate}</Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>{item.regDate}</Text>
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>유통기한 </Text>
-          <Text style={Style.description}>{item.usedDate}</Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>
+              {item.shelfLife === null
+                ? new Date(
+                    new Date().setDate(
+                      new Date(item.regDate).getDate() + item.dday,
+                    ),
+                  )
+                    .toJSON()
+                    .substring(0, 10)
+                : item.shelfLife}
+            </Text>
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>상세설명</Text>
-          <Text style={Style.description}>{item.content}</Text>
+          <View style={Style.descriptionBox}>
+            <Text style={Style.description}>{item.content}</Text>
+          </View>
         </View>
         <View style={Style.buttonContent}>
-          <TouchableOpacity style={Style.modify} onPress={goModify}>
+          <TouchableOpacity style={Style.button} onPress={goModify}>
             <Text style={Style.buttonTitle}>수정</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={Style.delete} onPress={deleteItem}>
+          <TouchableOpacity style={Style.button} onPress={removeItem}>
             <Text style={Style.buttonTitle}>삭제</Text>
           </TouchableOpacity>
         </View>
@@ -78,23 +105,17 @@ const Style = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  modify: {
-    backgroundColor: 'green',
-    width: 50,
-    height: 30,
-    borderRadius: 6,
-  },
-  delete: {
-    backgroundColor: 'red',
-    width: 50,
-    height: 30,
-    borderRadius: 6,
-    marginLeft: 5,
+  button: {
+    backgroundColor: '#F5F4F4',
+    width: '40%',
+    marginRight: '8%',
+    borderRadius: 10,
   },
   buttonTitle: {
     fontSize: 20,
-    color: 'white',
+    color: 'rgba(43,57,68,0.5)',
     textAlign: 'center',
+    marginVertical: '5%',
   },
   imageBox: {
     alignItems: 'center',
@@ -107,28 +128,37 @@ const Style = StyleSheet.create({
     resizeMode: 'contain',
   },
   content: {
-    flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 20,
+    marginLeft: '10%',
+    marginTop: '5%',
   },
   buttonContent: {
     flexDirection: 'row',
-    marginLeft: 290,
+    marginLeft: '11%',
     marginTop: 20,
     marginBottom: 7,
   },
   title: {
-    fontSize: 25,
+    fontSize: 14,
     fontWeight: 'bold',
+    fontFamily: 'Pretendard-Black',
     color: 'black',
     width: '25%',
   },
   description: {
-    fontSize: 20,
+    fontSize: 18,
     color: 'black',
-    marginTop: 3,
-    marginLeft: 30,
-    width: '70%',
+    borderRadius: 20,
+    paddingHorizontal: '3%',
+    paddingVertical: '3%',
+    fontFamily: 'Pretendard-Light',
+    marginLeft: '3%',
+  },
+  descriptionBox: {
+    marginLeft: '2%',
+    marginTop: '3%',
+    width: '88%',
+    backgroundColor: '#F5F4F4',
+    borderRadius: 40,
   },
 });
 export default ItemDetail;

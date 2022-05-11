@@ -60,7 +60,11 @@ function HomeItems(props: HomeItem) {
           <Text style={Style.lifetime}>
             유통기한:
             {item.shelfLife === null
-              ? new Date(shelfLife.setDate(new Date().getDate() + item.dday))
+              ? new Date(
+                  shelfLife.setDate(
+                    new Date(item.regDate).getDate() + item.dday,
+                  ),
+                )
                   .toJSON()
                   .substring(0, 10)
               : item.shelfLife}
