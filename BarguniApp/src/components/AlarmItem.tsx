@@ -71,7 +71,6 @@ const Style = StyleSheet.create({
     fontSize: 12,
     color: 'black',
     textAlign: 'right',
-    marginRight: 6,
   },
   line: {
     width: '100%',

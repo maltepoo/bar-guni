@@ -14,7 +14,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
-import {changeItemStatus, deleteItem, Item} from '../api/item';
+import {changeItemStatus, Item} from '../api/item';
 import Config from 'react-native-config';
 
 function ItemDetail() {
@@ -104,6 +104,12 @@ const Style = StyleSheet.create({
   background: {
     backgroundColor: 'white',
     flex: 1,
+  },
+  modify: {
+    backgroundColor: 'green',
+    width: 50,
+    height: 30,
+    borderRadius: 6,
   },
   button: {
     backgroundColor: '#F5F4F4',

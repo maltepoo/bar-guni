@@ -3,6 +3,7 @@ import {
   Alert,
   FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -20,15 +21,6 @@ function BasketSettingDetail({route}) {
   const [basketCategories, setBasketCategories] = useState([]);
   const [basketMembers, setBasketMembers] = useState([]);
 
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = useCallback(async () => {
-    initCategories();
-    initMembers();
-  }, []);
-
   const initCategories = useCallback(async () => {
     try {
       const category = await getCategory(basketInfo.bkt_id);
@@ -37,16 +29,26 @@ function BasketSettingDetail({route}) {
     } catch (e) {
       console.log(e, '카테고리 목록조회 에러');
     }
-  }, []);
+  }, [basketInfo.bkt_id]);
 
   const initMembers = useCallback(async () => {
     try {
       const members = await getBasketMembers(basketInfo.bkt_id);
-      await setBasketMembers(members, '바스켓멤버조회');
+      console.log(members);
+      await setBasketMembers(members);
     } catch (e) {
       console.log(e, '바스켓 참여멤버조회 에러');
     }
-  }, []);
+  }, [basketInfo.bkt_id]);
+
+  const init = useCallback(async () => {
+    await initCategories();
+    await initMembers();
+  }, [initCategories, initMembers]);
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   const handleNewBasketName = useCallback(name => {
     console.log(name, 'newBasketName');
@@ -66,7 +68,7 @@ function BasketSettingDetail({route}) {
         Alert.alert('error!', err.message);
       }
     }
-  }, []);
+  }, [basketInfo.bkt_id, newBasketName]);
 
   const handleDeleteBasket = useCallback(async () => {
     try {
@@ -75,7 +77,7 @@ function BasketSettingDetail({route}) {
     } catch (err) {
       Alert.alert('error!', JSON.stringify(err));
     }
-  }, []);
+  }, [basketInfo.bkt_id]);
 
   const handleNewCategoryName = useCallback(name => {
     console.log(name, '새로운 카데고리 이름');
@@ -110,40 +112,6 @@ function BasketSettingDetail({route}) {
     }
   }, []);
 
-  const renderBasketCategories = useCallback(({item}) => {
-    return (
-      <View>
-        {/*<TouchableOpacity>*/}
-        <Text
-          style={{
-            marginLeft: '10%',
-            fontFamily: 'Pretendard-Light',
-            color: 'black',
-          }}>
-          {item.name}
-        </Text>
-        {/*<TextInput*/}
-        {/*  placeholder="새로운 카테고리 이름 입력"*/}
-        {/*  value={newCategoryName}*/}
-        {/*  onChangeText={handleNewCategoryName}*/}
-        {/*/>*/}
-        {/*<TouchableOpacity*/}
-        {/*  onPress={() => {*/}
-        {/*    updateCategoryName(item.cateId);*/}
-        {/*  }}>*/}
-        {/*  <Text>@@@이름바꾸기@@@ OK</Text>*/}
-        {/*</TouchableOpacity>*/}
-        {/*<TouchableOpacity*/}
-        {/*  onPress={() => {*/}
-        {/*    handleDeleteCategory(item.name, item.cateId);*/}
-        {/*  }}>*/}
-        {/*  <Text>바구니카테고리삭제</Text>*/}
-        {/*</TouchableOpacity>*/}
-        {/*</TouchableOpacity>*/}
-      </View>
-    );
-  }, []);
-
   const moveToInvite = useCallback(() => {
     navigate('BasketInvite', basketInfo);
   }, []);
@@ -151,7 +119,7 @@ function BasketSettingDetail({route}) {
   const [checked, setChecked] = React.useState(true);
 
   return (
-    <View style={style.container}>
+    <ScrollView style={style.container}>
       <View>
         {checked ? (
           <View style={style.row}>
@@ -184,25 +152,26 @@ function BasketSettingDetail({route}) {
           </View>
         )}
       </View>
-      <Text style={style.left}>바구니 참여자 목록 : </Text>
+      <Text style={style.left}>바구니 참여자 목록 </Text>
       <Text
         style={{
           marginLeft: '10%',
           fontFamily: 'Pretendard-Light',
           color: 'black',
         }}>
-        {JSON.stringify(basketMembers)}
+        {basketMembers.map((item, index) => (
+          <Text>
+            {item.name} {index !== basketMembers.length - 1 ? ',' : ''}{' '}
+          </Text>
+        ))}
       </Text>
-      <Text style={style.left}>카테고리 목록</Text>
-      {/*<Text>{JSON.stringify(basketCategories)}</Text>*/}
-      <FlatList data={basketCategories} renderItem={renderBasketCategories} />
       <TouchableOpacity style={{flex: 1}} onPress={moveToInvite}>
         <Text style={{color: 'blue'}}>바구니 초대하기</Text>
       </TouchableOpacity>
       <TouchableOpacity style={{flex: 10}} onPress={handleDeleteBasket}>
         <Text style={{color: 'red'}}>바구니 삭제하기</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 const style = StyleSheet.create({

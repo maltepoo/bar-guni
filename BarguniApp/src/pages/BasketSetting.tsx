@@ -22,40 +22,43 @@ function BasketSetting() {
   const getBasketList = useCallback(async () => {
     const res = await getBaskets();
     setBasketList(res);
-  }, [basketList]);
+  }, []);
 
   const moveToSettingDetail = useCallback(item => {
     console.log('clicked!');
     navigate('BasketSettingDetail', item);
   }, []);
 
-  const renderBasketList = useCallback(({item}) => {
-    return (
-      <>
-        <TouchableOpacity
-          onPress={() => {
-            moveToSettingDetail(item);
-          }}>
-          <Text
-            style={{
-              fontSize: 15,
-              color: 'black',
-              fontFamily: 'Pretendard-Light',
-              marginLeft: '10%',
-              marginBottom: '3%',
+  const renderBasketList = useCallback(
+    ({item}) => {
+      return (
+        <>
+          <TouchableOpacity
+            onPress={() => {
+              moveToSettingDetail(item);
             }}>
-            {item.bkt_name}
-          </Text>
-          {/*<Text>{item.bkt_id} / 바스켓아이디</Text>*/}
-        </TouchableOpacity>
-        <View style={style.line} />
-      </>
-    );
-  }, []);
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'Pretendard-Light',
+                marginLeft: '10%',
+                marginBottom: '3%',
+              }}>
+              {item.bkt_name}
+            </Text>
+            {/*<Text>{item.bkt_id} / 바스켓아이디</Text>*/}
+          </TouchableOpacity>
+          <View style={style.line} />
+        </>
+      );
+    },
+    [moveToSettingDetail],
+  );
 
   useEffect(() => {
     getBasketList();
-  }, []);
+  }, [getBasketList]);
 
   const handleInputChange = useCallback(code => {
     setInviteCode(code);
@@ -71,7 +74,7 @@ function BasketSetting() {
       console.log(e, '바구니가입 잘 안댐');
       Alert.alert('API통신 중 오류', JSON.stringify(e));
     }
-  }, []);
+  }, [inviteCode]);
 
   return (
     <ScrollView style={style.container}>

@@ -414,7 +414,7 @@ const Style = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    height: 750,
+    height: '160%',
     alignItems: 'center',
   },
   topText: {

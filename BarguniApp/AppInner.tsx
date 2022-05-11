@@ -49,6 +49,9 @@ import BasketInvite from './src/pages/BasketInvite';
 import Manual from './src/pages/Manual';
 import Manual2 from './src/pages/Manual2';
 import Manual3 from './src/pages/Manual3';
+import ItemList from './src/pages/ItemList';
+import ItemDetail from './src/pages/ItemDetail';
+import ItemModify from './src/pages/ItemModify';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -114,32 +117,16 @@ function AppInner() {
     return (
       <Tab.Navigator>
         <Tab.Screen
-          name="Home"
-          component={Home}
+          name="ItemList"
+          component={ItemList}
           options={{
             title: '홈',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
+            headerShown: false,
             headerTitle: '',
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="home"
-                size={20}
-                style={{color: focused ? '#0094FF' : ''}}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="RegisterModal"
-          component={RegisterModal}
-          options={{
-            title: '등록',
-            tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
-            tabBarIcon: ({focused}) => (
-              <AntDesign
-                name="inbox"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -152,10 +139,26 @@ function AppInner() {
           options={{
             title: '알림',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="bells"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="RegisterModal"
+          component={RegisterModal}
+          options={{
+            title: '등록',
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="inbox"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -184,7 +187,7 @@ function AppInner() {
           options={{
             title: '설정',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="ellipsis1"
@@ -204,6 +207,22 @@ function AppInner() {
         name="BottomTab"
         component={BottomTab}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ItemDetail"
+        component={ItemDetail}
+        options={{
+          title: '상세 보기',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="ItemModify"
+        component={ItemModify}
+        options={{
+          title: '수정',
+          headerShown: true,
+        }}
       />
       <Stack.Screen
         name="Search"
