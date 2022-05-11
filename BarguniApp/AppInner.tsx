@@ -46,6 +46,7 @@ import {setJwtToken} from './src/api/instance';
 import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import BasketInvite from './src/pages/BasketInvite';
+import Manual from './src/pages/Manual';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -65,12 +66,14 @@ export type RootStackParamList = {
   ItemModify: Object;
   RegisterModal: undefined;
   Barcode: undefined;
+  Manual: undefined;
 };
 
 function AppInner() {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
+  // const isLogin = true;
   // const [isLogin, setIsLogin] = useState(false);
   const back = useCallback(() => {
     RootNavigation.pop();
@@ -101,8 +104,13 @@ function AppInner() {
         console.log(e);
       }
     };
+    // const init = async () => {
+    //   SplashScreen.hide();
+    //   navigation.navigate('Manual');
+    // };
     init();
   }, [dispatch, navigation]);
+
   function BottomTab() {
     return (
       <Tab.Navigator>
@@ -182,6 +190,11 @@ function AppInner() {
       <Stack.Screen
         name="BottomTab"
         component={BottomTab}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Manual"
+        component={Manual}
         options={{headerShown: false}}
       />
       <Stack.Screen

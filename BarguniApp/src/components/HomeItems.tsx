@@ -27,7 +27,6 @@ function HomeItems(props: HomeItem) {
     }
     // console.log(item);
   }, [item.itemId, props]);
-  console.log(Config.BASE_URL + item.pictureUrl);
   const shelfLife = new Date();
   const onClick = useCallback(() => {
     navigation.navigate('ItemDetail', {...item, basketName: props.basketName});
