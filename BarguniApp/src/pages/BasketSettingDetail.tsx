@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -26,7 +27,7 @@ function BasketSettingDetail({route}) {
   const init = useCallback(async () => {
     initCategories();
     initMembers();
-  });
+  }, []);
 
   const initCategories = useCallback(async () => {
     try {
@@ -36,7 +37,7 @@ function BasketSettingDetail({route}) {
     } catch (e) {
       console.log(e, '카테고리 목록조회 에러');
     }
-  });
+  }, []);
 
   const initMembers = useCallback(async () => {
     try {
@@ -45,7 +46,7 @@ function BasketSettingDetail({route}) {
     } catch (e) {
       console.log(e, '바스켓 참여멤버조회 에러');
     }
-  });
+  }, []);
 
   const handleNewBasketName = useCallback(name => {
     console.log(name, 'newBasketName');
@@ -65,7 +66,7 @@ function BasketSettingDetail({route}) {
         Alert.alert('error!', err.message);
       }
     }
-  });
+  }, []);
 
   const handleDeleteBasket = useCallback(async () => {
     try {
@@ -74,12 +75,12 @@ function BasketSettingDetail({route}) {
     } catch (err) {
       Alert.alert('error!', JSON.stringify(err));
     }
-  });
+  }, []);
 
   const handleNewCategoryName = useCallback(name => {
     console.log(name, '새로운 카데고리 이름');
     setNewCategoryName(name);
-  });
+  }, []);
 
   const updateCategoryName = useCallback(async cateId => {
     console.log('cateName Chainging');
@@ -97,7 +98,7 @@ function BasketSettingDetail({route}) {
         console.log(err);
       }
     }
-  });
+  }, []);
 
   const handleDeleteCategory = useCallback(async (name, cateId) => {
     await Alert.alert('카테고리 삭제', `${name} 카테고리를 삭제하시겠습니까?`);
@@ -107,72 +108,99 @@ function BasketSettingDetail({route}) {
     } catch (err) {
       console.log(err, '카테고리 삭제 에러');
     }
-  });
+  }, []);
 
   const renderBasketCategories = useCallback(({item}) => {
     return (
-      <TouchableOpacity>
-        <Text>{item.name}</Text>
-        <TextInput
-          placeholder="새로운 카테고리 이름 입력"
-          value={newCategoryName}
-          onChangeText={handleNewCategoryName}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            updateCategoryName(item.cateId);
+      <View>
+        {/*<TouchableOpacity>*/}
+        <Text
+          style={{
+            marginLeft: '10%',
+            fontFamily: 'Pretendard-Light',
+            color: 'black',
           }}>
-          <Text>@@@이름바꾸기@@@ OK</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            handleDeleteCategory(item.name, item.cateId);
-          }}>
-          <Text>바구니카테고리삭제</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
+          {item.name}
+        </Text>
+        {/*<TextInput*/}
+        {/*  placeholder="새로운 카테고리 이름 입력"*/}
+        {/*  value={newCategoryName}*/}
+        {/*  onChangeText={handleNewCategoryName}*/}
+        {/*/>*/}
+        {/*<TouchableOpacity*/}
+        {/*  onPress={() => {*/}
+        {/*    updateCategoryName(item.cateId);*/}
+        {/*  }}>*/}
+        {/*  <Text>@@@이름바꾸기@@@ OK</Text>*/}
+        {/*</TouchableOpacity>*/}
+        {/*<TouchableOpacity*/}
+        {/*  onPress={() => {*/}
+        {/*    handleDeleteCategory(item.name, item.cateId);*/}
+        {/*  }}>*/}
+        {/*  <Text>바구니카테고리삭제</Text>*/}
+        {/*</TouchableOpacity>*/}
+        {/*</TouchableOpacity>*/}
+      </View>
     );
-  });
+  }, []);
 
   const moveToInvite = useCallback(() => {
     navigate('BasketInvite', basketInfo);
-  });
+  }, []);
   const bktname = JSON.stringify(basketInfo.bkt_name);
+  const [checked, setChecked] = React.useState(true);
+
   return (
     <View style={style.container}>
-      <View style={{alignItems: 'center'}}>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            fontSize: 20,
-            color: 'black',
-            marginTop: '5%',
-            marginBottom: '5%',
-            marginRight: '5%',
-          }}>
-          {bktname.replace(/\"/gi, '')}
-        </Text>
+      <View>
+        {checked ? (
+          <View style={style.row}>
+            <Text style={style.top}>{bktname.replace(/\"/gi, '')}</Text>
+            <TouchableOpacity
+              style={style.picture}
+              onPress={() => setChecked(false)}>
+              <Image
+                style={style.picture}
+                source={require('../assets/pen.png')}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={style.row}>
+            <TextInput
+              style={style.top}
+              placeholder="바구니 이름"
+              onChangeText={handleNewBasketName}
+              value={newBasketName}
+            />
+            <TouchableOpacity
+              style={style.te}
+              onPress={() => {
+                setChecked(true);
+                changeBasketName;
+              }}>
+              <Text style={style.top}>완료</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-      <View style={style.row}>
-        <Text style={style.left}>바구니 참여자 목록 :</Text>
-        <Text>{JSON.stringify(basketMembers)}</Text>
-      </View>
-      <Text style={style.left}>카테고리 :</Text>
-      <Text>{JSON.stringify(basketCategories)}</Text>
+      <Text style={style.left}>바구니 참여자 목록 : </Text>
+      <Text
+        style={{
+          marginLeft: '10%',
+          fontFamily: 'Pretendard-Light',
+          color: 'black',
+        }}>
+        {JSON.stringify(basketMembers)}
+      </Text>
+      <Text style={style.left}>카테고리 목록</Text>
+      {/*<Text>{JSON.stringify(basketCategories)}</Text>*/}
       <FlatList data={basketCategories} renderItem={renderBasketCategories} />
-      <TouchableOpacity onPress={moveToInvite}>
-        <Text>바구니 초대하기(초대코드 페이지로 이동)</Text>
+      <TouchableOpacity style={{flex: 1}} onPress={moveToInvite}>
+        <Text style={{color: 'blue'}}>바구니 초대하기</Text>
       </TouchableOpacity>
-      <TextInput
-        placeholder="바꿀바구니이름입력하기"
-        onChangeText={handleNewBasketName}
-        value={newBasketName}
-      />
-      <TouchableOpacity onPress={changeBasketName}>
-        <Text>바구니이름수정 OK</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleDeleteBasket}>
-        <Text>바구니삭제 OK</Text>
+      <TouchableOpacity style={{flex: 10}} onPress={handleDeleteBasket}>
+        <Text style={{color: 'red'}}>바구니 삭제하기</Text>
       </TouchableOpacity>
     </View>
   );
@@ -193,9 +221,33 @@ const style = StyleSheet.create({
   },
   left: {
     width: '35%',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Light',
     fontSize: 15,
     color: 'black',
+    marginLeft: '7%',
+    marginTop: '3%',
+    marginBottom: '2%',
   },
+  right: {
+    width: '35%',
+    fontFamily: 'Pretendard-Light',
+    fontSize: 15,
+    color: 'black',
+    marginTop: '3%',
+    marginBottom: '2%',
+  },
+  picture: {
+    width: 20,
+    height: 20,
+    margin: '5%',
+    alignItems: 'flex-end',
+  },
+  top: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 20,
+    color: 'black',
+    margin: '5%',
+  },
+  te: {margin: '6%', alignItems: 'flex-end'},
 });
 export default BasketSettingDetail;
