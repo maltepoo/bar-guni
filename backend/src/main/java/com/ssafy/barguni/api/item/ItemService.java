@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureEntity;
 import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.Picture.PictureService;
 import com.ssafy.barguni.api.alert.AlertRepository;
@@ -14,6 +15,7 @@ import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.item.vo.ReceiptItemRes;
+import com.ssafy.barguni.api.product.ProductService;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.common.util.ClovaOcrUtil;
 import com.ssafy.barguni.common.util.ImageUtil;
@@ -43,7 +45,7 @@ public class ItemService {
     private final PictureService pictureService;
     private final CategoryService categoryService;
     private final UserBasketService userBasketService;
-    private final ClovaOcrUtil clovaOcrUtil;
+    private final ProductService productService;
     private final AlertRepository alertRepository;
     private final PictureRepository pictureRepository;
     private final ProductRepository productRepository;
@@ -202,15 +204,18 @@ public class ItemService {
         return false;
     }
 
-    public Integer deleteUsedItemInBasket(Long bktId) {
-        return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
+    public void deleteUsedItemInBasket(Long bktId) {
+        List<Item> usedInBasket = itemRepository.getAllInBasket(bktId, true);
+        for (Item i : usedInBasket) {
+            deleteById(i.getId());
+        }
     }
 
     public List<ReceiptItemRes> readReceipt(MultipartFile multipartFile) throws Exception {
 
 //        테스트용
         BufferedReader reader = new BufferedReader(
-                new FileReader("/Users/junaem/Desktop/SSAFY/2nd_sem_fre_pjt/S06P31B202/backend/src/main/java/com/ssafy/barguni/api/item/receipt4.txt"),
+                new FileReader("./src/main/java/com/ssafy/barguni/api/item/receipt4.txt"),
                 16 * 1024);
         String result = reader.readLine();
 

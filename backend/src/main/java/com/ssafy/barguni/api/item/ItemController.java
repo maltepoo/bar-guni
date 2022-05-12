@@ -213,7 +213,7 @@ public class ItemController {
         ResVO<String> result = new ResVO<>();
         HttpStatus status = null;
 
-        result.setData(itemService.deleteUsedItemInBasket(bktId) + "개의 아이템을 삭제했습니다.");
+        result.setData(basketService.getBasket(bktId).getName() + "의 휴지통을 비웠습니다.");
         result.setMessage("휴지통 비우기 성공");
         status = HttpStatus.OK;
 
@@ -221,7 +221,7 @@ public class ItemController {
     }
 
     @GetMapping("/ocr")
-    @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 ")
+    @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
