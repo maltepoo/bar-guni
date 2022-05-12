@@ -80,7 +80,12 @@ function Settings({navigation}: SettingsScreenProps) {
 
   return (
     <ScrollView
-      style={{flex: 1, backgroundColor: '#fff', paddingHorizontal: 20, paddingTop: 10,}}>
+      style={{
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingTop: 10,
+      }}>
       <Text style={style.title}>알림</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text style={style.content}>알림시간 설정</Text>
@@ -116,15 +121,15 @@ function Settings({navigation}: SettingsScreenProps) {
       <Pressable onPress={goTrashCan}>
         <Text style={style.content}>휴지통</Text>
       </Pressable>
-      <Pressable onPress={goMyPage}>
-        <Text style={style.content}>내 정보</Text>
-      </Pressable>
+      {/*<Pressable onPress={goMyPage}>*/}
+      {/*  <Text style={style.content}>내 정보</Text>*/}
+      {/*</Pressable>*/}
       <Pressable onPress={logout}>
         <Text style={style.content}>로그아웃</Text>
       </Pressable>
-      <Pressable>
-        <Text style={{...style.content, marginBottom: 40}}>회원탈퇴</Text>
-      </Pressable>
+      {/*<Pressable>*/}
+      {/*  <Text style={{...style.content, marginBottom: 40}}>회원탈퇴</Text>*/}
+      {/*</Pressable>*/}
     </ScrollView>
   );
 }

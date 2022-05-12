@@ -1,12 +1,20 @@
 import React, {useCallback, useState} from 'react';
-import {Alert, Image, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Divider} from '@rneui/base';
 import {changeItemStatus, Item} from '../api/item';
 import {getCategory} from '../api/category';
 import Config from 'react-native-config';
-import {Button, Dialog, Paragraph, Portal} from "react-native-paper";
+import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
 interface HomeItem {
   item: Item;
   category: string;
@@ -38,8 +46,7 @@ function HomeItems(props: HomeItem) {
 
   const handleConfirm = useCallback(() => {
     setVisible(true);
-  });
-
+  }, []);
   return item.category === props.category || props.category === '전체' ? (
     <TouchableOpacity onLongPress={handleConfirm}>
       <Portal>
@@ -91,21 +98,21 @@ function HomeItems(props: HomeItem) {
                   (
                     item.dday -
                     (new Date().getTime() - new Date(item.regDate).getTime()) /
-                      (1000 * 360 * 24)
+                      (1000 * 3600 * 24)
                   )
                     .toFixed(0)
                     .substring(0, 1) === '-'
-                    ? `- ${Math.abs(
+                    ? `+ ${Math.abs(
                         item.dday -
                           (new Date().getTime() -
                             new Date(item.regDate).getTime()) /
-                            (1000 * 360 * 24),
+                            (1000 * 3600 * 24),
                       ).toFixed(0)}`
-                    : `+ ${Math.abs(
+                    : `- ${Math.abs(
                         item.dday -
                           (new Date().getTime() -
                             new Date(item.regDate).getTime()) /
-                            (1000 * 360 * 24),
+                            (1000 * 3600 * 24),
                       ).toFixed(0)}`
                 }`}
             {/*5 17 5/ 5 12 5 13 5 / dday(5)-( date(513) -regDate(512))*/}
@@ -119,7 +126,8 @@ function HomeItems(props: HomeItem) {
                 )
                   .toJSON()
                   .substring(0, 10)
-              : item.shelfLife} 까지
+              : item.shelfLife}{' '}
+            까지
           </Text>
         </View>
         {/*<View style={Style.container}>*/}
