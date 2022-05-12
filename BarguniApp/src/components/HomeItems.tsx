@@ -1,11 +1,12 @@
-import React, {useCallback} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Alert, Image, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {Divider} from '@rneui/base';
 import {changeItemStatus, Item} from '../api/item';
 import {getCategory} from '../api/category';
 import Config from 'react-native-config';
+import {Button, Dialog, Paragraph, Portal} from "react-native-paper";
 interface HomeItem {
   item: Item;
   category: string;
@@ -15,7 +16,10 @@ interface HomeItem {
 
 function HomeItems(props: HomeItem) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [visible, setVisible] = useState(false);
+  const hideDialog = () => setVisible(false);
   let item = props.item;
+
   const deleteItem = useCallback(async () => {
     // Todo : 삭제 할 아이템
     try {
@@ -31,8 +35,22 @@ function HomeItems(props: HomeItem) {
   const onClick = useCallback(() => {
     navigation.navigate('ItemDetail', {...item, basketName: props.basketName});
   }, [item, navigation, props.basketName]);
+
+  const handleConfirm = useCallback(() => {
+    setVisible(true);
+  });
+
   return item.category === props.category || props.category === '전체' ? (
-    <View>
+    <TouchableOpacity onLongPress={handleConfirm}>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>아이템을 삭제합니다</Dialog.Title>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>취소</Button>
+            <Button onPress={deleteItem}>삭제</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <View style={Style.container}>
         <View style={Style.row}>
           <Image
@@ -58,7 +76,6 @@ function HomeItems(props: HomeItem) {
               : item.dday}
           </Text>
           <Text style={Style.lifetime}>
-            유통기한:
             {item.shelfLife === null
               ? new Date(
                   shelfLife.setDate(
@@ -67,17 +84,17 @@ function HomeItems(props: HomeItem) {
                 )
                   .toJSON()
                   .substring(0, 10)
-              : item.shelfLife}
+              : item.shelfLife} 까지
           </Text>
         </View>
-        <View style={Style.container}>
-          <Pressable onPress={deleteItem}>
-            <Image
-              style={Style.cancel}
-              source={require('../assets/close.png')}
-            />
-          </Pressable>
-        </View>
+        {/*<View style={Style.container}>*/}
+        {/*  <Pressable onPress={deleteItem}>*/}
+        {/*    <Image*/}
+        {/*      style={Style.cancel}*/}
+        {/*      source={require('../assets/close.png')}*/}
+        {/*    />*/}
+        {/*  </Pressable>*/}
+        {/*</View>*/}
       </View>
       <View style={{alignItems: 'center'}}>
         <Divider
@@ -86,7 +103,7 @@ function HomeItems(props: HomeItem) {
           color="#ECECEC"
         />
       </View>
-    </View>
+    </TouchableOpacity>
   ) : (
     <></>
   );

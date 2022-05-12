@@ -57,6 +57,7 @@ const Style = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     // alignItems: 'center'
+    paddingTop: 10,
   },
   count: {
     color: '#0094FF',

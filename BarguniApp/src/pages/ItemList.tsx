@@ -37,6 +37,7 @@ import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 function ItemList() {
   const user = useSelector((state: RootState) => state.user);
@@ -273,7 +274,7 @@ function ItemList() {
         {basket.map(item => (
           <Picker.Item
             key={item.bkt_id}
-            label={item.count > 1 ? item.bkt_name + '(공유)' : item.bkt_name}
+            label={item.count > 1 ? item.bkt_name + ' (공유)' : item.bkt_name}
             value={item.bkt_id}
             style={Style.dropdownItem}
           />
@@ -339,20 +340,21 @@ function ItemList() {
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
                 <Pressable
+                  style={{maginRight: 6}}
                   onPress={() => {
                     setDefaultBasket(item.bkt_id).then();
                   }}>
                   {item.bkt_name === user.defaultBasket.name ? (
-                    <Icon name={'star'} />
+                    <AntDesign name='star' size={18} />
                   ) : (
-                    <Icon name={'star-border'} />
+                    <AntDesign name='staro' size={18} />
                   )}
                 </Pressable>
                 <Pressable
                   onPress={() => {
                     showDeleteDialog(index, 'basket');
                   }}>
-                  <Icon name={'cancel'} />
+                  <AntDesign name={'delete'} size={18}/>
                 </Pressable>
               </View>
             ))
@@ -360,10 +362,11 @@ function ItemList() {
             <></>
           )}
         </ScrollView>
-        <Input
+        <TextInput
           value={basketName}
           onChangeText={onChangeBasketName}
-          placeholder="바구니 이름을 입력하세요"
+          style={Style.newBasketInput}
+          placeholder="생성할 바구니 이름을 입력하세요"
         />
         <Button onPress={addBasket} title="완료" />
         <DeleteConfirm />
@@ -381,7 +384,7 @@ function ItemList() {
                     onPress={() => {
                       showDeleteDialog(index, 'category');
                     }}>
-                    <Icon name={'cancel'} />
+                    <AntDesign name={'delete'} size={18}/>
                   </Pressable>
                 </View>
               ) : (
@@ -392,10 +395,11 @@ function ItemList() {
             <></>
           )}
         </ScrollView>
-        <Input
+        <TextInput
           value={categoryName}
           onChangeText={onChangeCategoryName}
           placeholder="카테고리 이름을 입력하세요"
+          style={Style.newBasketInput}
         />
         <Button onPress={addCategory} title="완료" />
         <DeleteConfirm />
@@ -488,6 +492,7 @@ const Style = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    marginBottom: 10
   },
   text: {
     width: '80%',
@@ -501,6 +506,12 @@ const Style = StyleSheet.create({
     width: '100%',
     backgroundColor: 'red',
   },
+  newBasketInput: {
+    backgroundColor: '#F5F4F4',
+    borderRadius: 100,
+    paddingLeft: 20,
+    marginVertical: 16
+  }
 });
 
 export default ItemList;

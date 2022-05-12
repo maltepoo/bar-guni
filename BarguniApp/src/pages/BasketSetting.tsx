@@ -80,6 +80,23 @@ function BasketSetting() {
   return (
     <ScrollView style={style.container}>
       <Text
+        style={style.title}>
+        바구니 참여
+      </Text>
+      <View style={{alignItems: 'center',}}>
+        <TextInput
+          value={inviteCode}
+          onChangeText={handleInputChange}
+          style={{textAlign: 'center'}}
+          placeholder="초대코드를 입력해서 바구니에 참여해보세요"
+        />
+        <TouchableOpacity
+          onPress={handleJoinBasket}
+          style={{alignItems: 'center',backgroundColor: '#F5F4F4', width: 140, borderRadius: 140}}>
+          <Text style={{color: '#0094FF', paddingVertical: 6}}>바구니 입장하기</Text>
+        </TouchableOpacity>
+      </View>
+      <Text
         style={{
           color: 'black',
           fontSize: 20,
@@ -89,19 +106,6 @@ function BasketSetting() {
         바구니 목록
       </Text>
       <FlatList data={basketList} renderItem={renderBasketList} />
-      <View>
-        <TextInput
-          value={inviteCode}
-          onChangeText={handleInputChange}
-          style={{textAlign: 'center'}}
-          placeholder="초대코드를 입력해서 바구니에 참여해보세요"
-        />
-        <TouchableHighlight
-          onPress={handleJoinBasket}
-          style={{alignItems: 'center'}}>
-          <Text style={{color: 'blue'}}>바구니 입장하기</Text>
-        </TouchableHighlight>
-      </View>
     </ScrollView>
   );
 }
@@ -111,5 +115,12 @@ const style = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     // alignItems: 'center',
   },
+  title: {
+    color: 'black',
+    fontSize: 20,
+    fontFamily: 'Pretendard-Bold',
+    margin: '5%',
+    marginBottom: 10,
+  }
 });
 export default BasketSetting;

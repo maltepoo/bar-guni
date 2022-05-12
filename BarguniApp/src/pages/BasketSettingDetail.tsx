@@ -13,6 +13,7 @@ import {
 import {deleteBasket, getBasketMembers, updateBasketName} from '../api/basket';
 import {deleteCategory, getCategory, updateCategory} from '../api/category';
 import {navigate} from '../../RootNavigation';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 function BasketSettingDetail({route}) {
   const basketInfo = route.params;
@@ -131,10 +132,7 @@ function BasketSettingDetail({route}) {
             <TouchableOpacity
               style={style.picture}
               onPress={() => setChecked(false)}>
-              <Image
-                style={style.picture}
-                source={require('../assets/pen.png')}
-              />
+              <FontAwesome5Icon name="pen" size={18} />
             </TouchableOpacity>
           </View>
         ) : (
