@@ -43,7 +43,9 @@ function ItemList() {
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
-  const [selectedBasket, setSelectedBasket] = useState({} as Basket);
+  const selectedBasket = useSelector(
+    (state: RootState) => state.user.selectBasket,
+  ) as Basket;
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
   const [open, setOpen] = useState(false);
@@ -57,6 +59,7 @@ function ItemList() {
   const [deleteMode, setDeleteMode] = useState('');
   const isFocused = useIsFocused();
   const [render, setRender] = useState(false);
+  console.log(user);
   const toggleDeleteDialog = useCallback(() => {
     setDeleteDialog(!deleteDialog);
   }, [deleteDialog]);
@@ -115,10 +118,13 @@ function ItemList() {
         baskets.unshift(baskets[index]);
         baskets.splice(index + 1, 1);
         await setBasket(baskets);
-        await setSelectedBasket(baskets[0]);
-        const categoryRes = await getCategory(baskets[0].bkt_id);
+        console.log(baskets[0], '선택 바구니 설정');
+        if (selectedBasket === undefined) {
+          await dispatch(userSlice.actions.setSelectBasket(baskets[0]));
+        }
+        const categoryRes = await getCategory(selectedBasket.bkt_id);
         await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
-        const itemRes = await getItems(baskets[0].bkt_id, false);
+        const itemRes = await getItems(selectedBasket.bkt_id, false);
         await setItems(itemRes);
         // PushNotification.localNotificationSchedule({
         //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
@@ -136,7 +142,7 @@ function ItemList() {
     }
 
     init();
-  }, [dispatch, isFocused, render]);
+  }, [dispatch, isFocused, render, selectedBasket]);
   const addBasket = useCallback(async () => {
     try {
       await registerBasket(basketName);
@@ -164,7 +170,7 @@ function ItemList() {
         setCategory([{cateId: -1, name: '전체'}, ...res]);
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
-        setSelectedBasket(selectBasket);
+        dispatch(userSlice.actions.setSelectBasket(selectBasket));
         const itemRes = await getItems(id, false);
         setItems(itemRes);
         console.log(id);
@@ -438,7 +444,7 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: '10%'
+    paddingTop: '10%',
   },
   button: {
     backgroundColor: 'rgba(0, 148, 255, 0.15)',

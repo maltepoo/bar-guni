@@ -49,13 +49,48 @@ function HomeItems(props: HomeItem) {
         </Pressable>
         <View style={Style.row3}>
           <Text style={Style.dDay}>
-            D -{' '}
+            D{' '}
             {item.dday === null
-              ? Math.abs(
-                  (new Date(item.shelfLife).getTime() - new Date().getTime()) /
-                    (1000 * 3600 * 24),
-                ).toFixed(0)
-              : item.dday}
+              ? (
+                  (-1 *
+                    (new Date(item.shelfLife).getTime() -
+                      new Date().getTime())) /
+                  (1000 * 3600 * 24)
+                )
+                  .toFixed(0)
+                  .substring(0, 1) === '-'
+                ? `- ${Math.abs(
+                    (new Date(item.shelfLife).getTime() -
+                      new Date().getTime()) /
+                      (1000 * 3600 * 24),
+                  ).toFixed(0)}`
+                : `+ ${Math.abs(
+                    (new Date(item.shelfLife).getTime() -
+                      new Date().getTime()) /
+                      (1000 * 3600 * 24),
+                  ).toFixed(0)}`
+              : `${
+                  (
+                    item.dday -
+                    (new Date().getTime() - new Date(item.regDate).getTime()) /
+                      (1000 * 360 * 24)
+                  )
+                    .toFixed(0)
+                    .substring(0, 1) === '-'
+                    ? `- ${Math.abs(
+                        item.dday -
+                          (new Date().getTime() -
+                            new Date(item.regDate).getTime()) /
+                            (1000 * 360 * 24),
+                      ).toFixed(0)}`
+                    : `+ ${Math.abs(
+                        item.dday -
+                          (new Date().getTime() -
+                            new Date(item.regDate).getTime()) /
+                            (1000 * 360 * 24),
+                      ).toFixed(0)}`
+                }`}
+            {/*5 17 5/ 5 12 5 13 5 / dday(5)-( date(513) -regDate(512))*/}
           </Text>
           <Text style={Style.lifetime}>
             유통기한:
