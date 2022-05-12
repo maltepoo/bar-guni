@@ -84,7 +84,6 @@ function Register({navigation}: RegisterScreenProps) {
     return ImagePicker.openCamera({
       includeBase64: true,
       includeExif: true,
-      cropping: true,
     })
       .then(onResponse)
       .catch(console.log);
@@ -116,7 +115,9 @@ function Register({navigation}: RegisterScreenProps) {
         }
       }
       console.log(imgRes);
-      imgRes.id = route.params.pictureId;
+      if (route.params !== undefined) {
+        imgRes.id = route.params.pictureId;
+      }
       console.log(imgRes.id, ' 등록할 이미지 아이디');
       if (alertBy === 'D_DAY') {
         regDate.setDate(new Date().getDate() + day);
