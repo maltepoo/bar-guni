@@ -117,13 +117,13 @@ function Register({navigation}: RegisterScreenProps) {
       }
       console.log(imgRes);
       if (alertBy === 'D_DAY') {
-        shelfLife.setDate(new Date().getDate() + day);
+        regDate.setDate(new Date().getDate() + day);
       }
       const item: ItemReq = {
         bktId: selectedBasket,
         cateId: selectedCategory,
         name: name,
-        shelfLife: shelfLife.toJSON().substring(0, 10),
+        shelfLife: regDate.toJSON().substring(0, 10),
         alertBy: alertBy,
         content: content,
         picId: imgRes.id,
@@ -158,7 +158,7 @@ function Register({navigation}: RegisterScreenProps) {
       setName(route.params.name);
     }
     init();
-  }, []);
+  }, [route.params]);
 
   return (
     <ScrollView style={Style.background}>

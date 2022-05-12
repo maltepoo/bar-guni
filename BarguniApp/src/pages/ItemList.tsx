@@ -37,7 +37,7 @@ import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
-import AntDesign from "react-native-vector-icons/AntDesign";
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function ItemList() {
   const user = useSelector((state: RootState) => state.user);
@@ -60,7 +60,6 @@ function ItemList() {
   const [deleteMode, setDeleteMode] = useState('');
   const isFocused = useIsFocused();
   const [render, setRender] = useState(false);
-  console.log(user);
   const toggleDeleteDialog = useCallback(() => {
     setDeleteDialog(!deleteDialog);
   }, [deleteDialog]);
@@ -158,7 +157,7 @@ function ItemList() {
     try {
       await registerCategory(selectedBasket.bkt_id, categoryName);
       const res = await getCategory(selectedBasket.bkt_id);
-      setCategory(res);
+      setCategory([{cateId: -1, name: '전체'}, ...res]);
       setCategoryDialog(false);
       setCategoryName('');
     } catch (e) {}
@@ -351,16 +350,16 @@ function ItemList() {
                     setDefaultBasket(item.bkt_id).then();
                   }}>
                   {item.bkt_name === user.defaultBasket.name ? (
-                    <AntDesign name='star' size={18} />
+                    <AntDesign name="star" size={18} />
                   ) : (
-                    <AntDesign name='staro' size={18} />
+                    <AntDesign name="staro" size={18} />
                   )}
                 </Pressable>
                 <Pressable
                   onPress={() => {
                     showDeleteDialog(index, 'basket');
                   }}>
-                  <AntDesign name={'delete'} size={18}/>
+                  <AntDesign name={'delete'} size={18} />
                 </Pressable>
               </View>
             ))
@@ -390,7 +389,7 @@ function ItemList() {
                     onPress={() => {
                       showDeleteDialog(index, 'category');
                     }}>
-                    <AntDesign name={'delete'} size={18}/>
+                    <AntDesign name={'delete'} size={18} />
                   </Pressable>
                 </View>
               ) : (
@@ -498,7 +497,7 @@ const Style = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 10
+    marginBottom: 10,
   },
   text: {
     width: '80%',
@@ -516,8 +515,8 @@ const Style = StyleSheet.create({
     backgroundColor: '#F5F4F4',
     borderRadius: 100,
     paddingLeft: 20,
-    marginVertical: 16
-  }
+    marginVertical: 16,
+  },
 });
 
 export default ItemList;

@@ -31,10 +31,12 @@ function ItemModify() {
   const [expOpen, setExpOpen] = useState(false);
   const [regDate, setRegDate] = useState(new Date());
   const [regOpen, setRegOpen] = useState(false);
-  const propsItem = route.params as Item;
-  console.log(propsItem, 'props');
+  const propsItem = route.params as ItemReq;
   const [items, setItem] = useState(propsItem);
-  console.log(expDate, 'expDate');
+  const [basket, setBasket] = useState([] as Basket[]);
+  const [category, setCategory] = useState([] as Category[]);
+  const [selectedBasket, setSelectedBasket] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const changeName = useCallback(
     text => {
       setItem(() => ({
@@ -48,9 +50,9 @@ function ItemModify() {
   );
   const onModify = useCallback(async () => {
     try {
+      console.log(items);
       const item: ItemReq = {
         bktId: selectedBasket,
-        picId: null,
         cateId: selectedCategory,
         name: items.name,
         alertBy: items.alertBy,
@@ -58,20 +60,35 @@ function ItemModify() {
         content: items.content,
         dday: items.dday,
       };
-      console.log(items.itemId, 'id');
-      await console.log(item, 'item');
-      await console.log(items, 'items');
-      await modifyItem(items.itemId, item);
+      console.log(item, 'ItemReq');
+      await modifyItem(propsItem.itemId, item);
       navigation.navigate('ItemList');
     } catch (e) {
       console.log(e);
     }
-  }, [navigation, items, expDate]);
-  const [basket, setBasket] = useState([] as Basket[]);
-  const [category, setCategory] = useState([] as Category[]);
+  }, [
+    selectedBasket,
+    items.picId,
+    items.name,
+    items.alertBy,
+    items.content,
+    items.dday,
+    selectedCategory,
+    expDate,
+    navigation,
+  ]);
 
-  const [selectedBasket, setSelectedBasket] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState(0);
+  const changeBasket = useCallback(async (itemValue: number) => {
+    console.log(itemValue, ' 바구니 선택');
+    setSelectedBasket(itemValue);
+    const res = await getCategory(itemValue as number);
+    setCategory(res);
+    setSelectedCategory(res[0].cateId);
+  }, []);
+  const changeCategory = useCallback((itemValue: number) => {
+    setSelectedCategory(itemValue);
+    console.log(itemValue);
+  }, []);
   useEffect(() => {
     async function init(): Promise<void> {
       const basketRes = await getBaskets();
@@ -173,11 +190,8 @@ function ItemModify() {
         </View>
         <Picker
           selectedValue={selectedBasket}
-          onValueChange={async itemValue => {
-            setSelectedBasket(itemValue);
-            const res = await getCategory(itemValue as number);
-            setCategory(res);
-            setSelectedCategory(res[0].cateId);
+          onValueChange={itemValue => {
+            changeBasket(itemValue).then();
           }}>
           {basket.map(item => (
             <Picker.Item
@@ -190,7 +204,7 @@ function ItemModify() {
         <Picker
           selectedValue={selectedCategory}
           onValueChange={itemValue => {
-            setSelectedCategory(itemValue);
+            changeCategory(itemValue);
           }}>
           {category.map(item => (
             <Picker.Item
@@ -201,7 +215,7 @@ function ItemModify() {
           ))}
         </Picker>
         <View style={Style.buttonContent}>
-          <TouchableOpacity style={Style.button}>
+          <TouchableOpacity onPress={onModify} style={Style.button}>
             <Text style={Style.buttonTitle}>수정</Text>
           </TouchableOpacity>
         </View>

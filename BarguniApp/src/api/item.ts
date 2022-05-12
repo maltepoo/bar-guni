@@ -17,8 +17,9 @@ export interface Item {
 }
 
 export interface ItemReq {
+  itemId: number;
   bktId: number;
-  picId: number | null;
+  picId?: number | null;
   cateId: number;
   name: string;
   alertBy: string;
