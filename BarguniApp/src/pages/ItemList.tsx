@@ -267,7 +267,7 @@ function ItemList() {
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
-        <Text style={Style.topText}>{count}개가 있어요</Text>
+        <Text style={Style.topText}><Text style={{color: count > 0 ? '#0094FF' : ""}}>{count}</Text>개가 있어요</Text>
       </View>
       <Picker
         selectedValue={selectedBasket.bkt_id}
