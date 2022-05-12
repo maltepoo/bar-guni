@@ -15,7 +15,7 @@ COPY requirements.txt ./
 COPY . .
 COPY /train/kor.traineddata /usr/share/tesseract-ocr/4.00/tessdata/
 
-RUN pip3 install -r requirements.txt -y
+RUN pip3 install -r requirements.txt
 
 VOLUME ["/data"]
 CMD ["python3","app.py"]
