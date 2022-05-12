@@ -11,15 +11,27 @@ import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.item.vo.ReceiptItemRes;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
+import com.ssafy.barguni.common.util.ClovaOcrUtil;
+import com.ssafy.barguni.common.util.ImageUtil;
+import com.ssafy.barguni.common.util.NaverImgSearchUtil;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +45,7 @@ public class ItemService {
     private final PictureService pictureService;
     private final CategoryService categoryService;
     private final UserBasketService userBasketService;
+    private final ClovaOcrUtil clovaOcrUtil;
 
     public Item saveNewItem(Long userId, ItemPostReq req) {
         if (!userBasketService.existsBybktId(userId, req.getBktId())){
@@ -179,4 +192,39 @@ public class ItemService {
     public Integer deleteUsedItemInBasket(Long bktId) {
         return itemRepository.deleteItemsByBasket_IdAndUsed(bktId, true);
     }
+
+    public List<ReceiptItemRes> readReceipt(MultipartFile multipartFile) throws Exception {
+
+//        테스트용
+//        BufferedReader reader = new BufferedReader(
+//                new FileReader("/Users/junaem/Desktop/SSAFY/2nd_sem_fre_pjt/S06P31B202/backend/src/main/java/com/ssafy/barguni/api/item/receipt4.txt"),
+//                16 * 1024);
+//
+//        String result = reader.readLine();
+
+        String result = clovaOcrUtil.getOcr(multipartFile);
+
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(result);
+
+        // 필요한 내용 경로 따라가기
+        JSONArray imagesJson = (JSONArray) json.get("images");
+        JSONObject imagesJson0 = (JSONObject) imagesJson.get(0);
+        JSONObject receiptJson = (JSONObject) imagesJson0.get("receipt");
+        JSONObject resultJson = (JSONObject) receiptJson.get("result");
+        JSONArray subResultJson = (JSONArray) resultJson.get("subResults");
+        JSONObject subResultJson0 = (JSONObject) subResultJson.get(0);
+        JSONArray itemsJson = (JSONArray) subResultJson0.get("items");  // items도착
+        // arr에 RecItemRes 쌓아서 반환
+        ArrayList<ReceiptItemRes> arr = new ArrayList<>();
+        for (int i=0; i<itemsJson.size(); i++) {
+            JSONObject itemJson = (JSONObject) itemsJson.get(i);
+            JSONObject nameJson = (JSONObject) itemJson.get("name");
+            String name = (String) nameJson.get("text");
+            arr.add(new ReceiptItemRes(name));
+        }
+
+        return arr;
+    }
+
 }

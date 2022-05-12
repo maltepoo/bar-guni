@@ -4,10 +4,8 @@ import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.error.ErrorCode;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
-import com.ssafy.barguni.api.item.vo.ItemRes;
-import com.ssafy.barguni.api.item.vo.ItemSearch;
+import com.ssafy.barguni.api.item.vo.*;
 import com.ssafy.barguni.api.common.ResVO;
-import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
@@ -223,17 +221,20 @@ public class ItemController {
     }
 
     @GetMapping("/ocr")
-    @Operation(summary = "OCR 진행", description = "사진 파일로 해당 정보를 받아온다")
+    @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public void clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile image) throws JSONException {
+    public ResponseEntity<ReceiptResVO> clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
+        ReceiptResVO result;
+        HttpStatus status = null;
+        result = new ReceiptResVO(itemService.readReceipt(receipt));
+        result.setMessage("영수증 분석 성공");
+        status = HttpStatus.OK;
 
-        ClovaOcrUtil clovaOcrUtil = new ClovaOcrUtil();
-//        clovaOcrUtil.ocrTest();
-//        clovaOcrUtil.getOcr(image);
+        return new ResponseEntity<ReceiptResVO>(result, status);
     }
 }
