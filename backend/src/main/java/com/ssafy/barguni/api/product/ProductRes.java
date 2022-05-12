@@ -10,12 +10,14 @@ import lombok.Data;
 public class ProductRes {
     private String name;
     private String pictureUrl;
+    private Long pictureId;
     private String barcode;
 
     public ProductRes(Product product){
         this.name = product.getName();
         if(product.getPicture() != null)
             this.pictureUrl = product.getPicture().getPicUrl();
+            this.pictureId = product.getPicture().getId();
         this.barcode = product.getBarcode();
     }
 }
