@@ -214,6 +214,9 @@ function AppInner() {
         options={{
           title: '상세 보기',
           headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
         }}
       />
       <Stack.Screen
@@ -222,17 +225,21 @@ function AppInner() {
         options={{
           title: '수정',
           headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
         }}
-      />
-      <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{headerShown: true}}
       />
       <Stack.Screen
         name="SearchResult"
         component={SearchResult}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: '검색 결과',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="AlarmSetting"
@@ -242,22 +249,46 @@ function AppInner() {
       <Stack.Screen
         name="MyPage"
         component={MyPage}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "내 정보",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="BasketSetting"
         component={BasketSetting}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "바구니 관리",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="BasketSettingDetail"
         component={BasketSettingDetail}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "바구니 상세",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="TrashCan"
         component={TrashCan}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "휴지통",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="Alarm"
@@ -273,27 +304,53 @@ function AppInner() {
             />
           ),
           headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
         }}
       />
       <Stack.Screen
         name="BasketDetail"
         component={BasketDetail}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="BasketInvite"
         component={BasketInvite}
-        options={{headerShown: true, headerTitle: '바구니 멤버초대'}}
+        options={{
+          headerShown: true,
+          headerTitle: '바구니 멤버초대',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: '제품 등록',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="Barcode"
         component={Barcode}
-        options={{title: '바코드로 등록하기', headerShown: true}}
+        options={{
+          title: '바코드로 등록',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
     </Stack.Navigator>
   ) : (

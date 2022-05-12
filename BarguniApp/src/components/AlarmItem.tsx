@@ -35,13 +35,13 @@ function AlarmItem({item, remove}: Props) {
           )}
           일 전
         </Text>
-        <Button
-          title={'읽음'}
-          titleStyle={{fontSize: 9}}
-          buttonStyle={{marginTop: 5, marginLeft: 5}}
-          onPress={removeAlarm}
-        />
       </View>
+      <Button
+        title={'읽음'}
+        titleStyle={{fontSize: 9}}
+        buttonStyle={{marginTop: 5, marginHorizontal: 5}}
+        onPress={removeAlarm}
+      />
       <View style={Style.line} />
     </>
   );
@@ -52,13 +52,14 @@ const Style = StyleSheet.create({
     marginTop: 10,
     marginLeft: 10,
     justifyContent: 'space-between',
+    paddingHorizontal: 10
   },
   dotContainer: {
     alignItems: 'center',
-    paddingTop: 4,
+    paddingTop: 7,
   },
   dot: {
-    color: '#C4C4C4',
+    color: '#0094FF',
   },
   multiline: {
     width: '80%',
@@ -69,7 +70,7 @@ const Style = StyleSheet.create({
   },
   time: {
     fontSize: 12,
-    color: 'black',
+    color: '#C4C4C4',
     textAlign: 'right',
   },
   line: {

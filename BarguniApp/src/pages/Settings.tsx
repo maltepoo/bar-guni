@@ -80,7 +80,7 @@ function Settings({navigation}: SettingsScreenProps) {
 
   return (
     <ScrollView
-      style={{flex: 1, backgroundColor: '#fff', paddingHorizontal: 20}}>
+      style={{flex: 1, backgroundColor: '#fff', paddingHorizontal: 20, paddingTop: 10,}}>
       <Text style={style.title}>알림</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text style={style.content}>알림시간 설정</Text>
@@ -150,7 +150,7 @@ const style = StyleSheet.create({
   },
   line: {
     height: 0.7,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: '#F5F4F4',
     marginTop: 30,
   },
   content: {

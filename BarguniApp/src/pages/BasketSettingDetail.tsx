@@ -13,6 +13,8 @@ import {
 import {deleteBasket, getBasketMembers, updateBasketName} from '../api/basket';
 import {deleteCategory, getCategory, updateCategory} from '../api/category';
 import {navigate} from '../../RootNavigation';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 function BasketSettingDetail({route}) {
   const basketInfo = route.params;
@@ -131,10 +133,7 @@ function BasketSettingDetail({route}) {
             <TouchableOpacity
               style={style.picture}
               onPress={() => setChecked(false)}>
-              <Image
-                style={style.picture}
-                source={require('../assets/pen.png')}
-              />
+              <FontAwesome5Icon name="pen" size={18} />
             </TouchableOpacity>
           </View>
         ) : (
@@ -156,17 +155,20 @@ function BasketSettingDetail({route}) {
           </View>
         )}
       </View>
-      <Text style={style.left}>바구니 참여자 목록 </Text>
+      {/*<Text style={style.left}>바구니 참여자 목록 </Text>*/}
       <Text
         style={{
-          marginLeft: '10%',
+          marginLeft: '6%',
           fontFamily: 'Pretendard-Light',
           color: 'black',
         }}>
         {basketMembers.map((item, index) => (
-          <Text>
-            {item.name} {index !== basketMembers.length - 1 ? ',' : ''}{' '}
-          </Text>
+          <>
+            <FontAwesomeIcon name="user-circle" />
+            <Text>
+              {" "}{item.name} {index !== basketMembers.length - 1 ? ',' : ''}{'  '}
+            </Text>
+          </>
         ))}
       </Text>
       <View style={style.row2}>
