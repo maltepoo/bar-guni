@@ -13,8 +13,8 @@ import {
 import {deleteBasket, getBasketMembers, updateBasketName} from '../api/basket';
 import {deleteCategory, getCategory, updateCategory} from '../api/category';
 import {navigate} from '../../RootNavigation';
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 function BasketSettingDetail({route}) {
   const basketInfo = route.params;
@@ -63,7 +63,9 @@ function BasketSettingDetail({route}) {
     } else {
       try {
         const res = await updateBasketName(basketInfo.bkt_id, newBasketName);
-        console.log(res.message, '바구니 이름 변경 결과');
+        console.log(res, '바구니 이름 변경 결과');
+
+        setChecked(true);
 
         // TODO: 바구니 목록 조회 다시하여 재렌더링하기
       } catch (err) {
@@ -144,12 +146,7 @@ function BasketSettingDetail({route}) {
               onChangeText={handleNewBasketName}
               value={newBasketName}
             />
-            <TouchableOpacity
-              style={style.te}
-              onPress={() => {
-                setChecked(true);
-                changeBasketName;
-              }}>
+            <TouchableOpacity style={style.te} onPress={changeBasketName}>
               <Text style={style.top}>완료</Text>
             </TouchableOpacity>
           </View>
@@ -166,7 +163,9 @@ function BasketSettingDetail({route}) {
           <>
             <FontAwesomeIcon name="user-circle" />
             <Text>
-              {" "}{item.name} {index !== basketMembers.length - 1 ? ',' : ''}{'  '}
+              {' '}
+              {item.name} {index !== basketMembers.length - 1 ? ',' : ''}
+              {'  '}
             </Text>
           </>
         ))}

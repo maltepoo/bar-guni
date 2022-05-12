@@ -48,7 +48,7 @@ async function getBasketInfo(basketId: number) {
 
 async function updateBasketName(basketId: number, basketName: string) {
   const axios = LoginApiInstance();
-  return (await axios.put(`/basket/${basketId}?name=${basketName}`)).data.data;
+  await axios.put(`/basket/${basketId}?name=${basketName}`);
 }
 
 async function deleteBasket(basketId: number) {
