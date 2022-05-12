@@ -6,7 +6,8 @@ RUN apt-get update \
     #python-setuptools \
     python3-pip \
     && apt-get clean \
-    && apt-get autoremove
+    && apt-get autoremove \
+    && apt-get install git
 
 ADD . /home/App
 WORKDIR /home/App
