@@ -1,7 +1,9 @@
 package com.ssafy.barguni.api.item;
 
 import com.ssafy.barguni.api.Picture.Picture;
+import com.ssafy.barguni.api.Picture.PictureRepository;
 import com.ssafy.barguni.api.Picture.PictureService;
+import com.ssafy.barguni.api.alert.AlertRepository;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
 import com.ssafy.barguni.api.basket.service.BasketService;
@@ -11,9 +13,11 @@ import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import com.ssafy.barguni.api.item.vo.ItemPostReq;
+import com.ssafy.barguni.api.product.ProductRepository;
 import com.ssafy.barguni.api.user.User;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
+import com.ssafy.barguni.common.util.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,9 @@ public class ItemService {
     private final PictureService pictureService;
     private final CategoryService categoryService;
     private final UserBasketService userBasketService;
+    private final AlertRepository alertRepository;
+    private final PictureRepository pictureRepository;
+    private final ProductRepository productRepository;
 
     public Item saveNewItem(Long userId, ItemPostReq req) {
         if (!userBasketService.existsBybktId(userId, req.getBktId())){
@@ -114,7 +121,19 @@ public class ItemService {
     }
 
     public void deleteById(Long id) {
+        Item item = itemRepository.findWithPictureById(id);
+        // alert 삭제
+        alertRepository.deleteByItemId(id);
+        // item 삭제
         itemRepository.deleteById(id);
+        // 이미지 삭제
+        if(item.getPicture() != null
+                && item.getPicture().getId() != 1L
+                && !productRepository.existsProductByPicture(item.getPicture()))
+        {
+            ImageUtil.delete(item.getPicture());
+            pictureRepository.delete(item.getPicture());
+        }
     }
 
     public List<Item> getAllInBasket(Long basketId, Long userId, Boolean used){

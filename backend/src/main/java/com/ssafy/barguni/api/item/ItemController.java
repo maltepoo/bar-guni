@@ -145,8 +145,8 @@ public class ItemController {
         HttpStatus status;
 
         itemService.deleteById(itemId);
-        result.setMessage("물품 수정에 성공했습니다.");
-        status = HttpStatus.NO_CONTENT;
+        result.setMessage("물품 삭제에 성공했습니다.");
+        status = HttpStatus.OK;
 
 
         return new ResponseEntity<ResVO<String>>(result, status);

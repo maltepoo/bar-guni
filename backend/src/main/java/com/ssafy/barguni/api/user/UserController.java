@@ -313,20 +313,20 @@ public class UserController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @DeleteMapping("/basket/{u_b_id}")
-    @Operation(summary = "유저_바구니 ID로 바구니 탈퇴", description = "사용자가 참여중인 바구니를 유저_바구니 Id를 통해 탈퇴한다.(로그인필요)")
+    @DeleteMapping("/basket/{basketId}")
+    @Operation(summary = "유저_바구니 ID로 바구니 탈퇴", description = "사용자가 참여중인 바구니를 바구니 Id를 통해 탈퇴한다.(로그인필요)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "사용자 또는 병원 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<Map<String, Object>> leaveBasket(
-            @PathVariable @Parameter(description = "유저_바구니 ID") Long u_b_id) {
+            @PathVariable @Parameter(description = "바구니 ID") Long basketId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         HttpStatus status = null;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        userBasketService.deleteById(userDetails.getUserId(), u_b_id);
+        userBasketService.deleteById(userDetails.getUserId(), basketId);
         resultMap.put("message", "성공");
         status = HttpStatus.OK;
 
