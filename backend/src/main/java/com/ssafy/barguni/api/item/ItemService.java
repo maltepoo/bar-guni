@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,13 +209,13 @@ public class ItemService {
     public List<ReceiptItemRes> readReceipt(MultipartFile multipartFile) throws Exception {
 
 //        테스트용
-//        BufferedReader reader = new BufferedReader(
-//                new FileReader("/Users/junaem/Desktop/SSAFY/2nd_sem_fre_pjt/S06P31B202/backend/src/main/java/com/ssafy/barguni/api/item/receipt4.txt"),
-//                16 * 1024);
-//
-//        String result = reader.readLine();
+        BufferedReader reader = new BufferedReader(
+                new FileReader("/Users/junaem/Desktop/SSAFY/2nd_sem_fre_pjt/S06P31B202/backend/src/main/java/com/ssafy/barguni/api/item/receipt4.txt"),
+                16 * 1024);
+        String result = reader.readLine();
 
-        String result = clovaOcrUtil.getOcr(multipartFile);
+//        실제 api 사용
+//        String result = clovaOcrUtil.getOcr(multipartFile);
 
         JSONParser parser = new JSONParser();
         JSONObject json = (JSONObject) parser.parse(result);
