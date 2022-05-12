@@ -30,9 +30,10 @@ async function updateCategory(
   ).data.data;
 }
 
-async function deleteCategory(categoryId: number) {
+async function deleteCategory(bktId: number, categoryId: number) {
   const axios = LoginApiInstance();
-  return (await axios.delete(`basket/category/${categoryId}`)).data.data;
+  return (await axios.delete(`basket/category/${bktId}/${categoryId}`)).data
+    .data;
 }
 
 export {getCategory, registerCategory, updateCategory, deleteCategory};

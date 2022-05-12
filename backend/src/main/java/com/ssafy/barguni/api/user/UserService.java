@@ -21,8 +21,8 @@ import static com.ssafy.barguni.api.error.ErrorCode.*;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
-    private final HttpServletResponse response;
     private final BasketService basketService;
+    private final UserBasketRepository userBasketRepository;
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).get();
@@ -67,7 +67,10 @@ public class UserService {
         if(user == null)
             throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
 
-        // 유저 탈퇴시 참여한 바구니, 갖고있는 아이템 등등 다 삭제....???
+        // 참여한 바구니 탈퇴
+        userBasketRepository.deleteUserBasketsByUser(user);
+
+        // 유저 삭제
         userRepository.deleteById(id);
     }
 

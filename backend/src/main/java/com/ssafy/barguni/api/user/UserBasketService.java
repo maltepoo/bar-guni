@@ -92,14 +92,15 @@ public class UserBasketService {
         return userBasketRepository.existsBybktId(user_id, bkt_id);
     }
 
-    public void deleteById(Long user_id, Long u_b_id) {
+    public void deleteById(Long user_id, Long basketId) {
         User user = userRepository.getById(user_id);
         if(user == null)
             throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        userBasketRepository.deleteById(user_id, basketId);
+        // 권한 양도 로직 추가
+    }
 
-        // 바구니 탈퇴시 갖고 있던 것들 다 사라지게 해야함.
-
-
-        userBasketRepository.deleteById(u_b_id);
+    public List<Long> getUsedBasketIds(){
+        return userBasketRepository.getUsedBasketIds();
     }
 }

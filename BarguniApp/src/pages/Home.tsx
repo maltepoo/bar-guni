@@ -6,21 +6,7 @@ import ItemModify from './ItemModify';
 
 function Home() {
   const Stack = createNativeStackNavigator();
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="ItemList"
-        component={ItemList}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name="ItemModify"
-        component={ItemModify}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
+  return <Stack.Navigator></Stack.Navigator>;
 }
 
 export default Home;

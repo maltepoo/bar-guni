@@ -22,6 +22,7 @@ import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
 import {Basket} from '../api/basket';
 import {Picker} from '@react-native-picker/picker';
+import Config from 'react-native-config';
 
 function ItemModify() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -83,43 +84,44 @@ function ItemModify() {
     init();
   }, []);
   return (
-    <View>
+    <View style={Style.background}>
       <ScrollView>
         <View style={Style.imageBox}>
-          <Image style={Style.image} source={require('../assets/close.png')} />
+          <Image
+            style={Style.image}
+            source={{uri: Config.BASE_URL + items.pictureUrl}}
+          />
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>제품명 </Text>
-          <TextInput
-            activeUnderlineColor={'#0094FF'}
-            value={items.name}
-            onChangeText={changeName}
-            style={Style.description}
-          />
+          <View style={Style.descriptionBox}>
+            <TextInput
+              activeUnderlineColor={'#0094FF'}
+              value={items.name}
+              onChangeText={changeName}
+              style={Style.description}
+            />
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>바구니 </Text>
-          <TextInput
-            activeUnderlineColor={'#0094FF'}
-            value={items.basketName}
-            style={Style.description}
-          />
-        </View>
-        <View style={Style.content}>
-          <Text style={Style.title}>카테고리 </Text>
-          <TextInput
-            activeUnderlineColor={'#0094FF'}
-            style={Style.description}
-          />
+          <View style={Style.descriptionBox}>
+            <TextInput
+              activeUnderlineColor={'#0094FF'}
+              value={items.basketName}
+              style={Style.description}
+            />
+          </View>
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>등록일자 </Text>
           <Pressable
             onPress={() => {
               setRegOpen(true);
-            }}
-            style={Style.description}>
-            <Text>{regDate.toJSON().substring(0, 10)}</Text>
+            }}>
+            <Text style={Style.description}>
+              {regDate.toJSON().substring(0, 10)}
+            </Text>
           </Pressable>
           <DateTimePicker
             isVisible={regOpen}
@@ -139,9 +141,10 @@ function ItemModify() {
           <Pressable
             onPress={() => {
               setExpOpen(true);
-            }}
-            style={Style.description}>
-            <Text>{expDate.toJSON().substring(0, 10)}</Text>
+            }}>
+            <Text style={Style.description}>
+              {expDate.toJSON().substring(0, 10)}
+            </Text>
           </Pressable>
           <DateTimePicker
             isVisible={expOpen}
@@ -158,13 +161,15 @@ function ItemModify() {
         </View>
         <View style={Style.content}>
           <Text style={Style.title}>상세설명</Text>
-          <TextInput
-            activeUnderlineColor={'#0094FF'}
-            numberOfLines={5}
-            style={Style.description}
-            multiline={true}
-            value={items.content}
-          />
+          <View style={Style.descriptionBox}>
+            <TextInput
+              activeUnderlineColor={'#0094FF'}
+              numberOfLines={5}
+              style={Style.description}
+              multiline={true}
+              value={items.content}
+            />
+          </View>
         </View>
         <Picker
           selectedValue={selectedBasket}
@@ -196,9 +201,9 @@ function ItemModify() {
           ))}
         </Picker>
         <View style={Style.buttonContent}>
-          <Button style={Style.modify} mode="contained" onPress={onModify}>
-            수정
-          </Button>
+          <TouchableOpacity style={Style.button}>
+            <Text style={Style.buttonTitle}>수정</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -210,10 +215,22 @@ const Style = StyleSheet.create({
     borderRadius: 6,
     marginLeft: 40,
   },
+  background: {
+    backgroundColor: 'white',
+    height: '100%',
+    flex: 1,
+  },
+  button: {
+    backgroundColor: '#0094FF',
+    width: '40%',
+    marginRight: '8%',
+    borderRadius: 10,
+  },
   buttonTitle: {
     fontSize: 20,
     color: 'white',
     textAlign: 'center',
+    marginVertical: '5%',
   },
   imageBox: {
     alignItems: 'center',
@@ -221,32 +238,37 @@ const Style = StyleSheet.create({
     height: 150,
   },
   image: {
-    width: '40%',
-    height: '70%',
+    width: '60%',
+    height: '100%',
+    resizeMode: 'contain',
   },
   content: {
-    flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 20,
+    marginLeft: '10%',
+    marginTop: '5%',
   },
   buttonContent: {
     flexDirection: 'row',
-    marginLeft: '27%',
+    marginLeft: '35%',
     marginTop: 20,
     marginBottom: 7,
   },
   title: {
-    fontSize: 15,
-    marginTop: 15,
+    fontSize: 14,
     fontWeight: 'bold',
+    fontFamily: 'Pretendard-Black',
     color: 'black',
     width: '25%',
   },
   description: {
     fontSize: 15,
     color: 'black',
-    marginLeft: 20,
-    width: '68%',
+    fontFamily: 'Pretendard-Light',
+    marginLeft: '3%',
+  },
+  descriptionBox: {
+    marginLeft: '2%',
+    marginTop: '3%',
+    width: '88%',
   },
 });
 export default ItemModify;

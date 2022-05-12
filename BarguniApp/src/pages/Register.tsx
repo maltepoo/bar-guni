@@ -162,19 +162,8 @@ function Register({navigation}: RegisterScreenProps) {
 
   return (
     <ScrollView style={Style.background}>
-      <View style={Style.preview}>
-        {preview && <Image style={Style.preview} source={preview} />}
-      </View>
-      <View style={Style.row}>
-        <Pressable style={Style.imageButton} onPress={onTakePhoto}>
-          <Text style={Style.imageText}>이미지 촬영</Text>
-        </Pressable>
-        <Pressable style={Style.imageButton} onPress={onChangeFile}>
-          <Text style={Style.imageText}>이미지 선택</Text>
-        </Pressable>
-      </View>
       <View style={Style.cont}>
-        <Text style={{marginRight: '5%'}}>제품명 :</Text>
+        <Text style={{color: 'black'}}>제품명 :</Text>
         <TextInput
           style={Style.textInput}
           value={name}
@@ -182,7 +171,15 @@ function Register({navigation}: RegisterScreenProps) {
           placeholder="제품명 입력"
         />
       </View>
-
+      <View style={Style.cont}>
+        <Text style={{color: 'black'}}>설명 :</Text>
+        <TextInput
+          style={Style.contentInput}
+          value={content}
+          onChangeText={changeContent}
+          placeholder="설명 입력"
+        />
+      </View>
       <View style={Style.cont}>
         <View>
           <Checkbox
@@ -194,7 +191,7 @@ function Register({navigation}: RegisterScreenProps) {
             }}
           />
         </View>
-        <Text>유효기간 관리</Text>
+        <Text style={{color: 'black'}}>유효기간 관리</Text>
         <View>
           <Checkbox
             status={checked ? 'unchecked' : 'checked'}
@@ -204,7 +201,7 @@ function Register({navigation}: RegisterScreenProps) {
             }}
           />
         </View>
-        <Text>지금부터 관리</Text>
+        <Text style={{color: 'black'}}>지금부터 관리</Text>
       </View>
       {checked ? (
         <View style={{alignItems: 'center'}}>
@@ -212,7 +209,9 @@ function Register({navigation}: RegisterScreenProps) {
             onPress={() => {
               setRegOpen(true);
             }}>
-            <Text>설정된 유효기간 : {regDate.toJSON().substring(0, 10)}</Text>
+            <Text style={{color: 'black'}}>
+              설정된 유효기간 : {regDate.toJSON().substring(0, 10)}
+            </Text>
           </Pressable>
           <DateTimePicker
             isVisible={regOpen}
@@ -284,14 +283,17 @@ function Register({navigation}: RegisterScreenProps) {
           />
         ))}
       </Picker>
-      <View style={Style.cont}>
-        <Text>설명 :</Text>
-        <TextInput
-          style={Style.contentInput}
-          value={content}
-          onChangeText={changeContent}
-          placeholder="설명 입력"
-        />
+
+      <View style={Style.preview}>
+        {preview && <Image style={Style.preview} source={preview} />}
+      </View>
+      <View style={Style.row}>
+        <Pressable style={Style.imageButton} onPress={onTakePhoto}>
+          <Text style={Style.imageText}>이미지 촬영</Text>
+        </Pressable>
+        <Pressable style={Style.imageButton} onPress={onChangeFile}>
+          <Text style={Style.imageText}>이미지 선택</Text>
+        </Pressable>
       </View>
       <View style={{alignItems: 'center'}}>
         <TouchableOpacity style={Style.imageButton} onPress={onSubmit}>
@@ -312,7 +314,8 @@ const Style = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#0094FF',
     borderRadius: 5,
-    margin: 5,
+    marginRight: 10,
+    marginTop: 10,
   },
   row: {
     flexDirection: 'row',
@@ -338,7 +341,7 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginLeft: '15%',
+    marginLeft: '10%',
   },
   col: {
     flexDirection: 'column',
@@ -370,7 +373,7 @@ const Style = StyleSheet.create({
     marginTop: 5,
     height: 30,
     margin: 5,
-    borderWidth: 1,
+    // borderWidth: 1,
     width: '40%',
     textAlign: 'center',
     // borderRadius: 10,
@@ -380,9 +383,10 @@ const Style = StyleSheet.create({
     marginTop: 5,
     height: 30,
     margin: 5,
-    borderWidth: 1,
-    width: '70%',
+    // borderWidth: 1,
+    width: '40%',
     textAlign: 'center',
+    // borderRadius: 10,
   },
   picture: {
     width: 80,

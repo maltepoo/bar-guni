@@ -41,16 +41,15 @@ function Login() {
         accessToken: data.accessToken,
       };
       console.log(user, ' 생성 받은 토큰 ');
-      dispatch(userSlice.actions.setUser(user));
       await EncryptedStorage.setItem('refreshToken', data.refreshToken);
       await EncryptedStorage.setItem('accessToken', data.accessToken);
       setJwtToken(data.accessToken);
+      dispatch(userSlice.actions.setUser(user));
     } catch (e) {
       console.log(e, '카카오 로그인 중 에러');
     }
     navigation.navigate('ItemList');
   }, [dispatch, navigation]);
-  const isLogin = useSelector((state: RootState) => !!state.user.accessToken);
   useEffect(() => {
     console.log('로그인 페이지');
     const init = async () => {

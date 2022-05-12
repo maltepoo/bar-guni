@@ -6,6 +6,13 @@ export interface Basket {
   bkt_id: number;
   authority: string;
   bkt_name: string;
+  count: number;
+}
+
+export interface DefaultBasket {
+  name: string;
+  profileUrl: string;
+  joinCode: string;
 }
 
 export interface AlarmI {
@@ -51,7 +58,7 @@ async function deleteBasket(basketId: number) {
 
 async function getBasketMembers(basketId: number) {
   const axios = LoginApiInstance();
-  return (await axios.delete(`/basket/user/${basketId}`)).data.data;
+  return (await axios.get(`/basket/user/${basketId}`)).data.data;
 }
 
 async function joinBasket(joinCode: string) {

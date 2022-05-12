@@ -4,73 +4,123 @@ import {
   FlatList,
   Pressable,
   ScrollView,
-  Text, TextInput, TouchableHighlight,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {getBaskets} from '../api/user';
 import {navigate} from '../../RootNavigation';
-import {joinBasket} from "../api/basket";
+import {joinBasket} from '../api/basket';
 
 function BasketSetting() {
   const [basketList, setBasketList] = useState([]);
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState('');
 
   const getBasketList = useCallback(async () => {
     const res = await getBaskets();
     setBasketList(res);
-  }, [basketList]);
+  }, []);
 
   const moveToSettingDetail = useCallback(item => {
     console.log('clicked!');
     navigate('BasketSettingDetail', item);
-  });
+  }, []);
 
-  const renderBasketList = useCallback(({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          moveToSettingDetail(item);
-        }}>
-        <Text>{item.bkt_name} / 바스켓이름</Text>
-        <Text>{item.bkt_id} / 바스켓아이디</Text>
-      </TouchableOpacity>
-    );
-  });
+  const renderBasketList = useCallback(
+    ({item}) => {
+      return (
+        <>
+          <TouchableOpacity
+            onPress={() => {
+              moveToSettingDetail(item);
+            }}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'Pretendard-Light',
+                marginLeft: '10%',
+                marginBottom: '3%',
+              }}>
+              {item.bkt_name}
+            </Text>
+            {/*<Text>{item.bkt_id} / 바스켓아이디</Text>*/}
+          </TouchableOpacity>
+          <View style={style.line} />
+        </>
+      );
+    },
+    [moveToSettingDetail],
+  );
 
   useEffect(() => {
     getBasketList();
-  }, []);
+  }, [getBasketList]);
 
-  const handleInputChange = useCallback((code) => {
+  const handleInputChange = useCallback(code => {
+    console.log(code, "입력코드");
     setInviteCode(code);
   }, []);
 
-  const handleJoinBasket = useCallback(async() => {
+  const handleJoinBasket = useCallback(async () => {
     try {
-      console.log(inviteCode, "초대코드입력잘됐누;;")
+      console.log(inviteCode, '초대코드입력잘됐누;;');
       const res = await joinBasket(inviteCode);
-      Alert.alert("바구니가입성공", JSON.stringify(res))
+      Alert.alert('바구니가입성공', JSON.stringify(res));
       // console.log(res, "바구니가입 잘댐")
     } catch (e) {
-      console.log(e, "바구니가입 잘 안댐")
-      Alert.alert("API통신 중 오류", JSON.stringify(e));
+      console.log(e, '바구니가입 잘 안댐');
+      Alert.alert('API통신 중 오류', JSON.stringify(e));
     }
-  });
+  }, [inviteCode]);
 
   return (
-    <ScrollView>
-      <Text>바구니 관리페이지</Text>
-      <View>
-        <TextInput value={inviteCode} onChangeText={handleInputChange} placeholder="초대코드를 입력해주세요" />
-        <TouchableHighlight onPress={handleJoinBasket}>
-          <Text>바구니 들어가기</Text>
-        </TouchableHighlight>
+    <ScrollView style={style.container}>
+      <Text
+        style={style.title}>
+        바구니 참여
+      </Text>
+      <View style={{alignItems: 'center',}}>
+        <TextInput
+          value={inviteCode}
+          onChangeText={handleInputChange}
+          style={{textAlign: 'center'}}
+          placeholder="초대코드를 입력해서 바구니에 참여해보세요"
+        />
+        <TouchableOpacity
+          onPress={handleJoinBasket}
+          style={{alignItems: 'center',backgroundColor: '#F5F4F4', width: 140, borderRadius: 140}}>
+          <Text style={{color: '#0094FF', paddingVertical: 6}}>바구니 입장하기</Text>
+        </TouchableOpacity>
       </View>
-      <Text>바구니목록</Text>
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 20,
+          fontFamily: 'Pretendard-Bold',
+          margin: '5%',
+        }}>
+        바구니 목록
+      </Text>
       <FlatList data={basketList} renderItem={renderBasketList} />
     </ScrollView>
   );
 }
-
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    // alignItems: 'center',
+  },
+  title: {
+    color: 'black',
+    fontSize: 20,
+    fontFamily: 'Pretendard-Bold',
+    margin: '5%',
+    marginBottom: 10,
+  }
+});
 export default BasketSetting;

@@ -1,5 +1,6 @@
 package com.ssafy.barguni.api.basket.repository;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.basket.entity.Categories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,7 @@ public interface CategoryRepository extends JpaRepository<Categories, Long> {
     @Modifying
     @Query("delete from Categories c where c.basket.id = :id")
     void deleteByBasketId(Long id);
+    Integer deleteCategoriesByBasket(Basket basket);
     @Query("select c from Categories c join fetch c.basket b where c.id = :id")
     Categories getByIdWithBasket(Long id);
 }

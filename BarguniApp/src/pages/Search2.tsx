@@ -49,11 +49,17 @@ function Search2({navigation}) {
   return (
     <View style={styles.searchContainer}>
       <NewSearchBar navigation={navigation} />
-      <FlatList
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>검색어를 입력해주세요.</Text>
+      </View>
+
+      {/*
+        <FlatList
         data={searchResult}
         keyExtractor={item => item.id}
         renderItem={renderItem}
-      />
+        />
+      */}
     </View>
   );
 }
@@ -66,6 +72,14 @@ const styles = StyleSheet.create({
   },
   item: {
     height: 40,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  text: {
+    color: '#A09F9F',
+    textAlign: 'center',
   },
   itemText: {
     color: '#A09F9F',

@@ -44,7 +44,11 @@ function TrashItem(props: TrashItem) {
           <Text style={Style.description}>
             유효 기간:
             {item.shelfLife === null
-              ? new Date(shelfLife.setDate(new Date().getDate() + item.dday))
+              ? new Date(
+                  shelfLife.setDate(
+                    new Date(item.regDate).getDate() + item.dday,
+                  ),
+                )
                   .toJSON()
                   .substring(0, 10)
               : item.shelfLife}

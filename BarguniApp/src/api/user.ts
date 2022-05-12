@@ -1,5 +1,5 @@
 import {ApiInstance, LoginApiInstance} from './instance';
-import {Basket} from './basket';
+import {Basket, DefaultBasket} from './basket';
 
 const axios = ApiInstance();
 
@@ -8,7 +8,7 @@ export interface User {
   refreshToken: string;
   name: string;
   email: string;
-  newName: string;
+  defaultBasket: DefaultBasket;
 }
 export enum SocialType {
   KAKAO = 'kakao',
@@ -46,8 +46,7 @@ async function getBaskets(): Promise<Basket[]> {
 async function changeDefaultBasket(id: number) {
   console.log(id, 'api ID');
   const loginAxios = LoginApiInstance();
-  return (await loginAxios.put(`/user/basket/default/basketId=${id}`)).data
-    .data;
+  return (await loginAxios.put(`/user/basket/default/${id}`)).data.data;
 }
 
 export {
