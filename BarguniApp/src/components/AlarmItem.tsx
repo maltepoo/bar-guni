@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {AlarmI, changeAlarm} from '../api/basket';
 import {Button} from '@rneui/base';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 interface Props {
   item: AlarmI;
   remove: Function;
@@ -15,45 +16,68 @@ function AlarmItem({item, remove}: Props) {
     } catch (e) {}
   }, [item.id]);
   return (
-    <View style={Style.container}>
-      <Text
-        key={item.itemId}
-        ellipsizeMode="tail"
-        numberOfLines={2}
-        style={Style.multiline}>
-        {item.title}
-      </Text>
-      <Text style={Style.time}>
-        {Math.ceil(
-          (new Date().getTime() - new Date(item.createdAt).getTime()) /
-            (1000 * 3600 * 24),
-        )}
-        일 전
-      </Text>
+    <>
+      <View style={Style.container}>
+        <View style={Style.dotContainer}>
+          <FontAwesomeIcon name="circle" size={8} style={Style.dot} />
+        </View>
+        <Text
+          key={item.itemId}
+          ellipsizeMode="tail"
+          numberOfLines={2}
+          style={Style.multiline}>
+          {item.title}
+        </Text>
+        <Text style={Style.time}>
+          {Math.ceil(
+            (new Date().getTime() - new Date(item.createdAt).getTime()) /
+              (1000 * 3600 * 24),
+          )}
+          일 전
+        </Text>
+      </View>
       <Button
         title={'읽음'}
         titleStyle={{fontSize: 9}}
-        buttonStyle={{marginTop: 5, marginLeft: 5}}
+        buttonStyle={{marginTop: 5, marginHorizontal: 5}}
         onPress={removeAlarm}
       />
-    </View>
+      <View style={Style.line} />
+    </>
   );
 }
 const Style = StyleSheet.create({
-  multiline: {
-    width: '65%',
+  container: {
+    flexDirection: 'row',
     marginTop: 10,
+    marginLeft: 10,
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
+  },
+  dotContainer: {
+    alignItems: 'center',
+    paddingTop: 7,
+  },
+  dot: {
+    color: '#0094FF',
+  },
+  multiline: {
+    width: '80%',
     marginLeft: 5,
     fontSize: 15,
     color: 'black',
-  },
-  container: {
-    flexDirection: 'row',
+    paddingHorizontal: 10,
   },
   time: {
-    marginTop: 10,
-    fontSize: 15,
-    color: 'black',
+    fontSize: 12,
+    color: '#C4C4C4',
+    textAlign: 'right',
+  },
+  line: {
+    width: '100%',
+    height: 0.7,
+    backgroundColor: '#F5F4F4',
+    marginTop: 15,
   },
 });
 

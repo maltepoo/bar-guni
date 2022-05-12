@@ -37,17 +37,16 @@ import {Dialog} from '@rneui/themed';
 import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
-type ItemListScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'ItemList'
->;
+import AntDesign from "react-native-vector-icons/AntDesign";
 
-function ItemList({navigation}: ItemListScreenProps) {
+function ItemList() {
   const user = useSelector((state: RootState) => state.user);
   const [count, setCount] = useState(0);
   const [basket, setBasket] = useState([] as Basket[]);
   const [category, setCategory] = useState([] as Category[]);
-  const [selectedBasket, setSelectedBasket] = useState({} as Basket);
+  const selectedBasket = useSelector(
+    (state: RootState) => state.user.selectBasket,
+  ) as Basket;
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [items, setItems] = useState([] as Item[]);
   const [open, setOpen] = useState(false);
@@ -61,6 +60,7 @@ function ItemList({navigation}: ItemListScreenProps) {
   const [deleteMode, setDeleteMode] = useState('');
   const isFocused = useIsFocused();
   const [render, setRender] = useState(false);
+  console.log(user);
   const toggleDeleteDialog = useCallback(() => {
     setDeleteDialog(!deleteDialog);
   }, [deleteDialog]);
@@ -119,10 +119,13 @@ function ItemList({navigation}: ItemListScreenProps) {
         baskets.unshift(baskets[index]);
         baskets.splice(index + 1, 1);
         await setBasket(baskets);
-        await setSelectedBasket(baskets[0]);
-        const categoryRes = await getCategory(baskets[0].bkt_id);
+        console.log(baskets[0], '선택 바구니 설정');
+        if (selectedBasket === undefined) {
+          await dispatch(userSlice.actions.setSelectBasket(baskets[0]));
+        }
+        const categoryRes = await getCategory(selectedBasket.bkt_id);
         await setCategory([{cateId: -1, name: '전체'}, ...categoryRes]);
-        const itemRes = await getItems(baskets[0].bkt_id, false);
+        const itemRes = await getItems(selectedBasket.bkt_id, false);
         await setItems(itemRes);
         // PushNotification.localNotificationSchedule({
         //   title: '바구니에 유통기한이 지난 물품이 있는지 확인해주세요!', // (optional)
@@ -140,7 +143,7 @@ function ItemList({navigation}: ItemListScreenProps) {
     }
 
     init();
-  }, [dispatch, isFocused, render]);
+  }, [dispatch, isFocused, render, selectedBasket]);
   const addBasket = useCallback(async () => {
     try {
       await registerBasket(basketName);
@@ -168,7 +171,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         setCategory([{cateId: -1, name: '전체'}, ...res]);
         setSelectedCategory(0);
         const selectBasket = basket.find(item => item.bkt_id === id) as Basket;
-        setSelectedBasket(selectBasket);
+        dispatch(userSlice.actions.setSelectBasket(selectBasket));
         const itemRes = await getItems(id, false);
         setItems(itemRes);
         console.log(id);
@@ -277,7 +280,7 @@ function ItemList({navigation}: ItemListScreenProps) {
         {basket.map(item => (
           <Picker.Item
             key={item.bkt_id}
-            label={item.count > 1 ? item.bkt_name + '(공유)' : item.bkt_name}
+            label={item.count > 1 ? item.bkt_name + ' (공유)' : item.bkt_name}
             value={item.bkt_id}
             style={Style.dropdownItem}
           />
@@ -343,20 +346,21 @@ function ItemList({navigation}: ItemListScreenProps) {
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
                 <Pressable
+                  style={{maginRight: 6}}
                   onPress={() => {
                     setDefaultBasket(item.bkt_id).then();
                   }}>
                   {item.bkt_name === user.defaultBasket.name ? (
-                    <Icon name={'star'} />
+                    <AntDesign name='star' size={18} />
                   ) : (
-                    <Icon name={'star-border'} />
+                    <AntDesign name='staro' size={18} />
                   )}
                 </Pressable>
                 <Pressable
                   onPress={() => {
                     showDeleteDialog(index, 'basket');
                   }}>
-                  <Icon name={'cancel'} />
+                  <AntDesign name={'delete'} size={18}/>
                 </Pressable>
               </View>
             ))
@@ -364,10 +368,11 @@ function ItemList({navigation}: ItemListScreenProps) {
             <></>
           )}
         </ScrollView>
-        <Input
+        <TextInput
           value={basketName}
           onChangeText={onChangeBasketName}
-          placeholder="바구니 이름을 입력하세요"
+          style={Style.newBasketInput}
+          placeholder="생성할 바구니 이름을 입력하세요"
         />
         <Button onPress={addBasket} title="완료" />
         <DeleteConfirm />
@@ -385,7 +390,7 @@ function ItemList({navigation}: ItemListScreenProps) {
                     onPress={() => {
                       showDeleteDialog(index, 'category');
                     }}>
-                    <Icon name={'cancel'} />
+                    <AntDesign name={'delete'} size={18}/>
                   </Pressable>
                 </View>
               ) : (
@@ -396,10 +401,11 @@ function ItemList({navigation}: ItemListScreenProps) {
             <></>
           )}
         </ScrollView>
-        <Input
+        <TextInput
           value={categoryName}
           onChangeText={onChangeCategoryName}
           placeholder="카테고리 이름을 입력하세요"
+          style={Style.newBasketInput}
         />
         <Button onPress={addCategory} title="완료" />
         <DeleteConfirm />
@@ -418,7 +424,7 @@ const Style = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    height: 750,
+    height: '160%',
     alignItems: 'center',
   },
   topText: {
@@ -442,6 +448,7 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingTop: '10%',
   },
   button: {
     backgroundColor: 'rgba(0, 148, 255, 0.15)',
@@ -491,6 +498,7 @@ const Style = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
+    marginBottom: 10
   },
   text: {
     width: '80%',
@@ -504,6 +512,12 @@ const Style = StyleSheet.create({
     width: '100%',
     backgroundColor: 'red',
   },
+  newBasketInput: {
+    backgroundColor: '#F5F4F4',
+    borderRadius: 100,
+    paddingLeft: 20,
+    marginVertical: 16
+  }
 });
 
 export default ItemList;

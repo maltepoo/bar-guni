@@ -50,7 +50,7 @@ function Search2({navigation}) {
     <View style={styles.searchContainer}>
       <NewSearchBar navigation={navigation} />
       <View style={styles.textContainer}>
-        <Text style={styles.text}>검색어를 입력해주세요</Text>
+        <Text style={styles.text}>검색어를 입력해주세요.</Text>
       </View>
 
       {/*

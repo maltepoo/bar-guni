@@ -49,6 +49,9 @@ import BasketInvite from './src/pages/BasketInvite';
 import Manual from './src/pages/Manual';
 import Manual2 from './src/pages/Manual2';
 import Manual3 from './src/pages/Manual3';
+import ItemList from './src/pages/ItemList';
+import ItemDetail from './src/pages/ItemDetail';
+import ItemModify from './src/pages/ItemModify';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -114,16 +117,32 @@ function AppInner() {
     return (
       <Tab.Navigator>
         <Tab.Screen
-          name="Home"
-          component={Home}
+          name="ItemList"
+          component={ItemList}
           options={{
             title: '홈',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
-            headerRight: () => <HeaderRight />,
+            headerShown: false,
+            headerTitle: '',
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="home"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="alarm"
+          component={Alarm}
+          options={{
+            title: '알림',
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="bells"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -136,28 +155,10 @@ function AppInner() {
           options={{
             title: '등록',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
-            headerRight: () => <HeaderRight />,
+            headerShown: false,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="inbox"
-                size={20}
-                style={{color: focused ? '#0094FF' : ''}}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            title: '설정',
-            tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
-            headerRight: () => <HeaderRight />,
-            tabBarIcon: ({focused}) => (
-              <AntDesign
-                name="ellipsis1"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -170,10 +171,26 @@ function AppInner() {
           options={{
             title: '검색',
             tabBarActiveTintColor: '#0094FF',
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="search1"
+                size={20}
+                style={{color: focused ? '#0094FF' : ''}}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            title: '설정',
+            tabBarActiveTintColor: '#0094FF',
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <AntDesign
+                name="ellipsis1"
                 size={20}
                 style={{color: focused ? '#0094FF' : ''}}
               />
@@ -192,14 +209,37 @@ function AppInner() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{headerShown: true}}
+        name="ItemDetail"
+        component={ItemDetail}
+        options={{
+          title: '상세 보기',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ItemModify"
+        component={ItemModify}
+        options={{
+          title: '수정',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="SearchResult"
         component={SearchResult}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: '검색 결과',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="AlarmSetting"
@@ -209,22 +249,46 @@ function AppInner() {
       <Stack.Screen
         name="MyPage"
         component={MyPage}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "내 정보",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="BasketSetting"
         component={BasketSetting}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "바구니 관리",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="BasketSettingDetail"
         component={BasketSettingDetail}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "바구니 상세",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="TrashCan"
         component={TrashCan}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: "휴지통",
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="Alarm"
@@ -240,27 +304,53 @@ function AppInner() {
             />
           ),
           headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
         }}
       />
       <Stack.Screen
         name="BasketDetail"
         component={BasketDetail}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="BasketInvite"
         component={BasketInvite}
-        options={{headerShown: true, headerTitle: '바구니 멤버초대'}}
+        options={{
+          headerShown: true,
+          headerTitle: '바구니 멤버초대',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+      }}
       />
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle: '제품 등록',
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
       <Stack.Screen
         name="Barcode"
         component={Barcode}
-        options={{title: '바코드로 등록하기', headerShown: true}}
+        options={{
+          title: '바코드로 등록',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
       />
     </Stack.Navigator>
   ) : (
