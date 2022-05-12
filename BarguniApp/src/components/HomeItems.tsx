@@ -66,11 +66,11 @@ function HomeItems(props: HomeItem) {
           />
         </View>
         <Pressable style={Style.row2} onPress={onClick}>
-          <Text style={Style.date}> {item.name}</Text>
+          <Text style={Style.date}>{item.name}</Text>
           <Text style={Style.date2}>
             {item.regDate.toString().substring(0, 10)}
           </Text>
-          <Text style={Style.date2}> {item.category}</Text>
+          <Text style={Style.date2}>{item.category}</Text>
         </Pressable>
         <View style={Style.row3}>
           <Text style={Style.dDay}>
@@ -130,14 +130,16 @@ function HomeItems(props: HomeItem) {
             까지
           </Text>
         </View>
-        {/*<View style={Style.container}>*/}
-        {/*  <Pressable onPress={deleteItem}>*/}
-        {/*    <Image*/}
-        {/*      style={Style.cancel}*/}
-        {/*      source={require('../assets/close.png')}*/}
-        {/*    />*/}
-        {/*  </Pressable>*/}
-        {/*</View>*/}
+        {/*
+          <View style={Style.container}>
+            <Pressable onPress={deleteItem}>
+              <Image
+                style={Style.cancel}
+                source={require('../assets/close.png')}
+              />
+            </Pressable>
+          </View>
+        */}
       </View>
       <View style={{alignItems: 'center'}}>
         <Divider
@@ -159,11 +161,12 @@ const Style = StyleSheet.create({
   row: {
     width: '20%',
     marginTop: 10,
-    marginLeft: 4,
+    marginLeft: 10,
+    marginRight: 10,
   },
   row2: {
     marginLeft: 15,
-    width: '35%',
+    width: '32%',
   },
   row3: {
     backgroundColor: '#ECECEC',
@@ -174,9 +177,8 @@ const Style = StyleSheet.create({
   },
   date2: {
     fontSize: 12,
-    fontWeight: 'bold',
     marginTop: 3,
-    marginLeft: 8,
+    // marginLeft: 8,
     color: 'black',
   },
   date: {
@@ -184,13 +186,13 @@ const Style = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Pretendard-Black',
     marginTop: 25,
-    marginLeft: 4,
+    // marginLeft: 4,
     color: 'black',
   },
   picture: {
-    width: 70,
+    width: 80,
     height: 80,
-    borderRadius: 30,
+    borderRadius: 800,
     resizeMode: 'contain',
   },
   title: {
