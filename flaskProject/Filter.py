@@ -5,6 +5,14 @@ from flask import Flask
 # if __name__ == '__main__':
 #     app.run()
 
+def get_filter_word_set():
+    f = open('static/filtering_words.txt', 'r', encoding='utf-8')
+    str = f.readline()
+    str = str.replace('/',',')
+    str = str.split(',')
+    fword_set = set(str)
+    return fword_set
+
 class TrieNode:
 
     def __init__(self):
