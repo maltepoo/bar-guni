@@ -5,10 +5,12 @@ from flask import Flask
 # if __name__ == '__main__':
 #     app.run()
 
+
 def get_filter_word_set():
     f = open('static/filtering_words.txt', 'r', encoding='utf-8')
     str = f.readline()
     str = str.replace('/',',')
+    str = str.replace("기타",'')
     str = str.split(',')
     fword_set = set(str)
     return fword_set
