@@ -2,6 +2,7 @@ from flask import Flask, request
 import pytesseract
 from PIL import Image
 from Filter import TrieNode
+from Filter import get_filter_word_set
 import cv2
 import imutils
 import time
@@ -14,9 +15,10 @@ from demo.text_detection import detect
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './receipts'
 
-filter_words = ["커피", "우유", "비빔면", "햄버거", "라면", "상추", "술", "포도", "돈까스", "김밥", "어니언", "초코", "사과", "카페", "치킨", "돈까스"]
+# filter_words = ["커피", "우유", "비빔면", "햄버거", "라면", "상추", "술", "포도", "돈까스", "김밥", "어니언", "초코", "사과", "카페", "치킨", "돈까스"]
+filter_word_set = get_filter_word_set()
 root = TrieNode()
-for word in filter_words:
+for word in filter_word_set:
     root.add(word,0)
 
 
