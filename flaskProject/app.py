@@ -20,7 +20,7 @@ filter_word_set = get_filter_word_set()
 root = TrieNode()
 for word in filter_word_set:
     root.add(word,0)
-    root.add(word[::-1])
+    root.add(word[::-1],0)
 
 
 @app.route('/',methods=['POST'])
