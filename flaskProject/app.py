@@ -20,6 +20,7 @@ filter_word_set = get_filter_word_set()
 root = TrieNode()
 for word in filter_word_set:
     root.add(word,0)
+    root.add(word[::-1])
 
 
 @app.route('/',methods=['POST'])
@@ -43,9 +44,15 @@ def barcode():  # put application's code here
         # 필터 처리
         st_idx = 0
         check = False
+        # 정순으로 검사
         while st_idx < len(word) and check == False:
             check = root.search(word, st_idx)
             st_idx += 1
+
+        # 역순으로 검사
+        r_word = word[::-1]
+        while st_idx < len(r_word) and check == False:
+            check = root.search(r_word, st_idx)
 
         if(check == False):
             continue

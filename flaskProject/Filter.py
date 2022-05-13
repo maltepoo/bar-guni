@@ -13,6 +13,7 @@ def get_filter_word_set():
     str = str.replace("기타",'')
     str = str.split(',')
     fword_set = set(str)
+    fword_set.remove('')
     return fword_set
 
 class TrieNode:
