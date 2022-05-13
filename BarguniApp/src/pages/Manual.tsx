@@ -21,13 +21,13 @@ function Manual() {
       </View>
       <View style={Style.imageBox}>
         <Image style={Style.image} source={require('../assets/expired.png')} />
-        <Button
-          title={'다음'}
-          titleStyle={Style.buttonTitle}
-          buttonStyle={Style.button}
-          onPress={next}
-        />
       </View>
+      <Button
+        title={'다음'}
+        titleStyle={Style.buttonTitle}
+        buttonStyle={Style.button}
+        onPress={next}
+      />
     </View>
   );
 }
@@ -35,10 +35,7 @@ const Style = StyleSheet.create({
   button: {
     backgroundColor: '#F5F4F4',
     borderRadius: 10,
-    paddingHorizontal: 25,
-    paddingVertical: 15,
-    marginTop: '8%',
-    marginLeft: '65%',
+    paddingHorizontal: 20,
   },
   buttonTitle: {
     color: '#2B3944',
@@ -63,8 +60,8 @@ const Style = StyleSheet.create({
   },
   background: {
     backgroundColor: 'white',
-    height: '100%',
     flex: 1,
+    justifyContent: 'space-between',
   },
   imageBox: {
     alignItems: 'center',

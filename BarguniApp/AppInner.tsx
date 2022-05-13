@@ -52,14 +52,17 @@ import Manual3 from './src/pages/Manual3';
 import ItemList from './src/pages/ItemList';
 import ItemDetail from './src/pages/ItemDetail';
 import ItemModify from './src/pages/ItemModify';
+import ReceiptRegister from './src/pages/ReceiptRegister';
+import RegisterList from './src/pages/RegisterList';
 
 export type RootStackParamList = {
   SignIn: undefined;
   Login: undefined;
   Home: undefined;
   Search: undefined;
-  Register: undefined | Object;
   Settings: undefined;
+  Register: undefined | Object;
+  RegisterList: undefined | Object;
   SignUp: undefined;
   AlarmSetting: undefined;
   MyPage: undefined;
@@ -74,6 +77,7 @@ export type RootStackParamList = {
   Manual: undefined;
   Manual2: undefined;
   Manual3: undefined;
+  ReceiptRegister: undefined;
 };
 
 function AppInner() {
@@ -220,6 +224,28 @@ function AppInner() {
         }}
       />
       <Stack.Screen
+        name="ReceiptRegister"
+        component={ReceiptRegister}
+        options={{
+          title: '영수증 등록',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="RegisterList"
+        component={RegisterList}
+        options={{
+          title: '영수증 아이템 등록',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
         name="ItemModify"
         component={ItemModify}
         options={{
@@ -251,7 +277,7 @@ function AppInner() {
         component={MyPage}
         options={{
           headerShown: true,
-          headerTitle: "내 정보",
+          headerTitle: '내 정보',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
@@ -262,33 +288,33 @@ function AppInner() {
         component={BasketSetting}
         options={{
           headerShown: true,
-          headerTitle: "바구니 관리",
+          headerTitle: '바구니 관리',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="BasketSettingDetail"
         component={BasketSettingDetail}
         options={{
           headerShown: true,
-          headerTitle: "바구니 상세",
+          headerTitle: '바구니 상세',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="TrashCan"
         component={TrashCan}
         options={{
           headerShown: true,
-          headerTitle: "휴지통",
+          headerTitle: '휴지통',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="Alarm"
@@ -328,7 +354,7 @@ function AppInner() {
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="Register"

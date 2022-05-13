@@ -15,7 +15,7 @@ import {
 import {Checkbox} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import {fileApiInstance, LoginApiInstance} from '../api/instance';
+import {fileApiInstance} from '../api/instance';
 import Config from 'react-native-config';
 import {getItems, ItemReq, registerItem} from '../api/item';
 import {getBaskets} from '../api/user';
@@ -158,7 +158,6 @@ function Register({navigation}: RegisterScreenProps) {
       const categoryRes = await getCategory(basketRes[0].bkt_id);
       console.log(categoryRes, 'categoryRes');
       setCategory(categoryRes);
-      console.log(Config.BASE_URL + route.params.pictureUrl);
       setPreview({uri: Config.BASE_URL + route.params.pictureUrl});
       setName(route.params.name);
     }
@@ -290,7 +289,7 @@ function Register({navigation}: RegisterScreenProps) {
       </Picker>
 
       <View style={Style.preview}>
-        {preview && <Image style={Style.preview} source={preview} />}
+        {preview && <Image style={Style.previewImage} source={preview} />}
       </View>
       <View style={Style.row}>
         <Pressable style={Style.imageButton} onPress={onTakePhoto}>
