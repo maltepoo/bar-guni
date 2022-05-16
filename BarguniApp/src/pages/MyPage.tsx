@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 import {changeName, getProfile, signOut} from '../api/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../AppInner';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({});
   const [newName, setNewName] = useState('');
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const init = useCallback(async () => {
     const userInfo = await getProfile();
     console.log(userInfo, '유저인포');
@@ -23,27 +25,25 @@ function MyPage() {
     init();
   }, [init]);
 
-  const handleChangeName = useCallback(name => {
-    console.log(name);
+  const handleChangeName = useCallback((name: string) => {
     setNewName(name);
   }, []);
 
   const modifyUserName = useCallback(async () => {
     try {
-      const res = await changeName(newName);
-      console.log(res, '결과');
+      await changeName(newName);
       await Alert.alert('변경완료되었습니다.');
+      navigation.navigate('ItemList');
     } catch (err) {
       console.log(err, 'userName change ERROR');
     }
-  }, []);
+  }, [navigation, newName]);
 
   const handleSignOut = useCallback(async () => {
     // TODO: 회원탈퇴 후 스토어에서 토큰삭제
-    await Alert.alert('정말,,, 탈퇴하시렵니까,,');
+    await Alert.alert('정말 탈퇴하시겠습니까?');
     try {
       await signOut();
-      console.log('byebye...');
       await EncryptedStorage.removeItem('accessToken');
     } catch (err) {
       Alert.alert('회원탈퇴 실패', err);
