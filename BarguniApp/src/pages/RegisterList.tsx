@@ -5,27 +5,50 @@ import {getBaskets} from '../api/user';
 import {Category, getCategory} from '../api/category';
 import {Basket} from '../api/basket';
 import {Button} from '@rneui/base';
+import {ItemReq, registerItem} from '../api/item';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../AppInner';
 
 function RegisterList({route}: any) {
   const [names, setNames] = useState(route.params);
   const [contents, setContents] = useState([] as string[]);
   const [categorys, setCategorys] = useState([] as number[]);
   const [baskets, setBaskets] = useState([] as number[]);
-  const [ddays, setDdays] = useState([] as Number[]);
+  const [ddays, setDdays] = useState([] as number[]);
   const [shelfLifes, setShelfLifes] = useState([] as Date[]);
   const [alertBy, setAlertBys] = useState([] as string[]);
   const [basketData, setBasketData] = useState([] as Basket[]);
   const [categoryData, setCategoryData] = useState([] as Category[]);
-
-  const onSubmit = useCallback(() => {
-    console.log(names);
-    console.log(contents);
-    console.log(baskets, ' 바구니 리스트');
-    console.log(categorys);
-    console.log(ddays);
-    console.log(shelfLifes);
-    console.log(alertBy);
-  }, [alertBy, baskets, categorys, contents, ddays, names, shelfLifes]);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const onSubmit = useCallback(async () => {
+    for (let i = 0; i < names.length; i++) {
+      const item: ItemReq = {
+        bktId: baskets[i],
+        cateId: categorys[i],
+        name: names[i].name,
+        shelfLife: shelfLifes[i].toJSON().substring(0, 10),
+        alertBy: alertBy[i],
+        content: contents[i],
+        picId: null,
+        dday: ddays[0],
+      };
+      try {
+        await registerItem(item);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    navigation.navigate('ItemList');
+  }, [
+    alertBy,
+    baskets,
+    categorys,
+    contents,
+    ddays,
+    names,
+    navigation,
+    shelfLifes,
+  ]);
   useEffect(() => {
     async function init(): Promise<void> {
       const basketRes = await getBaskets();
@@ -42,7 +65,7 @@ function RegisterList({route}: any) {
       }
     }
     init();
-  }, []);
+  }, []); // dependency 추가 안하는 게 맞음!
   useEffect(() => {}, []);
   const renderItem = useCallback(
     ({item, index}: {item: object; index: number}) => {

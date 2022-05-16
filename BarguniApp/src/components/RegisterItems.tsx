@@ -116,14 +116,14 @@ function RegisterItems(props: any) {
         />
       </View>
       <View style={Style.cont2}>
-        <View style={{backgroundColor: 'orange'}}>
+        <View style={{marginHorizontal: 15}}>
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
             onPress={changeShelfLife}
           />
         </View>
         <Text style={{color: 'black'}}>유효기간 관리</Text>
-        <View>
+        <View style={{marginHorizontal: 15}}>
           <Checkbox
             status={checked ? 'unchecked' : 'checked'}
             onPress={changeDay}
@@ -271,11 +271,11 @@ const Style = StyleSheet.create({
   },
   cont2: {
     marginTop: 10,
-    backgroundColor: 'blue',
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 10,
   },
   col: {
     flexDirection: 'column',
