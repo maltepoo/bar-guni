@@ -26,12 +26,10 @@ for word in filter_word_set:
     root.add(word[::-1],0)
 
 # 문자 or 숫자 or 공백 만 True
-def alphaOrNumOrSpace(c):
-    if c.isalpha():
+def alnumOrSpace(c):
+    if c.isalnum():
         return True
     elif c.isspace():
-        return True
-    elif c.isalnum():
         return True
     else:
         return False
@@ -54,7 +52,7 @@ def barcode():  # put application's code here
     result_li = []
     for word in words:
         # word = ''.join(filter(str.isalnum, word)) # 숫자만
-        word = ''.join(filter(alphaOrNumOrSpace, word))   # 언어만
+        word = ''.join(filter(str.isalpha, word))   # 언어만
 
         # 필터 처리
         st_idx = 0
@@ -124,7 +122,7 @@ def crop():  # put application's code here
             # 공백만 있는 경우
             if word.isspace():
                 continue
-            word = ''.join(filter(alphaOrNumOrSpace, word))   # 언어만
+            word = ''.join(filter(alnumOrSpace, word))   # 언어만
             word = word.strip()
 
             # 필터 처리
