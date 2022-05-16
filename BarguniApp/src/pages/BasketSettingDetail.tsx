@@ -153,16 +153,19 @@ function BasketSettingDetail({route}) {
           </View>
         )}
       </View>
-      <Text style={style.left}>바구니 참여자 목록 </Text>
+      <View style={style.line} />
+
+      <Text style={style.title}>바구니 참여자 목록 </Text>
       <Text
         style={{
-          marginLeft: '6%',
+          marginLeft: '10%',
           fontFamily: 'Pretendard-Light',
           color: 'black',
+          fontSize: 20,
         }}>
         {basketMembers.map((item, index) => (
           <>
-            <FontAwesomeIcon name="user-circle" />
+            <FontAwesomeIcon name="user-circle" size={20} />
             <Text>
               {' '}
               {item.name} {index !== basketMembers.length - 1 ? ',' : ''}
@@ -187,6 +190,8 @@ function BasketSettingDetail({route}) {
 const style = StyleSheet.create({
   row: {
     flexDirection: 'row',
+    marginLeft: '10%',
+    marginBottom: '4%',
   },
   row2: {
     flexDirection: 'row',
@@ -198,17 +203,15 @@ const style = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginVertical: '5%',
+    fontWeight: 'bold',
   },
   title: {
-    // paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    // backgroundColor: 'orange',
   },
   deleteButton: {
     backgroundColor: 'red',
@@ -229,8 +232,9 @@ const style = StyleSheet.create({
   },
   line: {
     height: 0.7,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    marginTop: 30,
+    backgroundColor: '#F5F4F4',
+    marginTop: '5%',
+    marginBottom: '5%',
   },
   left: {
     width: '35%',
