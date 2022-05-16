@@ -110,8 +110,6 @@ def crop():  # put application's code here
         # blur = cv2.GaussianBlur(img, (3, 3), 0)
         # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        cv2.waitKey(0)
-
         # ocr 처리
         result = pytesseract.image_to_string(img, lang='kor+eng')
 
