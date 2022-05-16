@@ -52,14 +52,17 @@ import Manual3 from './src/pages/Manual3';
 import ItemList from './src/pages/ItemList';
 import ItemDetail from './src/pages/ItemDetail';
 import ItemModify from './src/pages/ItemModify';
+import ReceiptRegister from './src/pages/ReceiptRegister';
+import RegisterList from './src/pages/RegisterList';
 
 export type RootStackParamList = {
   SignIn: undefined;
   Login: undefined;
   Home: undefined;
   Search: undefined;
-  Register: undefined | Object;
   Settings: undefined;
+  Register: undefined | Object;
+  RegisterList: undefined | Object;
   SignUp: undefined;
   AlarmSetting: undefined;
   MyPage: undefined;
@@ -74,6 +77,7 @@ export type RootStackParamList = {
   Manual: undefined;
   Manual2: undefined;
   Manual3: undefined;
+  ReceiptRegister: undefined;
 };
 
 function AppInner() {
@@ -213,6 +217,28 @@ function AppInner() {
         component={ItemDetail}
         options={{
           title: '상세 보기',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ReceiptRegister"
+        component={ReceiptRegister}
+        options={{
+          title: '영수증 등록',
+          headerShown: true,
+          headerTitleStyle: {
+            fontFamily: 'Pretendard-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="RegisterList"
+        component={RegisterList}
+        options={{
+          title: '영수증 아이템 등록',
           headerShown: true,
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
