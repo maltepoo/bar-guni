@@ -220,7 +220,7 @@ public class ItemController {
         return new ResponseEntity<ResVO<String>>(result, status);
     }
 
-    @GetMapping("/receipt")
+    @PostMapping("/receipt")
     @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
