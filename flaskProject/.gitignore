@@ -311,3 +311,4 @@ $RECYCLE.BIN/
 # 트레인 백업 데이터
 **/train_backups/**
 # End of https://www.toptal.com/developers/gitignore/api/flask,python,macos,windows
+/out_dir_r101/ctw1500_model/model_ctw_r101.pth
