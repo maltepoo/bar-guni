@@ -231,6 +231,14 @@ public class ItemController {
     public ResponseEntity<ReceiptResVO> clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
         ReceiptResVO result;
         HttpStatus status = null;
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (userDetails.getUserId() != 479l) {
+            result = new ReceiptResVO(null);
+            result.setMessage("아직 테스트 중인 기능입니다.");
+            return new ResponseEntity<ReceiptResVO>(result, status);
+        }
+
         result = new ReceiptResVO(itemService.readReceipt(receipt));
         result.setMessage("영수증 분석 성공");
         status = HttpStatus.OK;
