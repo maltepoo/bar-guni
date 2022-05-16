@@ -67,19 +67,14 @@ function Login() {
       <Image
         source={logo}
         resizeMode={'contain'}
-        style={{width: 140, height: 140, marginBottom: 30, marginTop: 80}}
+        style={{
+          flex: 0.8,
+          width: '40%',
+          height: '40%',
+        }}
       />
       <TouchableOpacity onPress={kakaoLogin}>
-        <Image
-          style={styles.kakao}
-          source={require('../assets/kakao-login.png')}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Image
-          style={styles.google}
-          source={require('../assets/google-login.png')}
-        />
+        <Image source={require('../assets/kakao-login.png')} />
       </TouchableOpacity>
     </View>
   );
@@ -90,19 +85,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-  },
-  kakao: {
-    marginTop: 140,
-    borderRadius: 5,
-    width: 220,
-    resizeMode: 'stretch',
-  },
-  google: {
-    borderRadius: 5,
-    width: 318,
-    marginTop: 10,
-    height: 55,
-    resizeMode: 'contain',
   },
 });
 

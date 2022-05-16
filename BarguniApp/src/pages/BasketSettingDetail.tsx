@@ -128,6 +128,7 @@ function BasketSettingDetail({route}) {
 
   return (
     <ScrollView style={style.container}>
+      <Text style={style.title}>바구니 이름</Text>
       <View>
         {checked ? (
           <View style={style.row}>
@@ -152,7 +153,7 @@ function BasketSettingDetail({route}) {
           </View>
         )}
       </View>
-      {/*<Text style={style.left}>바구니 참여자 목록 </Text>*/}
+      <Text style={style.left}>바구니 참여자 목록 </Text>
       <Text
         style={{
           marginLeft: '6%',
@@ -198,6 +199,17 @@ const style = StyleSheet.create({
     textAlign: 'center',
     marginVertical: '5%',
   },
+  title: {
+    // paddingLeft: 10,
+    paddingTop: 10,
+    marginBottom: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    // backgroundColor: 'orange',
+  },
   deleteButton: {
     backgroundColor: 'red',
     width: '40%',
@@ -240,14 +252,14 @@ const style = StyleSheet.create({
   picture: {
     width: 20,
     height: 20,
-    margin: '5%',
-    alignItems: 'flex-end',
+    marginLeft: '5%',
+    alignContent: 'flex-end',
   },
   top: {
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: 'Pretendard-Light',
     fontSize: 20,
     color: 'black',
-    margin: '5%',
+    marginleft: '5%',
   },
   te: {margin: '6%', alignItems: 'flex-end'},
 });

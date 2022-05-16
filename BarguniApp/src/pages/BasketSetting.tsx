@@ -49,7 +49,7 @@ function BasketSetting() {
             </Text>
             {/*<Text>{item.bkt_id} / 바스켓아이디</Text>*/}
           </TouchableOpacity>
-          <View style={style.line} />
+          <View style={style.listline} />
         </>
       );
     },
@@ -61,7 +61,7 @@ function BasketSetting() {
   }, [getBasketList]);
 
   const handleInputChange = useCallback(code => {
-    console.log(code, "입력코드");
+    console.log(code, '입력코드');
     setInviteCode(code);
   }, []);
 
@@ -79,11 +79,8 @@ function BasketSetting() {
 
   return (
     <ScrollView style={style.container}>
-      <Text
-        style={style.title}>
-        바구니 참여
-      </Text>
-      <View style={{alignItems: 'center',}}>
+      <Text style={style.title}>바구니 참여</Text>
+      <View style={{alignItems: 'center'}}>
         <TextInput
           value={inviteCode}
           onChangeText={handleInputChange}
@@ -92,19 +89,20 @@ function BasketSetting() {
         />
         <TouchableOpacity
           onPress={handleJoinBasket}
-          style={{alignItems: 'center',backgroundColor: '#F5F4F4', width: 140, borderRadius: 140}}>
-          <Text style={{color: '#0094FF', paddingVertical: 6}}>바구니 입장하기</Text>
+          style={{
+            alignItems: 'center',
+            backgroundColor: '#F5F4F4',
+            width: 140,
+            borderRadius: 140,
+          }}>
+          <Text style={{color: '#0094FF', paddingVertical: 6}}>
+            바구니 입장하기
+          </Text>
         </TouchableOpacity>
       </View>
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 20,
-          fontFamily: 'Pretendard-Bold',
-          margin: '5%',
-        }}>
-        바구니 목록
-      </Text>
+      <View style={style.line} />
+
+      <Text style={style.title}>바구니 목록</Text>
       <FlatList data={basketList} renderItem={renderBasketList} />
     </ScrollView>
   );
@@ -113,14 +111,29 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+
     // alignItems: 'center',
   },
   title: {
-    color: 'black',
-    fontSize: 20,
-    fontFamily: 'Pretendard-Bold',
-    margin: '5%',
+    // paddingLeft: 10,
+    paddingTop: 10,
     marginBottom: 10,
-  }
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    // backgroundColor: 'orange',
+  },
+  line: {
+    height: 0.7,
+    backgroundColor: '#F5F4F4',
+    marginTop: 30,
+  },
+  listline: {
+    height: 0.7,
+    backgroundColor: '#F5F4F4',
+    // marginTop: 30,
+  },
 });
 export default BasketSetting;

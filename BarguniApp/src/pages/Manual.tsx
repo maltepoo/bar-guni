@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {Button, Text} from '@rneui/base';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
@@ -21,30 +21,24 @@ function Manual() {
       </View>
       <View style={Style.imageBox}>
         <Image style={Style.image} source={require('../assets/expired.png')} />
-        <Button
-          title={'다음'}
-          titleStyle={Style.buttonTitle}
-          buttonStyle={Style.button}
-          onPress={next}
-        />
       </View>
+      <Button
+        title={'다음'}
+        titleStyle={Style.buttonTitle}
+        buttonStyle={Style.button}
+        onPress={next}
+      />
     </View>
   );
 }
 const Style = StyleSheet.create({
-  button: {
-    backgroundColor: '#F5F4F4',
-    borderRadius: 10,
-    paddingHorizontal: 25,
-    paddingVertical: 15,
-    marginTop: '8%',
-    marginLeft: '65%',
-  },
-  buttonTitle: {
-    color: '#2B3944',
+  background: {
+    backgroundColor: 'white',
+    flex: 1,
   },
   headerBox: {
-    marginLeft: '4%',
+    flex: 1,
+    alignItems: 'center',
     marginTop: '20%',
   },
   header: {
@@ -52,27 +46,29 @@ const Style = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
+  button: {
+    backgroundColor: '#32A3F5',
+  },
   contentBox: {
-    marginLeft: '4%',
-    marginTop: '4%',
+    flex: 1,
+    marginLeft: '5%',
   },
   content: {
     fontFamily: 'Pretendard-Light',
     fontSize: 15,
     color: 'gray',
   },
-  background: {
-    backgroundColor: 'white',
-    height: '100%',
-    flex: 1,
-  },
   imageBox: {
+    flex: 4,
     alignItems: 'center',
   },
   image: {
     width: '70%',
     height: '60%',
     resizeMode: 'contain',
+  },
+  buttonTitle: {
+    color: 'white',
   },
 });
 
