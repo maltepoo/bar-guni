@@ -251,7 +251,7 @@ function AppInner() {
         component={MyPage}
         options={{
           headerShown: true,
-          headerTitle: "내 정보",
+          headerTitle: '내 정보',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
@@ -262,33 +262,33 @@ function AppInner() {
         component={BasketSetting}
         options={{
           headerShown: true,
-          headerTitle: "바구니 관리",
+          headerTitle: '바구니 관리',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="BasketSettingDetail"
         component={BasketSettingDetail}
         options={{
           headerShown: true,
-          headerTitle: "바구니 상세",
+          headerTitle: '바구니 상세',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="TrashCan"
         component={TrashCan}
         options={{
           headerShown: true,
-          headerTitle: "휴지통",
+          headerTitle: '휴지통',
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="Alarm"
@@ -328,7 +328,7 @@ function AppInner() {
           headerTitleStyle: {
             fontFamily: 'Pretendard-Bold',
           },
-      }}
+        }}
       />
       <Stack.Screen
         name="Register"

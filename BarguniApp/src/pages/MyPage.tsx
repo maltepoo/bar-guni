@@ -7,24 +7,26 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {changeName, getProfile, signOut} from '../api/user';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 function MyPage() {
   const [userInfo, setUserInfo] = useState({});
   const [newName, setNewName] = useState('');
 
-  useEffect(() => {
-    init();
-  }, []);
   const init = useCallback(async () => {
     const userInfo = await getProfile();
     console.log(userInfo, '유저인포');
     setUserInfo(userInfo);
   }, []);
 
+  useEffect(() => {
+    init();
+  }, [init]);
+
   const handleChangeName = useCallback(name => {
     console.log(name);
     setNewName(name);
-  });
+  }, []);
 
   const modifyUserName = useCallback(async () => {
     try {
@@ -34,7 +36,7 @@ function MyPage() {
     } catch (err) {
       console.log(err, 'userName change ERROR');
     }
-  });
+  }, []);
 
   const handleSignOut = useCallback(async () => {
     // TODO: 회원탈퇴 후 스토어에서 토큰삭제
@@ -42,10 +44,11 @@ function MyPage() {
     try {
       await signOut();
       console.log('byebye...');
+      await EncryptedStorage.removeItem('accessToken');
     } catch (err) {
       Alert.alert('회원탈퇴 실패', err);
     }
-  });
+  }, []);
 
   return (
     <ScrollView>
