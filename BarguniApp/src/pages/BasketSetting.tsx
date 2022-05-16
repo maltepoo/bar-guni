@@ -87,14 +87,14 @@ function BasketSetting() {
           margin: 20,
           borderRadius: 8,
           backgroundColor: '#fff',
-          shadowColor: '#000',
+          shadowColor: 'rgba(0,0,0,0.4)',
           shadowOffset: {
             width: 0,
             height: 2,
           },
           shadowOpacity: 0.1,
           shadowRadius: 3.84,
-          elevation: 5,
+          elevation: 10,
         }}>
         <TextInput
           value={inviteCode}
