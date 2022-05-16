@@ -84,7 +84,6 @@ function Register({navigation}: RegisterScreenProps) {
     return ImagePicker.openCamera({
       includeBase64: true,
       includeExif: true,
-      cropping: true,
     })
       .then(onResponse)
       .catch(console.log);
@@ -116,6 +115,10 @@ function Register({navigation}: RegisterScreenProps) {
         }
       }
       console.log(imgRes);
+      if (route.params !== undefined) {
+        imgRes.id = route.params.pictureId;
+      }
+      console.log(imgRes.id, ' 등록할 이미지 아이디');
       if (alertBy === 'D_DAY') {
         regDate.setDate(new Date().getDate() + day);
       }
@@ -142,9 +145,9 @@ function Register({navigation}: RegisterScreenProps) {
     image,
     name,
     navigation,
+    regDate,
     selectedBasket,
     selectedCategory,
-    shelfLife,
   ]);
   useEffect(() => {
     async function init(): Promise<void> {
@@ -155,6 +158,8 @@ function Register({navigation}: RegisterScreenProps) {
       const categoryRes = await getCategory(basketRes[0].bkt_id);
       console.log(categoryRes, 'categoryRes');
       setCategory(categoryRes);
+      console.log(Config.BASE_URL + route.params.pictureUrl);
+      setPreview({uri: Config.BASE_URL + route.params.pictureUrl});
       setName(route.params.name);
     }
     init();
