@@ -64,15 +64,18 @@ function ReceiptRegister(props) {
   }, [onResponse]);
 
   const onSubmit = useCallback(async () => {
+    console.log('click');
+    const start_time = new Date();
     try {
-      console.log(image);
       if (image) {
         const formData = new FormData();
-        formData.append('image', image);
+        console.log('clova strat');
+        formData.append('receipt', image);
         try {
           const axios = fileApiInstance();
-          const res = await axios.get('/item/receipt');
+          const res = await axios.post('/item/receipt', formData);
           console.log(res);
+          console.log(new Date().getTime() - start_time.getTime());
           navigation.navigate('RegisterList', res.data.data);
         } catch (e) {
           console.log(e, 'api 에러');

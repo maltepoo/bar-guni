@@ -3,6 +3,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {View, TouchableOpacity, StyleSheet, Text, Alert} from 'react-native';
 import {RootStackParamList} from '../../AppInner';
 import * as RootNavigation from '../../RootNavigation';
+import {RootState} from '../store/reducer';
+import {useSelector} from 'react-redux';
 
 type RegisterModalScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -10,13 +12,19 @@ type RegisterModalScreenProps = NativeStackScreenProps<
 >;
 
 function RegisterModal({navigation}: RegisterModalScreenProps) {
+  const user = useSelector((state: RootState) => !!state.user);
   const byReceipt = useCallback(() => {
     // TODO : 만약 유저가 등록된 계정이면 영수증 등록으로 이동 아니면 제한
-    // if (true) {
-    //   Alert.alert('준비중', '아직 준비중인 기능입니다!');
-    // } else {
-    RootNavigation.navigate('ReceiptRegister');
-    // }
+    const adminList = [
+      '07___28@naver.com',
+      'ccocao@nate.com',
+      'da323@naver.com',
+    ];
+    if (adminList.includes(user.email)) {
+      Alert.alert('준비중', '아직 준비중인 기능입니다!');
+    } else {
+      RootNavigation.navigate('ReceiptRegister');
+    }
   }, []);
   const byBarcode = useCallback(() => {
     navigation.navigate('Barcode');
