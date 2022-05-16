@@ -117,6 +117,11 @@ def crop():  # put application's code here
                 check = root.search(word, st_idx)
                 st_idx += 1
 
+            # 역순으로 검사
+            r_word = word[::-1]
+            while st_idx < len(r_word) and check == False:
+                check = root.search(r_word, st_idx)
+
             if(check == False):
                 continue
 

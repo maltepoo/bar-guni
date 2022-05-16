@@ -16,6 +16,7 @@ COPY . .
 COPY /train/kor.traineddata /usr/share/tesseract-ocr/4.00/tessdata/
 
 RUN pip3 install -r requirements.txt
+RUN pip3 install fvcore-master.zip
 RUN python3 setup.py build develop
 
 VOLUME ["/data"]
