@@ -220,7 +220,7 @@ public class ItemController {
         return new ResponseEntity<ResVO<String>>(result, status);
     }
 
-    @GetMapping("/receipt")
+    @PostMapping("/receipt")
     @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -231,6 +231,14 @@ public class ItemController {
     public ResponseEntity<ReceiptResVO> clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
         ReceiptResVO result;
         HttpStatus status = null;
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (userDetails.getUserId() != 479l) {
+            result = new ReceiptResVO(null);
+            result.setMessage("아직 테스트 중인 기능입니다.");
+            return new ResponseEntity<ReceiptResVO>(result, status);
+        }
+
         result = new ReceiptResVO(itemService.readReceipt(receipt));
         result.setMessage("영수증 분석 성공");
         status = HttpStatus.OK;

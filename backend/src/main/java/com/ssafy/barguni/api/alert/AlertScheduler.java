@@ -24,8 +24,8 @@ public class AlertScheduler {
     private final ItemService itemService;
 
     // (초 분 시 일 월)
-//    @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
-    @Scheduled(cron="${schedular.alert.time}")
+//    @Scheduled(cron="${schedular.alert.time}")
+    @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
     @Async
     public void createAlert(){
         long start = System.currentTimeMillis();

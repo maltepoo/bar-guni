@@ -48,7 +48,7 @@ function Login() {
     } catch (e) {
       console.log(e, '카카오 로그인 중 에러');
     }
-    navigation.navigate('ItemList');
+    // navigation.navigate('ItemList');
   }, [dispatch, navigation]);
   useEffect(() => {
     console.log('로그인 페이지');

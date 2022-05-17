@@ -74,9 +74,14 @@ async function changeAlarm(id: number) {
   const axios = LoginApiInstance();
   return (await axios.put(`/alert/${id}?alertStatus=CHECKED`)).data.data;
 }
+async function deleteAlarm(id: number) {
+  const axios = LoginApiInstance();
+  return (await axios.delete(`/alert/${id}`)).data.data;
+}
 
 export {
   changeAlarm,
+  deleteAlarm,
   registerBasket,
   getBasketInfo,
   updateBasketName,
