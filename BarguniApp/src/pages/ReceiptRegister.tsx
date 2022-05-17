@@ -24,18 +24,20 @@ function ReceiptRegister(props) {
   const [preview, setPreview] = useState<{uri: string}>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const onResponse = useCallback(async response => {
-    console.log(response.width, response.height, response.exif);
+    console.log(response);
+    console.log(response.width, response.height, response.exif, 'response!!');
     setPreview({uri: `data:${response.mime};base64,${response.data}`});
     const orientation = (response.exif as any)?.Orientation;
     console.log('orientation', orientation);
     return ImageResizer.createResizedImage(
       response.path,
-      600,
-      600,
+      response.width,
+      response.height,
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
-      100,
+      0,
       0,
     ).then(r => {
+      console.log(r, 'resized');
       console.log(r.uri, r.name);
       setImage({
         uri: r.uri,
