@@ -18,14 +18,14 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
     // TODO : 만약 유저가 등록된 계정이면 영수증 등록으로 이동 아니면 제한
     console.log(email);
     if (adminList.includes(email)) {
-      RootNavigation.navigate('ReceiptRegister');
+      RootNavigation.navigate('ReceiptRegister', {service: 'clova'});
     } else {
       Alert.alert('준비중', '아직 준비중인 기능입니다!');
     }
   }, [adminList, email]);
   const byFreeReceipt = useCallback(() => {
     // TODO : 만약 유저가 등록된 계정이면 영수증 등록으로 이동 아니면 제한
-    Alert.alert('준비중', '아직 준비중인 기능입니다!');
+    RootNavigation.navigate('ReceiptRegister', {service: 'us'});
   }, []);
   const byBarcode = useCallback(() => {
     navigation.navigate('Barcode');
