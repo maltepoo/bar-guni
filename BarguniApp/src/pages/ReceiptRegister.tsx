@@ -15,7 +15,7 @@ import {fileApiInstance} from '../api/instance';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 
-function ReceiptRegister(props) {
+function ReceiptRegister({route}) {
   const [image, setImage] = useState<{
     uri: string;
     name: string;
@@ -23,6 +23,7 @@ function ReceiptRegister(props) {
   }>();
   const [preview, setPreview] = useState<{uri: string}>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  console.log(route.params);
   const onResponse = useCallback(async response => {
     console.log(response.width, response.height, response.exif);
     setPreview({uri: `data:${response.mime};base64,${response.data}`});
@@ -71,7 +72,10 @@ function ReceiptRegister(props) {
         formData.append('image', image);
         try {
           const axios = fileApiInstance();
-          const res = await axios.get('/item/receipt');
+          const res = await axios.post(
+            `/item/receipt${route.params.service === 'clova' ? '/clova' : ''}`,
+            formData,
+          );
           console.log(res);
           navigation.navigate('RegisterList', res.data.data);
         } catch (e) {
