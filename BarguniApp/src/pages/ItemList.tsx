@@ -433,8 +433,7 @@ const Style = StyleSheet.create({
     marginLeft: 12,
     marginTop: 3,
     fontSize: 20,
-    fontFamily: 'Pretendard-Black',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: 'black',
   },
   dropdown: {
@@ -445,9 +444,8 @@ const Style = StyleSheet.create({
   },
   dropdownItem: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'Pretendard-Black',
+    fontFamily: 'Pretendard-Bold',
   },
   container: {
     flex: 1,

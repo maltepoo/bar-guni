@@ -105,6 +105,7 @@ const Style = StyleSheet.create({
   },
   buttonText: {
     fontSize: 10,
+    fontFamily: 'Pretendard-Bold',
   },
   list: {
     height: '91%',
@@ -113,16 +114,15 @@ const Style = StyleSheet.create({
   headerText: {
     color: 'black',
     marginTop: 7,
-    fontWeight: 'bold',
     width: '65%',
-
+    fontFamily: 'Pretendard-Bold',
     marginLeft: 10,
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
     color: 'black',
     marginTop: 10,
+    fontFamily: 'Pretendard-Bold',
   },
   header: {flexDirection: 'row', marginTop: 10},
   line: {width: '100%', height: 0.7, backgroundColor: 'gray'},

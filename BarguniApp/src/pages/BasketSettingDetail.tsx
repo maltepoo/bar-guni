@@ -206,7 +206,6 @@ const style = StyleSheet.create({
     marginVertical: '5%',
   },
   title: {
-    // paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
     fontSize: 20,
@@ -214,16 +213,12 @@ const style = StyleSheet.create({
     color: 'black',
     paddingHorizontal: 20,
     paddingTop: 10,
-    // backgroundColor: 'orange',
   },
   deleteButton: {
     backgroundColor: '#F5F4F4',
     flex: 1,
     borderRadius: 100,
     paddingVertical: 6,
-    // width: '40%',
-    // marginRight: '8%',
-    // borderRadius: 10,
   },
   inviteButton: {
     backgroundColor: '#0094FF',
@@ -231,16 +226,12 @@ const style = StyleSheet.create({
     borderRadius: 100,
     marginRight: 10,
     paddingVertical: 6,
-    // width: '40%',
-    // marginRight: '8%',
-    // borderRadius: 10,
   },
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingTop: 20,
-    // alignItems: 'center',
   },
   line: {
     height: 0.7,
@@ -248,14 +239,12 @@ const style = StyleSheet.create({
     marginTop: 30,
   },
   left: {
-    // width: '35%',
     fontFamily: 'Pretendard-SemiBold',
     fontSize: 16,
     color: 'black',
     marginTop: 18,
   },
   right: {
-    // width: '35%',
     fontFamily: 'Pretendard-Light',
     fontSize: 16,
     color: 'black',
@@ -264,8 +253,7 @@ const style = StyleSheet.create({
   picture: {
     width: 20,
     height: 20,
-    // marginLeft: '5%',
-    // alignContent: 'flex-end',
+
     position: 'absolute',
     right: 15,
     top: 4,
@@ -274,7 +262,6 @@ const style = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
     fontSize: 20,
     color: 'black',
-    // marginleft: '5%',
     padding: 0,
   },
   top2: {

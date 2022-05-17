@@ -136,7 +136,7 @@ function ItemModify() {
             onPress={() => {
               setRegOpen(true);
             }}>
-            <Text style={Style.description}>
+            <Text style={Style.datedescription}>
               {regDate.toJSON().substring(0, 10)}
             </Text>
           </Pressable>
@@ -159,7 +159,7 @@ function ItemModify() {
             onPress={() => {
               setExpOpen(true);
             }}>
-            <Text style={Style.description}>
+            <Text style={Style.datedescription}>
               {expDate.toJSON().substring(0, 10)}
             </Text>
           </Pressable>
@@ -267,17 +267,29 @@ const Style = StyleSheet.create({
     marginBottom: 7,
   },
   title: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    fontFamily: 'Pretendard-Black',
+    fontSize: 17,
+    fontFamily: 'Pretendard-Bold',
     color: 'black',
-    width: '25%',
+    width: '30%',
+    marginBottom: '2%',
+    marginTop: '3%',
   },
   description: {
     fontSize: 15,
     color: 'black',
     fontFamily: 'Pretendard-Light',
     marginLeft: '3%',
+    marginTop: '3%',
+    alignContent: 'center',
+  },
+  datedescription: {
+    fontSize: 18,
+    color: 'black',
+    fontFamily: 'Pretendard-Light',
+    marginRight: '10%',
+    marginTop: '3%',
+    marginBottom: '3%',
+    alignSelf: 'center',
   },
   descriptionBox: {
     marginLeft: '2%',

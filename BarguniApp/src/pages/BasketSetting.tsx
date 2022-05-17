@@ -67,12 +67,9 @@ function BasketSetting() {
 
   const handleJoinBasket = useCallback(async () => {
     try {
-      console.log(inviteCode, '초대코드입력잘됐누;;');
       const res = await joinBasket(inviteCode);
       Alert.alert('바구니가입성공', JSON.stringify(res));
-      // console.log(res, "바구니가입 잘댐")
     } catch (e) {
-      console.log(e, '바구니가입 잘 안댐');
       Alert.alert('API통신 중 오류', JSON.stringify(e));
     }
   }, [inviteCode]);
@@ -99,7 +96,7 @@ function BasketSetting() {
         <TextInput
           value={inviteCode}
           onChangeText={handleInputChange}
-          style={{textAlign: 'center'}}
+          style={{textAlign: 'center', fontFamily: 'Pretendard-Bold'}}
           placeholder="초대코드를 입력해서 바구니에 참여해보세요"
         />
         <TouchableOpacity
@@ -110,7 +107,12 @@ function BasketSetting() {
             width: 140,
             borderRadius: 140,
           }}>
-          <Text style={{color: '#0094FF', paddingVertical: 6}}>
+          <Text
+            style={{
+              color: '#0094FF',
+              paddingVertical: 6,
+              fontFamily: 'Pretendard-Bold',
+            }}>
             바구니 입장하기
           </Text>
         </TouchableOpacity>
@@ -130,10 +132,10 @@ const style = StyleSheet.create({
   title: {
     marginTop: '4%',
     fontSize: 20,
-    fontWeight: 'bold',
     color: 'black',
     paddingHorizontal: 20,
     marginBottom: '4%',
+    fontFamily: 'Pretendard-Bold',
   },
   line: {
     height: 0.7,

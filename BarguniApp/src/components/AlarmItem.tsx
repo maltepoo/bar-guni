@@ -1,9 +1,16 @@
 import React, {useCallback, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {AlarmI, changeAlarm, deleteAlarm} from '../api/basket';
 import {Button} from '@rneui/base';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {Dialog, Paragraph, Portal} from "react-native-paper";
+import {Dialog, Paragraph, Portal} from 'react-native-paper';
 interface Props {
   item: AlarmI;
   remove: Function;
@@ -11,7 +18,9 @@ interface Props {
 function AlarmItem({item, remove, reload}: Props) {
   console.log(item);
   const [alertVisible, setAlertVisible] = useState(false);
-  const closeDialog = useCallback(() => {setAlertVisible(false)});
+  const closeDialog = useCallback(() => {
+    setAlertVisible(false);
+  });
 
   const changeStatusAlarm = useCallback(async () => {
     try {
@@ -35,27 +44,54 @@ function AlarmItem({item, remove, reload}: Props) {
     <>
       <Portal>
         <Dialog visible={alertVisible} onDismiss={closeDialog}>
-          <Dialog.Title>알림을 삭제하시겠습니까?</Dialog.Title>
+          <Dialog.Title style={{fontFamily: 'Pretendard-Bold'}}>
+            알림을 삭제하시겠습니까?
+          </Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{item.title.split(0, 7)}... 의 알림을 삭제합니다.</Paragraph>
+            <Paragraph style={{fontFamily: 'Pretendard-Light'}}>
+              {item.title.split(0, 7)}... 의 알림을 삭제합니다.
+            </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button title={'확인'} onPress={removeAlarm} titleStyle={{color: '#fff'}} buttonStyle={{...Style.button, marginRight: 6, backgroundColor: '#c4c4c4'}} />
-            <Button title={'취소'} onPress={closeDialog} buttonStyle={Style.button} />
+            <Button
+              title={'확인'}
+              onPress={removeAlarm}
+              titleStyle={{color: '#fff'}}
+              buttonStyle={{
+                ...Style.button,
+                marginRight: 6,
+                backgroundColor: '#c4c4c4',
+              }}
+            />
+            <Button
+              title={'취소'}
+              onPress={closeDialog}
+              buttonStyle={Style.button}
+            />
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <TouchableOpacity style={Style.container} onPress={changeStatusAlarm} onLongPress={confirmDelete}>
+      <TouchableOpacity
+        style={Style.container}
+        onPress={changeStatusAlarm}
+        onLongPress={confirmDelete}>
         <View style={Style.dotContainer}>
-          <FontAwesomeIcon name="circle" size={8} style={{
-            color: item.status === "UNCHECKED" ? '#0094FF' : '#F5F4F4',
-          }} />
+          <FontAwesomeIcon
+            name="circle"
+            size={8}
+            style={{
+              color: item.status === 'UNCHECKED' ? '#0094FF' : '#F5F4F4',
+            }}
+          />
         </View>
         <Text
           key={item.itemId}
           ellipsizeMode="tail"
           numberOfLines={2}
-          style={{...Style.multiline, color: item.status === "UNCHECKED" ? "#000" : "#C4C4C4"}}>
+          style={{
+            ...Style.multiline,
+            color: item.status === 'UNCHECKED' ? '#000' : '#C4C4C4',
+          }}>
           {item.title}
         </Text>
         <Text style={Style.time}>
@@ -81,6 +117,7 @@ const Style = StyleSheet.create({
   dotContainer: {
     alignItems: 'center',
     paddingTop: 7,
+    fontFamily: 'Pretendard-Light',
   },
   multiline: {
     width: '80%',
@@ -92,6 +129,7 @@ const Style = StyleSheet.create({
     fontSize: 12,
     color: '#C4C4C4',
     textAlign: 'right',
+    fontFamily: 'Pretendard-Light',
   },
   line: {
     width: '100%',
@@ -102,7 +140,8 @@ const Style = StyleSheet.create({
   button: {
     paddingHorizontal: 16,
     backgroundColor: '#0094FF',
-  }
+    fontFamily: 'Pretendard-Light',
+  },
 });
 
 export default AlarmItem;

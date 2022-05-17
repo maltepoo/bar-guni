@@ -138,6 +138,7 @@ const Style = StyleSheet.create({
   },
   imageText: {
     color: 'white',
+    fontFamily: 'Pretendard-Light',
   },
 });
 

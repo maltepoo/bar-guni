@@ -19,8 +19,21 @@ app.config['UPLOAD_FOLDER'] = './receipts'
 filter_word_set = get_filter_word_set()
 root = TrieNode()
 for word in filter_word_set:
+    # 1글자 이상만 포함
+    if(len(word) == 1):
+        continue
     root.add(word,0)
     root.add(word[::-1],0)
+
+# 문자 or 숫자 or 공백 만 True
+def alnumOrSpace(c):
+    if c.isalnum():
+        return True
+    elif c.isspace():
+        return True
+    else:
+        return False
+
 
 
 @app.route('/',methods=['POST'])
@@ -84,8 +97,8 @@ def crop():  # put application's code here
 
     for index in range(len(boxes)):
         x0, y0, x1, y1 = boxes[index]
-        x0 = int(x0) + 1
-        y0 = int(y0) + 1
+        x0 = int(x0) - 1
+        y0 = int(y0) - 1
         x1 = int(x1) + 1
         y1 = int(y1) + 1
 
@@ -93,22 +106,22 @@ def crop():  # put application's code here
         h = y1 - y0
         cropped_img = image[y0:y0 + h, x0:x0 + w]
 
-        img = imutils.resize(cropped_img, int(image.shape[1] * 2))
+        img = imutils.resize(cropped_img, int(image.shape[1]*2))
         # blur = cv2.GaussianBlur(img, (3, 3), 0)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # ocr 처리
-        result = pytesseract.image_to_string(gray, lang='kor')
+        result = pytesseract.image_to_string(img, lang='kor+eng')
 
-        print(result)
-        print("-----------------")
-
-        # 단어 빈칸으로 구분
+        # 단어 개행으로 구분
         words = result.split('\n')
 
         for word in words:
-            # word = ''.join(filter(str.isalnum, word)) # 숫자만
-            word = ''.join(filter(str.isalpha, word))   # 언어만
+            # 공백만 있는 경우
+            if word.isspace():
+                continue
+            word = ''.join(filter(alnumOrSpace, word))   # 언어만
+            word = word.strip()
 
             # 필터 처리
             st_idx = 0
