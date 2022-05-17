@@ -225,12 +225,35 @@ public class ItemController {
             @ApiResponse(responseCode = "404", description = "없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ReceiptResVO> useOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
+    public ResponseEntity<ReceiptResVO> useFlaskOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
         ReceiptResVO result;
         HttpStatus status = null;
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        if (userDetails.getUserId() == 479l) {
+
+        result = new ReceiptResVO(itemService.readReceiptByFlask(receipt));
+
+        result.setMessage("영수증 분석 성공");
+        status = HttpStatus.OK;
+
+        return new ResponseEntity<ReceiptResVO>(result, status);
+    }
+
+    @PostMapping("/receipt/clova")
+    @Operation(summary = "영수증 OCR 진행(클로바)", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ReceiptResVO> useClovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
+        ReceiptResVO result;
+        HttpStatus status = null;
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (userDetails.getUserId() == 479l || userDetails.getUserId() == 25l
+                || userDetails.getUserId() == 612l || userDetails.getUserId() == 310l) {
             result = new ReceiptResVO(itemService.readReceiptByClova(receipt));
         } else {
             result = new ReceiptResVO(itemService.readReceiptByFlask(receipt));
@@ -241,4 +264,5 @@ public class ItemController {
 
         return new ResponseEntity<ReceiptResVO>(result, status);
     }
+
 }
