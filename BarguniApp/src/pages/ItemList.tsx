@@ -439,7 +439,9 @@ const Style = StyleSheet.create({
   },
   dropdown: {
     marginTop: 20,
+    marginBottom: 6,
     color: 'black',
+    marginHorizontal: 6,
   },
   dropdownItem: {
     fontSize: 16,

@@ -21,6 +21,7 @@ function MyPage() {
     email: '',
   } as User);
   const [newName, setNewName] = useState('');
+  const [isOpenName, setIsOpenName] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
@@ -39,6 +40,7 @@ function MyPage() {
     try {
       await changeName(newName);
       await Alert.alert('변경완료되었습니다.');
+      setIsOpenName(false);
       navigation.navigate('ItemList');
     } catch (err) {
       console.log(err, 'userName change ERROR');
@@ -56,6 +58,10 @@ function MyPage() {
     }
   }, []);
 
+  const handleChangeForm = useCallback(() => {
+    setIsOpenName(!isOpenName);
+  }, [isOpenName]);
+
   return (
     <ScrollView style={Style.background}>
       <View style={Style.container}>
@@ -65,21 +71,29 @@ function MyPage() {
           title={`${userInfo.name.charAt(0)}`}
           containerStyle={{backgroundColor: '#3d4db7', marginVertical: 20}}
         />
-        <Text style={Style.nameText}>이름 : {userInfo.name}</Text>
-        <Text style={Style.nameText}>Email : {userInfo.email}</Text>
-        <View style={Style.textBox}>
-          <TextInput
-            placeholder={'수정하실 이름을 입력하세요'}
-            value={newName}
-            onChangeText={handleChangeName}
-            style={Style.input}
-          />
-        </View>
-        <TouchableOpacity onPress={modifyUserName} style={Style.modify}>
-          <Text style={Style.text}>수정</Text>
+        <Text style={Style.nameText}>{userInfo.name}</Text>
+        <Text style={Style.emailText}>{userInfo.email}</Text>
+
+        <TouchableOpacity style={{marginTop: 50}}>
+          <Text onPress={handleChangeForm}>닉네임변경</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleSignOut} style={Style.delete}>
-          <Text style={Style.text}>탈퇴</Text>
+        {isOpenName ? (
+          <View style={{alignItems: 'center'}}>
+            <View style={Style.textBox}>
+              <TextInput
+                placeholder={'수정하실 이름을 입력하세요'}
+                value={newName}
+                onChangeText={handleChangeName}
+                style={Style.input}
+              />
+            </View>
+            <TouchableOpacity onPress={modifyUserName} style={Style.modify}>
+              <Text style={Style.modifyText}>수정</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        <TouchableOpacity style={{marginTop: 10}}>
+          <Text onPress={handleSignOut}>탈퇴하기</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -105,9 +119,16 @@ const Style = StyleSheet.create({
     fontWeight: 'bold',
   },
   modify: {
-    backgroundColor: 'green',
-    marginVertical: 10,
-    borderRadius: 10,
+    backgroundColor: '#0094ff',
+    marginBottom: 10,
+    borderRadius: 100,
+    width: 60,
+  },
+  modifyText: {
+    fontSize: 16,
+    color: '#fff',
+    padding: 4,
+    textAlign: 'center',
   },
   container: {
     alignItems: 'center',
@@ -119,11 +140,15 @@ const Style = StyleSheet.create({
   },
   nameText: {
     fontSize: 20,
-    marginVertical: 10,
     marginHorizontal: 20,
     color: 'black',
-    fontFamily: 'Pretendard-Light',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
+  },
+  emailText: {
+    fontSize: 16,
+    marginHorizontal: 20,
+    color: 'gray',
+    fontFamily: 'Pretendard-Regular',
   },
   text: {
     fontSize: 20,
