@@ -34,7 +34,7 @@ function ReceiptRegister(props) {
       response.width,
       response.height,
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
-      0,
+      100,
       0,
     ).then(r => {
       console.log(r, 'resized');
