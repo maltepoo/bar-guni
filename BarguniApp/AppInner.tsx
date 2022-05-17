@@ -78,7 +78,7 @@ export type RootStackParamList = {
   Manual: undefined;
   Manual2: undefined;
   Manual3: undefined;
-  ReceiptRegister: undefined;
+  ReceiptRegister: Object;
 };
 
 function AppInner() {
