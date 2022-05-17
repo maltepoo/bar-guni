@@ -98,7 +98,9 @@ function RegisterItems(props: any) {
   return (
     <View>
       <View style={Style.cont}>
-        <Text style={{color: 'black'}}>제품명 :</Text>
+        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
+          제품명 :
+        </Text>
         <TextInput
           style={Style.textInput}
           value={name}
@@ -107,7 +109,9 @@ function RegisterItems(props: any) {
         />
       </View>
       <View style={Style.cont}>
-        <Text style={{color: 'black'}}>설명 :</Text>
+        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
+          설명 :
+        </Text>
         <TextInput
           style={Style.contentInput}
           value={content}
@@ -122,14 +126,18 @@ function RegisterItems(props: any) {
             onPress={changeShelfLife}
           />
         </View>
-        <Text style={{color: 'black'}}>유효기간 관리</Text>
+        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
+          유효기간 관리
+        </Text>
         <View style={{marginHorizontal: 15}}>
           <Checkbox
             status={checked ? 'unchecked' : 'checked'}
             onPress={changeDay}
           />
         </View>
-        <Text style={{color: 'black'}}>지금부터 관리</Text>
+        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
+          지금부터 관리
+        </Text>
       </View>
       {checked ? (
         <View style={Style.cont}>
@@ -137,7 +145,13 @@ function RegisterItems(props: any) {
             onPress={() => {
               setRegOpen(true);
             }}>
-            <Text style={{color: 'black', fontSize: 18, paddingVertical: 20}}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 18,
+                paddingVertical: 20,
+                fontFamily: 'Pretendard-Light',
+              }}>
               설정된 유효기간 : {regDate.toJSON().substring(0, 10)}
             </Text>
           </Pressable>
@@ -311,6 +325,7 @@ const Style = StyleSheet.create({
     width: '40%',
     textAlign: 'center',
     // borderRadius: 10,
+    fontFamily: 'Pretendard-Bold',
   },
   contentInput: {
     padding: 5,
@@ -321,6 +336,7 @@ const Style = StyleSheet.create({
     width: '40%',
     textAlign: 'center',
     // borderRadius: 10,
+    fontFamily: 'Pretendard-Light',
   },
 
   cancel: {

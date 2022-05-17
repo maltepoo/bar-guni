@@ -30,9 +30,7 @@ function TrashItem(props: TrashItem) {
           }}
         />
       </View>
-      <Image
-        style={Style.image}
-        source={require('../assets/loginlogo.png')}></Image>
+      <Image style={Style.image} source={require('../assets/loginlogo.png')} />
       <View style={Style.content}>
         <View style={Style.container}>
           <Text style={Style.title}>{item.name}</Text>
@@ -61,12 +59,12 @@ function TrashItem(props: TrashItem) {
 }
 const Style = StyleSheet.create({
   container: {flexDirection: 'row'},
-  descriptionView: {marginTop: 10},
+  descriptionView: {marginTop: 10, fontFamily: 'Pretendard-Light'},
   checkbox: {marginTop: 50},
   image: {width: 100, height: 120, borderRadius: 20},
   content: {marginTop: 25, marginLeft: 20},
-  title: {fontSize: 25, color: 'black', fontWeight: 'bold'},
-  description: {fontSize: 15},
+  title: {fontSize: 25, color: 'black', fontFamily: 'Pretendard-Bold'},
+  description: {fontSize: 15, fontFamily: 'Pretendard-Light'},
 });
 
 export default TrashItem;

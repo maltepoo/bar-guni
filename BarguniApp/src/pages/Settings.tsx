@@ -121,9 +121,9 @@ function Settings({navigation}: SettingsScreenProps) {
       <Pressable onPress={goTrashCan}>
         <Text style={style.content}>휴지통</Text>
       </Pressable>
-      {/*<Pressable onPress={goMyPage}>*/}
-      {/*  <Text style={style.content}>내 정보</Text>*/}
-      {/*</Pressable>*/}
+      <Pressable onPress={goMyPage}>
+        <Text style={style.content}>내 정보</Text>
+      </Pressable>
       <Pressable onPress={logout}>
         <Text style={style.content}>로그아웃</Text>
       </Pressable>

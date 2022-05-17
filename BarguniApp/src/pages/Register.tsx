@@ -373,6 +373,7 @@ const Style = StyleSheet.create({
     top: 20,
   },
   textInput: {
+    fontFamily: 'Pretendard-Bold',
     padding: 5,
     marginTop: 5,
     height: 30,
@@ -383,6 +384,7 @@ const Style = StyleSheet.create({
     // borderRadius: 10,
   },
   contentInput: {
+    fontFamily: 'Pretendard-Bold',
     padding: 5,
     marginTop: 5,
     height: 30,

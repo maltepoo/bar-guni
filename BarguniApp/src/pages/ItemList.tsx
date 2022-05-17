@@ -267,7 +267,10 @@ function ItemList() {
       <View>
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
-        <Text style={Style.topText}><Text style={{color: count > 0 ? '#0094FF' : ""}}>{count}</Text>개가 있어요</Text>
+        <Text style={Style.topText}>
+          <Text style={{color: count > 0 ? '#0094FF' : ''}}>{count}</Text>개가
+          있어요
+        </Text>
       </View>
       <Picker
         selectedValue={selectedBasket.bkt_id}
@@ -430,19 +433,19 @@ const Style = StyleSheet.create({
     marginLeft: 12,
     marginTop: 3,
     fontSize: 20,
-    fontFamily: 'Pretendard-Black',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: 'black',
   },
   dropdown: {
     marginTop: 20,
+    marginBottom: 6,
     color: 'black',
+    marginHorizontal: 6,
   },
   dropdownItem: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'Pretendard-Black',
+    fontFamily: 'Pretendard-Bold',
   },
   container: {
     flex: 1,
@@ -453,8 +456,8 @@ const Style = StyleSheet.create({
     backgroundColor: 'rgba(0, 148, 255, 0.15)',
     marginTop: 3,
     marginRight: 4,
-    borderWidth: 1,
-    borderColor: 'rgb(0,148,255)',
+    // borderWidth: 1,
+    // borderColor: 'rgb(0,148,255)',
     marginLeft: 4,
     height: 30,
     borderRadius: 20,
@@ -471,7 +474,7 @@ const Style = StyleSheet.create({
     backgroundColor: 'rgba(0, 148, 255, 0.6)',
     marginTop: 3,
     marginLeft: 4,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
     height: 30,
     borderRadius: 20,

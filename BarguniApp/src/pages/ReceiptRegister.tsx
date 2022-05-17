@@ -65,11 +65,13 @@ function ReceiptRegister({route}) {
   }, [onResponse]);
 
   const onSubmit = useCallback(async () => {
+    console.log('click');
+    const start_time = new Date();
     try {
-      console.log(image);
       if (image) {
         const formData = new FormData();
-        formData.append('image', image);
+        console.log('clova strat');
+        formData.append('receipt', image);
         try {
           const axios = fileApiInstance();
           const res = await axios.post(
@@ -77,6 +79,7 @@ function ReceiptRegister({route}) {
             formData,
           );
           console.log(res);
+          console.log(new Date().getTime() - start_time.getTime());
           navigation.navigate('RegisterList', res.data.data);
         } catch (e) {
           console.log(e, 'api 에러');
@@ -139,6 +142,7 @@ const Style = StyleSheet.create({
   },
   imageText: {
     color: 'white',
+    fontFamily: 'Pretendard-Light',
   },
 });
 

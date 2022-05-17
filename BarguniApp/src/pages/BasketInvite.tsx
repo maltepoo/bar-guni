@@ -1,50 +1,70 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, Image, Pressable, StyleSheet, Text, TextInput, View} from "react-native";
-import { Snackbar } from 'react-native-paper';
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import {Snackbar} from 'react-native-paper';
 import Clipboard from '@react-native-clipboard/clipboard';
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import {getBasketInfo} from "../api/basket";
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {getBasketInfo} from '../api/basket';
 
 function BasketInvite({route}) {
   const basketInfo = route.params;
-  console.log(basketInfo, "invite basket Info")
-  const [inviteCode, setInviteCode] = useState("join code here");
+  console.log(basketInfo, 'invite basket Info');
+  const [inviteCode, setInviteCode] = useState('join code here');
   const [onCopied, setOnCopied] = useState(false);
 
   useEffect(() => {
     init();
-  }, [])
+  }, []);
 
   const init = useCallback(async () => {
     try {
       const res = await getBasketInfo(basketInfo.bkt_id);
       await setInviteCode(res.joinCode);
-      console.log(res, "바스켓 조회")
+      console.log(res, '바스켓 조회');
     } catch (e) {
-      console.log(e, "ERROR IN BASKET INVITE")
+      console.log(e, 'ERROR IN BASKET INVITE');
     }
   });
 
   const copyInviteCode = useCallback(() => {
     Clipboard.setString(inviteCode);
     // Alert.alert("초대코드가 복사되었습니다", "스낵바로 바꿔보기");
-    setOnCopied(true)
+    setOnCopied(true);
   });
 
   const onDismissSnackBar = useCallback(() => {
-    setOnCopied(false)
-  })
+    setOnCopied(false);
+  });
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Image source={require('../assets/basket_emoji.png')} style={styles.titleImg}/>
-        <Text style={{...styles.title, marginTop: 16}}>초대코드를 복사하여</Text>
-        <Text style={{...styles.title, marginBottom: 20}}>친구를 초대해보세요!</Text>
+        <Image
+          source={require('../assets/basket_emoji.png')}
+          style={styles.titleImg}
+        />
+        <Text style={{...styles.title, marginTop: 16}}>
+          초대코드를 복사하여
+        </Text>
+        <Text style={{...styles.title, marginBottom: 20}}>
+          친구를 초대해보세요!
+        </Text>
       </View>
       <View style={styles.inviteContainer}>
-        <TextInput value={inviteCode} editable={false} selectTextOnFocus={true} style={styles.inviteText}/>
-        <FontAwesome5 name="link" style={styles.linkIcon}/>
+        <TextInput
+          value={inviteCode}
+          editable={false}
+          selectTextOnFocus={true}
+          style={styles.inviteText}
+        />
+        <FontAwesome5 name="link" style={styles.linkIcon} />
       </View>
       <Pressable onPress={copyInviteCode} style={styles.inviteBtn}>
         <Text style={styles.inviteBtnText}>초대코드 복사</Text>
@@ -56,10 +76,9 @@ function BasketInvite({route}) {
         action={{
           label: '확인',
           onPress: () => {
-            setOnCopied(false)
-          }
-        }}
-      >
+            setOnCopied(false);
+          },
+        }}>
         초대코드가 복사되었습니다
       </Snackbar>
     </View>
@@ -71,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   titleImg: {
     width: 60,
@@ -83,10 +102,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   title: {
-    fontWeight: "900",
+    fontWeight: '900',
     fontSize: 22,
     color: '#000',
     textAlign: 'center',
+    fontFamily: 'Pretendard-Light',
   },
   inviteContainer: {
     backgroundColor: '#F5F4F4',
@@ -98,6 +118,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 40,
     fontSize: 16,
+    fontFamily: 'Pretendard-Light',
   },
   linkIcon: {
     position: 'absolute',
@@ -115,7 +136,8 @@ const styles = StyleSheet.create({
     color: '#0094FF',
     fontWeight: 'bold',
     fontSize: 12,
-  }
-})
+    fontFamily: 'Pretendard-Light',
+  },
+});
 
 export default BasketInvite;

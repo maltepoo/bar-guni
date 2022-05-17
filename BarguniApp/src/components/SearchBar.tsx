@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 6,
     paddingLeft: 40,
+    fontFamily: 'Pretendard-Light',
   },
 });
 

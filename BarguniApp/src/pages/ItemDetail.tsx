@@ -89,11 +89,13 @@ function ItemDetail() {
           </View>
         </View>
         <View style={Style.buttonContent}>
-          <TouchableOpacity style={Style.button} onPress={goModify}>
-            <Text style={Style.buttonTitle}>수정</Text>
+          <TouchableOpacity
+            style={{...Style.button, backgroundColor: '#0094FF'}}
+            onPress={goModify}>
+            <Text style={{...Style.buttonTitle, color: '#ffffff'}}>수정</Text>
           </TouchableOpacity>
           <TouchableOpacity style={Style.button} onPress={removeItem}>
-            <Text style={Style.buttonTitle}>삭제</Text>
+            <Text style={{...Style.buttonTitle, color: '#000'}}>삭제</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -162,6 +164,7 @@ const Style = StyleSheet.create({
   descriptionBox: {
     marginLeft: '2%',
     marginTop: '3%',
+    marginBottom: '3%',
     width: '88%',
     backgroundColor: '#F5F4F4',
     borderRadius: 40,

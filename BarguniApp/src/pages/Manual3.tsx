@@ -17,63 +17,63 @@ function Manual() {
       </View>
       <View style={Style.contentBox}>
         <Text style={Style.content}>
-          깜빡 잊고 유통기한을 넘겨 물건을 버려보신적이
+          깜빡 잊고 유통기한을 넘겨 물건을 버린 적이 있나요?
         </Text>
         <Text style={Style.content}>
-          있지 않으신가요? 바구니에서는 유통기한이
+          바구니에서는 유통기한이 임박한 상품에 대해
         </Text>
-        <Text style={Style.content}>
-          임박한 상품들에 대한 알림을 보내드려요
-        </Text>
+        <Text style={Style.content}>알림을 보내드려요</Text>
       </View>
       <View style={Style.imageBox}>
-        <Button title={'바구니 시작하기'} onPress={next} />
+        <Image style={Style.image} source={require('../assets/expired.png')} />
       </View>
+      <Button
+        title={'바구니 시작하기'}
+        titleStyle={Style.buttonTitle}
+        buttonStyle={Style.button}
+        onPress={next}
+      />
     </View>
   );
 }
 const Style = StyleSheet.create({
-  button: {
-    backgroundColor: '#F5F4F4',
-    borderRadius: 10,
-    paddingHorizontal: 25,
-    paddingVertical: 15,
-    marginTop: '8%',
-    marginLeft: '65%',
-  },
-  buttonTitle: {
-    color: '#2B3944',
+  background: {
+    backgroundColor: 'white',
+    flex: 1,
   },
   headerBox: {
-    marginLeft: '4%',
+    flex: 1,
+    alignItems: 'center',
     marginTop: '20%',
   },
   header: {
     fontFamily: 'Pretendard-Bold',
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
   },
+  button: {
+    backgroundColor: '#32A3F5',
+  },
   contentBox: {
-    marginLeft: '4%',
-    marginTop: '4%',
+    flex: 1,
+    marginLeft: '5%',
   },
   content: {
     fontFamily: 'Pretendard-Light',
     fontSize: 15,
     color: 'gray',
   },
-  background: {
-    backgroundColor: 'white',
-    height: '100%',
-    flex: 1,
-  },
   imageBox: {
-    marginTop: '85%',
+    flex: 4,
+    alignItems: 'center',
   },
   image: {
     width: '70%',
     height: '60%',
     resizeMode: 'contain',
+  },
+  buttonTitle: {
+    color: 'white',
   },
 });
 

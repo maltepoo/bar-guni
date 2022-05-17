@@ -53,8 +53,8 @@ function HomeItems(props: HomeItem) {
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>아이템을 삭제합니다</Dialog.Title>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>취소</Button>
             <Button onPress={deleteItem}>삭제</Button>
+            <Button onPress={hideDialog}>취소</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -67,10 +67,11 @@ function HomeItems(props: HomeItem) {
         </View>
         <Pressable style={Style.row2} onPress={onClick}>
           <Text style={Style.date}>{item.name}</Text>
-          <Text style={Style.date2}>
-            {item.regDate.toString().substring(0, 10)}
-          </Text>
-          <Text style={Style.date2}>{item.category}</Text>
+          {/*<Text style={Style.date2}>*/}
+          {/*  {item.usedDate}*/}
+          {/*  {item.regDate.toString().substring(0, 10)}*/}
+          {/*</Text>*/}
+          {/*<Text style={Style.date2}>카테고리 : {item.category}</Text>*/}
         </Pressable>
         <View style={Style.row3}>
           <Text style={Style.dDay}>
@@ -141,10 +142,10 @@ function HomeItems(props: HomeItem) {
           </View>
         */}
       </View>
-      <View style={{alignItems: 'center'}}>
+      <View style={{alignItems: 'center', marginTop: '1%'}}>
         <Divider
           width={1}
-          style={{marginTop: 10, width: '93%', alignItems: 'center'}}
+          style={{width: '93%', alignItems: 'center'}}
           color="#ECECEC"
         />
       </View>
@@ -156,7 +157,7 @@ function HomeItems(props: HomeItem) {
 const Style = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   row: {
     width: '20%',
@@ -169,8 +170,8 @@ const Style = StyleSheet.create({
     width: '32%',
   },
   row3: {
-    backgroundColor: '#ECECEC',
-    borderRadius: 30,
+    // backgroundColor: '#ECECEC',
+    // borderRadius: 30,
     width: '35%',
     marginTop: 20,
     height: 70,
@@ -183,9 +184,12 @@ const Style = StyleSheet.create({
   },
   date: {
     fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'Pretendard-Black',
+    // fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     marginTop: 25,
+    alignItems: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
     // marginLeft: 4,
     color: 'black',
   },
@@ -208,18 +212,19 @@ const Style = StyleSheet.create({
     height: 13,
   },
   dDay: {
-    marginTop: 15,
+    // marginTop: 15,
     marginLeft: 15,
     textAlign: 'center',
+    alignContent: 'center',
     marginRight: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    fontFamily: 'Pretendard-Black',
+    fontFamily: 'Pretendard-Bold',
   },
   lifetime: {
     textAlign: 'center',
     fontSize: 10,
-    fontFamily: 'Pretendard-Light',
+    fontFamily: 'Pretendard-Bold',
     fontWeight: 'bold',
   },
 });

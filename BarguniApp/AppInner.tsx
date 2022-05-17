@@ -54,6 +54,7 @@ import ItemDetail from './src/pages/ItemDetail';
 import ItemModify from './src/pages/ItemModify';
 import ReceiptRegister from './src/pages/ReceiptRegister';
 import RegisterList from './src/pages/RegisterList';
+import {getProfile} from './src/api/user';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -94,15 +95,17 @@ function AppInner() {
   useEffect(() => {
     const init = async () => {
       try {
-        const token = await EncryptedStorage.getItem('accessToken');
+        const token = (await EncryptedStorage.getItem('accessToken')) as string;
         console.log(token);
-        console.log(!token, 'token 확인!!!!!!!!!!!');
+        setJwtToken(token);
+        console.log(token, 'token 확인!!!!!!!!!!!');
         if (!token) {
           SplashScreen.hide();
           return;
         }
-        const user = {name: '', email: '', accessToken: token};
-        setJwtToken(token);
+        const res = await getProfile();
+        console.log(res, 'userInfo');
+        const user = {name: res.name, email: res.email, accessToken: token};
         const alramSetting = await EncryptedStorage.getItem('hour');
         console.log('초기', alramSetting);
         if (alramSetting === null) {

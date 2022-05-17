@@ -18,11 +18,11 @@ function SearchResult({route, navigation}) {
       const res = await getItems(-1);
       const newRes = res.filter(
         item =>
-          item.name.includes(searchText) ||
-          item.content.includes(searchText) ||
-          item.category.includes(searchText),
+          !!item.name &&
+          (item.name.includes(searchText) ||
+            item.content.includes(searchText) ||
+            item.category.includes(searchText)),
       );
-      console.log(newRes, '바꾸기');
       setResult(newRes);
     } catch (error) {
       console.log(error, 'getItem error');
@@ -36,17 +36,20 @@ function SearchResult({route, navigation}) {
           <Pressable style={{display: 'flex', flexDirection: 'row'}}>
             <Image
               source={{uri: `http://k6b202.p.ssafy.io:8000${item.pictureUrl}`}}
-              style={{backgroundColor: 'yellow', width: 100, height: 100}}
+              style={{width: 100, height: 100, borderRadius: 8}}
               resizeMode="cover"
             />
-            <View>
-              <Text>{item.category} 카테고리</Text>
-              <Text>{item.name} 제품명</Text>
-              <Text>{item.content} 설명</Text>
-              <Text>{item.regDate} 등록날짜</Text>
-              <Text>{item.shelfLife} 유통기한</Text>
+            <View style={{marginLeft: 10}}>
+              <Text>{item.category}</Text>
+              <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 20}}>
+                {item.name}
+              </Text>
+              <Text style={{fontSize: 12}}>{item.content}</Text>
+              <Text style={{fontSize: 14}}>{item.regDate} 등록</Text>
+              <Text style={{fontSize: 14}}>{item.shelfLife} 까지</Text>
             </View>
           </Pressable>
+          <View style={styles.line} />
         </View>
       );
     },
@@ -76,8 +79,14 @@ function NoResult() {
 
 const styles = StyleSheet.create({
   resultContainer: {
-    backgroundColor: 'pink',
-    marginVertical: 4,
+    // backgroundColor: 'pink',
+    borderRadius: 8,
+    marginVertical: 6,
+  },
+  line: {
+    height: 0.7,
+    backgroundColor: '#F5F4F4',
+    marginTop: 8,
   },
 });
 

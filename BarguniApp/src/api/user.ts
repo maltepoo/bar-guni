@@ -35,7 +35,7 @@ async function changeName(newName: string): Promise<User> {
 
 async function signOut(): Promise<User> {
   const loginAxios = LoginApiInstance();
-  return (await loginAxios.delete(`/user`)).data.data;
+  return (await loginAxios.delete('/user')).data.data;
 }
 
 async function getBaskets(): Promise<Basket[]> {

@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {Button, Text} from '@rneui/base';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
@@ -32,16 +32,17 @@ function Manual() {
   );
 }
 const Style = StyleSheet.create({
-  button: {
-    backgroundColor: '#F5F4F4',
-    borderRadius: 10,
-    paddingHorizontal: 20,
+  background: {
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'space-between',
   },
-  buttonTitle: {
-    color: '#2B3944',
+  button: {
+    backgroundColor: '#32A3F5',
   },
   headerBox: {
-    marginLeft: '4%',
+    flex: 1,
+    alignItems: 'center',
     marginTop: '20%',
   },
   header: {
@@ -50,26 +51,25 @@ const Style = StyleSheet.create({
     fontWeight: 'bold',
   },
   contentBox: {
-    marginLeft: '4%',
-    marginTop: '4%',
+    flex: 1,
+    marginLeft: '5%',
   },
   content: {
     fontFamily: 'Pretendard-Light',
     fontSize: 15,
     color: 'gray',
   },
-  background: {
-    backgroundColor: 'white',
-    flex: 1,
-    justifyContent: 'space-between',
-  },
   imageBox: {
+    flex: 4,
     alignItems: 'center',
   },
   image: {
     width: '70%',
     height: '60%',
     resizeMode: 'contain',
+  },
+  buttonTitle: {
+    color: 'white',
   },
 });
 
