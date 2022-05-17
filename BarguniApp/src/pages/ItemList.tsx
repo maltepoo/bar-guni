@@ -426,7 +426,7 @@ const Style = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    height: '160%',
+    height: '175%',
     alignItems: 'center',
   },
   topText: {
@@ -473,18 +473,19 @@ const Style = StyleSheet.create({
   selectButton: {
     backgroundColor: 'rgba(0, 148, 255, 0.6)',
     marginTop: 3,
-    marginLeft: 4,
+    marginLeft: 7,
     // borderWidth: 1,
     borderColor: 'rgb(0,148,255)',
     height: 30,
     borderRadius: 20,
+    marginRight: 7,
   },
   selectButtonText: {
     color: 'black',
     alignItems: 'center',
     height: 20,
     fontSize: 13,
-    fontFamily: 'Pretendard-Light',
+    fontFamily: 'Pretendard-Bold',
   },
   category: {
     flexDirection: 'row',
