@@ -35,6 +35,11 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
   }, []);
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{...styles.button, backgroundColor: '#c4c4c4', marginTop: '55%'}}
+        onPress={byFreeReceipt}>
+        <Text>영수증 등록(무료)</Text>
+      </TouchableOpacity>
       {adminList.includes(email) ? (
         <TouchableOpacity
           style={{
@@ -47,12 +52,6 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
       ) : (
         <></>
       )}
-
-      <TouchableOpacity
-        style={{...styles.button, backgroundColor: '#c4c4c4', marginTop: '55%'}}
-        onPress={byFreeReceipt}>
-        <Text>영수증 등록(무료)</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={byBarcode}>
         <Text style={styles.text}>바코드 등록</Text>
       </TouchableOpacity>
