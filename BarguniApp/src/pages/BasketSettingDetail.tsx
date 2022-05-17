@@ -128,8 +128,13 @@ function BasketSettingDetail({route}) {
 
   return (
     <ScrollView style={style.container}>
-      <Text style={style.title}>바구니 이름</Text>
-      <View>
+      <View
+        style={{
+          backgroundColor: '#F5F4F4',
+          borderRadius: 100,
+          paddingVertical: 6,
+          paddingLeft: 15,
+        }}>
         {checked ? (
           <View style={style.row}>
             <Text style={style.top}>{bktname.replace(/\"/gi, '')}</Text>
@@ -142,30 +147,27 @@ function BasketSettingDetail({route}) {
         ) : (
           <View style={style.row}>
             <TextInput
-              style={style.top}
+              style={style.top2}
               placeholder="바구니 이름"
               onChangeText={handleNewBasketName}
               value={newBasketName}
             />
             <TouchableOpacity style={style.te} onPress={changeBasketName}>
-              <Text style={style.top}>완료</Text>
+              <Text style={style.submit}>완료</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
-      <View style={style.line} />
-
-      <Text style={style.title}>바구니 참여자 목록 </Text>
+      <Text style={style.left}>바구니 참여자 목록 </Text>
       <Text
         style={{
-          marginLeft: '10%',
           fontFamily: 'Pretendard-Light',
           color: 'black',
-          fontSize: 20,
+          marginTop: 10,
         }}>
         {basketMembers.map((item, index) => (
           <>
-            <FontAwesomeIcon name="user-circle" size={20} />
+            <FontAwesomeIcon name="user-circle" />
             <Text>
               {' '}
               {item.name} {index !== basketMembers.length - 1 ? ',' : ''}
@@ -181,7 +183,9 @@ function BasketSettingDetail({route}) {
         <TouchableOpacity
           style={style.deleteButton}
           onPress={handleDeleteBasket}>
-          <Text style={style.buttonTitle}>바구니 삭제하기</Text>
+          <Text style={{...style.buttonTitle, color: '#A09F9F'}}>
+            바구니 삭제하기
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -190,81 +194,107 @@ function BasketSettingDetail({route}) {
 const style = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    marginLeft: '10%',
-    marginBottom: '4%',
   },
   row2: {
     flexDirection: 'row',
-    marginLeft: '10%',
-    marginTop: '10%',
+    marginTop: 20,
   },
   buttonTitle: {
-    fontSize: 15,
+    fontSize: 16,
     color: 'white',
     textAlign: 'center',
     marginVertical: '5%',
-    fontWeight: 'bold',
   },
   title: {
+    // paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
     paddingHorizontal: 20,
+    paddingTop: 10,
+    // backgroundColor: 'orange',
   },
   deleteButton: {
-    backgroundColor: 'red',
-    width: '40%',
-    marginRight: '8%',
-    borderRadius: 10,
+    backgroundColor: '#F5F4F4',
+    flex: 1,
+    borderRadius: 100,
+    paddingVertical: 6,
+    // width: '40%',
+    // marginRight: '8%',
+    // borderRadius: 10,
   },
   inviteButton: {
-    backgroundColor: 'blue',
-    width: '40%',
-    marginRight: '8%',
-    borderRadius: 10,
+    backgroundColor: '#0094FF',
+    flex: 1,
+    borderRadius: 100,
+    marginRight: 10,
+    paddingVertical: 6,
+    // width: '40%',
+    // marginRight: '8%',
+    // borderRadius: 10,
   },
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingTop: 20,
     // alignItems: 'center',
   },
   line: {
     height: 0.7,
-    backgroundColor: '#F5F4F4',
-    marginTop: '5%',
-    marginBottom: '5%',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    marginTop: 30,
   },
   left: {
-    width: '35%',
-    fontFamily: 'Pretendard-Light',
-    fontSize: 15,
+    // width: '35%',
+    fontFamily: 'Pretendard-SemiBold',
+    fontSize: 16,
     color: 'black',
-    marginLeft: '7%',
-    marginTop: '3%',
-    marginBottom: '2%',
+    marginTop: 18,
   },
   right: {
-    width: '35%',
+    // width: '35%',
     fontFamily: 'Pretendard-Light',
-    fontSize: 15,
+    fontSize: 16,
     color: 'black',
-    marginTop: '3%',
-    marginBottom: '2%',
+    marginVertical: 10,
   },
   picture: {
     width: 20,
     height: 20,
-    marginLeft: '5%',
-    alignContent: 'flex-end',
+    // marginLeft: '5%',
+    // alignContent: 'flex-end',
+    position: 'absolute',
+    right: 15,
+    top: 4,
   },
   top: {
-    fontFamily: 'Pretendard-Light',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 20,
     color: 'black',
-    marginleft: '5%',
+    // marginleft: '5%',
+    padding: 0,
   },
-  te: {margin: '6%', alignItems: 'flex-end'},
+  top2: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 20,
+    color: 'black',
+    padding: 0,
+  },
+  te: {
+    position: 'absolute',
+    backgroundColor: '#0094FF',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 100,
+    right: 0,
+    top: -6,
+  },
+  submit: {
+    fontSize: 18,
+    color: '#fff',
+  },
 });
 export default BasketSettingDetail;

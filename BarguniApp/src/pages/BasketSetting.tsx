@@ -79,8 +79,23 @@ function BasketSetting() {
 
   return (
     <ScrollView style={style.container}>
-      <Text style={style.title}>바구니 참여</Text>
-      <View style={{alignItems: 'center'}}>
+      {/* <Text style={style.title}>바구니 참여</Text> */}
+      <View
+        style={{
+          alignItems: 'center',
+          padding: 20,
+          margin: 20,
+          borderRadius: 8,
+          backgroundColor: '#fff',
+          shadowColor: 'rgba(0,0,0,0.4)',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3.84,
+          elevation: 10,
+        }}>
         <TextInput
           value={inviteCode}
           onChangeText={handleInputChange}
@@ -100,8 +115,6 @@ function BasketSetting() {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={style.line} />
-
       <Text style={style.title}>바구니 목록</Text>
       <FlatList data={basketList} renderItem={renderBasketList} />
     </ScrollView>
