@@ -43,7 +43,7 @@ function BasketSetting() {
                 color: 'black',
                 fontFamily: 'Pretendard-Light',
                 marginLeft: '10%',
-                marginBottom: '3%',
+                marginBottom: '4%',
               }}>
               {item.bkt_name}
             </Text>
@@ -128,25 +128,24 @@ const style = StyleSheet.create({
     // alignItems: 'center',
   },
   title: {
-    // paddingLeft: 10,
-    paddingTop: 10,
-    marginBottom: 10,
+    marginTop: '4%',
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    // backgroundColor: 'orange',
+    marginBottom: '4%',
   },
   line: {
     height: 0.7,
     backgroundColor: '#F5F4F4',
-    marginTop: 30,
+    marginTop: '5%',
   },
   listline: {
-    height: 0.7,
+    height: 1.7,
+    width: '80%',
+    alignSelf: 'center',
     backgroundColor: '#F5F4F4',
-    // marginTop: 30,
+    marginBottom: '4%',
   },
 });
 export default BasketSetting;
