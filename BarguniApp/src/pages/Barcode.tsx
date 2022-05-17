@@ -26,8 +26,11 @@ function Barcode({navigation}: BarcodeScreenProp) {
       console.log(res);
       navigation.navigate('Register', res);
     } catch (e: AxiosError | any) {
+      if (e.response.data.code === 'P001') {
+        Alert.alert('조회 실패', '죄송합니다.\n바코드 목록에 없는 제품입니다.');
+      }
       console.log(e);
-      console.log(e.code);
+      console.log(e.response);
     }
     Alert.alert('QR Code', event.nativeEvent.codeStringValue, [
       {text: 'OK', onPress: () => setScaned(true)},
