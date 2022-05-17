@@ -18,6 +18,7 @@ import com.ssafy.barguni.api.item.vo.ItemPostReq;
 import com.ssafy.barguni.api.item.vo.ReceiptItemRes;
 import com.ssafy.barguni.api.product.ProductService;
 import com.ssafy.barguni.api.user.UserBasketService;
+import com.ssafy.barguni.common.auth.AccountUserDetails;
 import com.ssafy.barguni.common.util.ClovaOcrUtil;
 import com.ssafy.barguni.common.util.ImageUtil;
 import com.ssafy.barguni.api.product.ProductRepository;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,6 +89,12 @@ public class ItemService {
     }
 
     public Item changeItem(Long id, ItemPostReq req) {
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (!canUserChangeItem(userDetails.getUserId(), id)){
+            throw new ItemException(new ErrorResVO(ErrorCode.ITEM_FORBIDDEN));
+        }
+
         Item item = itemRepository.getById(id);
 
 
@@ -121,6 +129,12 @@ public class ItemService {
     }
 
     public Item changeStatus(Long id, Boolean used) {
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (!canUserChangeItem(userDetails.getUserId(), id)){
+            throw new ItemException(new ErrorResVO(ErrorCode.ITEM_FORBIDDEN));
+        }
+
         Item item = itemRepository.getById(id);
         item.setUsed(used);
         if (used) {
@@ -133,6 +147,13 @@ public class ItemService {
 
     public void deleteById(Long id) {
         Item item = itemRepository.findWithPictureById(id);
+
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        if (!canUserChangeItem(userDetails.getUserId(), id)){
+            throw new ItemException(new ErrorResVO(ErrorCode.ITEM_FORBIDDEN));
+        }
+
         // alert 삭제
         alertRepository.deleteByItemId(id);
         // item 삭제

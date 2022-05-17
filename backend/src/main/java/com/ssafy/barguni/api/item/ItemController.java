@@ -4,6 +4,7 @@ import com.ssafy.barguni.api.basket.service.BasketService;
 import com.ssafy.barguni.api.error.ErrorCode;
 import com.ssafy.barguni.api.error.ErrorResVO;
 import com.ssafy.barguni.api.error.Exception.BasketException;
+import com.ssafy.barguni.api.error.Exception.ItemException;
 import com.ssafy.barguni.api.item.vo.*;
 import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.user.UserBasketService;
@@ -94,12 +95,6 @@ public class ItemController {
             @PathVariable @Parameter Long itemId, @RequestBody @Parameter ItemPostReq req) {
         ResVO<ItemRes> result = new ResVO<>();
         HttpStatus status;
-
-        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-        if (!itemService.canUserChangeItem(userDetails.getUserId(), itemId)){
-            throw new BasketException(new ErrorResVO(ErrorCode.BASKET_FORBIDDEN));
-        }
 
         Item item = itemService.changeItem(itemId, req);
         result.setData(new ItemRes(item));

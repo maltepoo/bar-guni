@@ -34,7 +34,8 @@ public enum ErrorCode {
 
     PRODUCT_CODE_NOT_FOUND("저희가 사용하는 바코드 목록에 없는 제품입니다.", "P001", HttpStatus.NOT_FOUND),
 
-    ITEM_RECEIPT_ERROR("영수증  인식이 실패했습니다.", "I001", HttpStatus.BAD_REQUEST)
+    ITEM_FORBIDDEN("접근할 수 없는 아이템입니다.", "I001", HttpStatus.FORBIDDEN),
+    ITEM_RECEIPT_ERROR("영수증  인식이 실패했습니다.", "I002", HttpStatus.BAD_REQUEST)
     ;
 
     private final String message;
