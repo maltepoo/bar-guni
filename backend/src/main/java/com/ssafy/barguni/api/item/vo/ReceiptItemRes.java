@@ -13,4 +13,6 @@ public class ReceiptItemRes {
 //        if(picture != null)
 //            this.pictureUrl = picture.getPicUrl();
     }
+
+
 }
