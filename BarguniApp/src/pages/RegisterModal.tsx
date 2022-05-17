@@ -37,13 +37,13 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
       <TouchableOpacity
         style={{...styles.button, backgroundColor: '#c4c4c4', marginTop: '55%'}}
         onPress={byReceipt}>
-        <Text style={{color: '#FFFFFF'}}>영수증 등록</Text>
+        <Text style={styles.text}>영수증 등록</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={byBarcode}>
-        <Text style={{color: '#FFFFFF'}}>바코드 등록</Text>
+        <Text style={styles.text}>바코드 등록</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={bySelf}>
-        <Text style={{color: '#FFFFFF'}}>직접 등록</Text>
+        <Text style={styles.text}>직접 등록</Text>
       </TouchableOpacity>
     </View>
   );
@@ -64,5 +64,6 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 80,
   },
+  text: {color: '#FFFFFF', fontFamily: 'Pretendard-Bold'},
 });
 export default RegisterModal;

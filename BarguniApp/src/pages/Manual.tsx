@@ -37,6 +37,28 @@ const Style = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
+  button: {
+    backgroundColor: '#32A3F5',
+  },
+  headerBox: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: '20%',
+  },
+  header: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  contentBox: {
+    flex: 1,
+    marginLeft: '5%',
+  },
+  content: {
+    fontFamily: 'Pretendard-Light',
+    fontSize: 15,
+    color: 'gray',
+  },
   imageBox: {
     flex: 4,
     alignItems: 'center',
