@@ -9,15 +9,12 @@ import com.ssafy.barguni.api.common.ResVO;
 import com.ssafy.barguni.api.user.UserBasketService;
 import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
-import com.ssafy.barguni.common.util.ClovaOcrUtil;
-import com.ssafy.barguni.common.util.SocialLoginType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -221,25 +218,24 @@ public class ItemController {
     }
 
     @PostMapping("/receipt")
-    @Operation(summary = "영수증 OCR 진행", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
+    @Operation(summary = "영수증 OCR 진행(클로바)", description = "영수증 이미지를 보내면 구매한 상품들의 정보를 보내준다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<ReceiptResVO> clovaOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
+    public ResponseEntity<ReceiptResVO> useOcr(@RequestBody @Parameter(description = "이미지") MultipartFile receipt) throws Exception {
         ReceiptResVO result;
         HttpStatus status = null;
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        if (userDetails.getUserId() != 479l) {
-            result = new ReceiptResVO(null);
-            result.setMessage("아직 테스트 중인 기능입니다.");
-            return new ResponseEntity<ReceiptResVO>(result, status);
+        if (userDetails.getUserId() == 479l) {
+            result = new ReceiptResVO(itemService.readReceiptByClova(receipt));
+        } else {
+            result = new ReceiptResVO(itemService.readReceiptByFlask(receipt));
         }
 
-        result = new ReceiptResVO(itemService.readReceipt(receipt));
         result.setMessage("영수증 분석 성공");
         status = HttpStatus.OK;
 
