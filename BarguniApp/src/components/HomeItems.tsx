@@ -53,8 +53,8 @@ function HomeItems(props: HomeItem) {
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>아이템을 삭제합니다</Dialog.Title>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>취소</Button>
             <Button onPress={deleteItem}>삭제</Button>
+            <Button onPress={hideDialog}>취소</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -142,7 +142,7 @@ function HomeItems(props: HomeItem) {
           </View>
         */}
       </View>
-      <View style={{alignItems: 'center'}}>
+      <View style={{alignItems: 'center', marginTop: '1%'}}>
         <Divider
           width={1}
           style={{width: '93%', alignItems: 'center'}}
@@ -184,8 +184,8 @@ const Style = StyleSheet.create({
   },
   date: {
     fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'Pretendard-Black',
+    // fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     marginTop: 25,
     alignItems: 'center',
     alignContent: 'center',
@@ -219,12 +219,12 @@ const Style = StyleSheet.create({
     marginRight: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    fontFamily: 'Pretendard-Black',
+    fontFamily: 'Pretendard-Bold',
   },
   lifetime: {
     textAlign: 'center',
     fontSize: 10,
-    fontFamily: 'Pretendard-Light',
+    fontFamily: 'Pretendard-Bold',
     fontWeight: 'bold',
   },
 });

@@ -10,14 +10,16 @@ import {
 import AlarmItem from '../components/AlarmItem';
 import PushNotification from 'react-native-push-notification';
 import {AlarmI, changeAlarm, getAlarms} from '../api/basket';
-import {Button, Dialog, Portal, Snackbar} from "react-native-paper";
-import AntDesign from "react-native-vector-icons/AntDesign";
+import {Button, Dialog, Portal, Snackbar} from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function Alarm() {
   const [alarms, setAlarms] = useState([] as AlarmI[]);
   const [visible, setVisible] = useState(false);
 
-  const onDismissSnackBar = useCallback(() => {setVisible(false)});
+  const onDismissSnackBar = useCallback(() => {
+    setVisible(false);
+  });
 
   const reloadAlarm = useCallback(async () => {
     const res = await getAlarms();
@@ -34,7 +36,9 @@ function Alarm() {
   );
   const renderItem = useCallback(
     ({item}: {item: AlarmI}) => {
-      return <AlarmItem item={item} remove={removeAlarm} reload={reloadAlarm} />;
+      return (
+        <AlarmItem item={item} remove={removeAlarm} reload={reloadAlarm} />
+      );
     },
     [removeAlarm],
   );
@@ -54,7 +58,11 @@ function Alarm() {
     <View style={Style.alarmContainer}>
       <View style={{alignItems: 'center'}}>
         <Text style={Style.content}>
-          읽지않은 알림 <Text style={Style.count}>{alarms.filter(item => item.status === 'UNCHECKED').length}</Text>개
+          읽지않은 알림{' '}
+          <Text style={Style.count}>
+            {alarms.filter(item => item.status === 'UNCHECKED').length}
+          </Text>
+          개
         </Text>
       </View>
       <Pressable onPress={goBasket}>
@@ -66,7 +74,7 @@ function Alarm() {
         action={{
           label: '확인',
           onPress: () => {
-            onDismissSnackBar
+            onDismissSnackBar;
           },
         }}>
         알람이 삭제되었습니다.
@@ -94,6 +102,7 @@ const Style = StyleSheet.create({
     marginVertical: 10,
     fontWeight: '500',
     color: '#000',
+    fontFamily: 'Pretendard-Light',
   },
   line: {
     width: '100%',
