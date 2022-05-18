@@ -19,10 +19,6 @@ function BasketInvite({route}) {
   const [inviteCode, setInviteCode] = useState('join code here');
   const [onCopied, setOnCopied] = useState(false);
 
-  useEffect(() => {
-    init();
-  }, []);
-
   const init = useCallback(async () => {
     try {
       const res = await getBasketInfo(basketInfo.bkt_id);
@@ -31,17 +27,20 @@ function BasketInvite({route}) {
     } catch (e) {
       console.log(e, 'ERROR IN BASKET INVITE');
     }
-  });
+  }, [basketInfo.bkt_id]);
+  useEffect(() => {
+    init();
+  }, [init]);
 
   const copyInviteCode = useCallback(() => {
     Clipboard.setString(inviteCode);
     // Alert.alert("초대코드가 복사되었습니다", "스낵바로 바꿔보기");
     setOnCopied(true);
-  });
+  }, [inviteCode]);
 
   const onDismissSnackBar = useCallback(() => {
     setOnCopied(false);
-  });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -64,7 +63,7 @@ function BasketInvite({route}) {
           selectTextOnFocus={true}
           style={styles.inviteText}
         />
-        <FontAwesome5 name="link" style={styles.linkIcon} />
+        <FontAwesome5 name="link" color={'#000'} style={styles.linkIcon} />
       </View>
       <Pressable onPress={copyInviteCode} style={styles.inviteBtn}>
         <Text style={styles.inviteBtnText}>초대코드 복사</Text>

@@ -11,7 +11,7 @@ function SearchResult({route, navigation}) {
   useEffect(() => {
     // TODO : searchText로 api 통신해서 검색 결과 받아서 뿌려주기
     getItemResults();
-  }, []);
+  }, [getItemResults]);
 
   const getItemResults = useCallback(async () => {
     try {
@@ -29,32 +29,29 @@ function SearchResult({route, navigation}) {
     }
   }, [searchText]);
 
-  const renderItem = useCallback(
-    ({item}) => {
-      return (
-        <View key={item.itemId} style={styles.resultContainer}>
-          <Pressable style={{display: 'flex', flexDirection: 'row'}}>
-            <Image
-              source={{uri: `http://k6b202.p.ssafy.io:8000${item.pictureUrl}`}}
-              style={{width: 100, height: 100, borderRadius: 8}}
-              resizeMode="cover"
-            />
-            <View style={{marginLeft: 10}}>
-              <Text>{item.category}</Text>
-              <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 20}}>
-                {item.name}
-              </Text>
-              <Text style={{fontSize: 12}}>{item.content}</Text>
-              <Text style={{fontSize: 14}}>{item.regDate} 등록</Text>
-              <Text style={{fontSize: 14}}>{item.shelfLife} 까지</Text>
-            </View>
-          </Pressable>
-          <View style={styles.line} />
-        </View>
-      );
-    },
-    [result],
-  );
+  const renderItem = useCallback(({item}) => {
+    return (
+      <View key={item.itemId} style={styles.resultContainer}>
+        <Pressable style={{display: 'flex', flexDirection: 'row'}}>
+          <Image
+            source={{uri: `http://k6b202.p.ssafy.io:8000${item.pictureUrl}`}}
+            style={{width: 100, height: 100, borderRadius: 8}}
+            resizeMode="cover"
+          />
+          <View style={{marginLeft: 10}}>
+            <Text>{item.category}</Text>
+            <Text style={{fontFamily: 'Pretendard-Bold', fontSize: 20}}>
+              {item.name}
+            </Text>
+            <Text style={{fontSize: 12}}>{item.content}</Text>
+            <Text style={{fontSize: 14}}>{item.regDate} 등록</Text>
+            <Text style={{fontSize: 14}}>{item.shelfLife} 까지</Text>
+          </View>
+        </Pressable>
+        <View style={styles.line} />
+      </View>
+    );
+  }, []);
 
   return (
     <View style={{flex: 1, paddingHorizontal: 20, backgroundColor: '#ffffff'}}>
@@ -71,8 +68,11 @@ function SearchResult({route, navigation}) {
 function NoResult() {
   return (
     <View style={{alignItems: 'center'}}>
-      <AntDesign name={'search1'} style={{fontSize: 30, marginTop: 160}} />
-      <Text style={{marginTop: 8}}>검색결과가 없습니다.</Text>
+      <AntDesign
+        name={'search1'}
+        style={{fontSize: 30, marginTop: 160, color: '#000'}}
+      />
+      <Text style={{marginTop: 8, color: '#000'}}>검색결과가 없습니다.</Text>
     </View>
   );
 }
