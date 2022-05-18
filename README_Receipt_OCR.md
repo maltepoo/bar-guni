@@ -67,9 +67,10 @@
 
         ```jsx
         Tesseract-OCR 과 EasyOCR 두 모델을 비교했다.
-        Tesseract-OCR/tessdata_best의 kor.traineddata와
-        EasyOCR의 korean_g2.pth, craft_mlt_25k.pth를
+
+        Tesseract-OCR/tessdata_best의 kor.traineddata와 EasyOCR의 korean_g2.pth를
         준비한 영수증 사진들을 이용해 테스트를 진행하였다.
+
         테스트 결과 Tesseract-OCR의 텍스트 인식이 더 정확하다고 판단하여 해당 모델을 선정하게 됐다.
         ```
 
@@ -77,8 +78,11 @@
 
         ```
         Colab 개발 환경에서 단어 5000개, 글자 2000개의 손글씩 이미지 데이터로 학습을 진행하였다.
+
         Iteration을 10000, 20000, 30000 으로 증가시키며 총 3번의 학습을 진행했다.
-        Iteration이 증가할 수 록 데이터에 대한 error rate는 감소하였지만 실제 결과는 나빠지는 오버피팅 현상이 발생하였고 학습을 중단하게 됐다.
+
+        Iteration이 증가할 수 록 데이터에 대한 error rate는 감소하였지만
+        실제 결과는 나빠지는 오버피팅 현상이 발생하였고 학습을 중단하게 됐다.
         ```
 
     3.  시행착오
