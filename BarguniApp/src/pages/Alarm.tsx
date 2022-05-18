@@ -50,6 +50,7 @@ function Alarm() {
       const res = await getAlarms();
       // const list = res.filter(item => item.status === 'UNCHECKED');
       setAlarms(res);
+      console.log(res);
     };
     init();
   }, []);
