@@ -8,6 +8,7 @@ export interface User {
   refreshToken: string;
   name: string;
   email: string;
+  alertTime: number;
   defaultBasket: DefaultBasket;
 }
 export enum SocialType {
@@ -44,9 +45,18 @@ async function getBaskets(): Promise<Basket[]> {
 }
 
 async function changeDefaultBasket(id: number) {
-  console.log(id, 'api ID');
   const loginAxios = LoginApiInstance();
   return (await loginAxios.put(`/user/basket/default/${id}`)).data.data;
+}
+
+async function sendFCMKey(id: string) {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.post(`/user/alert/key?alertApiKey=${id}`)).data.data;
+}
+
+async function changeAlaramTime(time: number) {
+  const loginAxios = LoginApiInstance();
+  return (await loginAxios.put(`/user/?alertTime=${time}`)).data.data;
 }
 
 export {
@@ -56,4 +66,6 @@ export {
   changeName,
   signOut,
   getBaskets,
+  sendFCMKey,
+  changeAlaramTime,
 };

@@ -42,7 +42,7 @@ import Barcode from './src/pages/Barcode';
 import SplashScreen from 'react-native-splash-screen';
 import KakaoSDK from '@actbase/react-kakaosdk';
 import Config from 'react-native-config';
-import {setJwtToken} from './src/api/instance';
+import {LoginApiInstance, setJwtToken} from './src/api/instance';
 import userSlice from './src/slices/user';
 import {useAppDispatch} from './src/store';
 import BasketInvite from './src/pages/BasketInvite';
@@ -54,7 +54,7 @@ import ItemDetail from './src/pages/ItemDetail';
 import ItemModify from './src/pages/ItemModify';
 import ReceiptRegister from './src/pages/ReceiptRegister';
 import RegisterList from './src/pages/RegisterList';
-import {getProfile} from './src/api/user';
+import {getProfile, sendFCMKey} from './src/api/user';
 import messaging from '@react-native-firebase/messaging';
 
 export type RootStackParamList = {
@@ -122,18 +122,19 @@ function AppInner() {
   }, [dispatch, navigation]);
 
   useEffect(() => {
-    async function getToken() {
+    async function sendToken() {
       try {
         if (!messaging().isDeviceRegisteredForRemoteMessages) {
           await messaging().registerDeviceForRemoteMessages();
         }
         const token = await messaging().getToken();
         console.log('phone token', token);
+        const res = await sendFCMKey(token);
       } catch (error) {
         console.error(error);
       }
     }
-    getToken();
+    sendToken();
   }, []);
 
   function BottomTab() {
