@@ -386,4 +386,27 @@ public class UserController {
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);
     }
+
+
+    @PostMapping("/alert/key")
+    @Operation(summary = "사용자 기본 바구니 변경", description = "사용자의 기본 바구니를 변경한다.(로그인필요)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Boolean>> setAlertApiKey(@RequestParam String alertApiKey){
+        ResVO<Boolean> result = new ResVO<>();
+        HttpStatus status = null;
+
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        userService.setAlertApiKey(userDetails.getUserId(), alertApiKey);
+
+        status = HttpStatus.OK;
+        result.setMessage("알람 api키 변경 성공");
+        result.setData(true);
+
+        return new ResponseEntity<ResVO<Boolean>>(result, status);
+    }
 }
