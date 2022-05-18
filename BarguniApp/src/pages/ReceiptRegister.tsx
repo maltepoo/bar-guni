@@ -15,7 +15,7 @@ import {fileApiInstance} from '../api/instance';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
 
-function ReceiptRegister(props) {
+function ReceiptRegister({route}) {
   const [image, setImage] = useState<{
     uri: string;
     name: string;
@@ -23,19 +23,22 @@ function ReceiptRegister(props) {
   }>();
   const [preview, setPreview] = useState<{uri: string}>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  console.log(route.params);
   const onResponse = useCallback(async response => {
-    console.log(response.width, response.height, response.exif);
+    console.log(response);
+    console.log(response.width, response.height, response.exif, 'response!!');
     setPreview({uri: `data:${response.mime};base64,${response.data}`});
     const orientation = (response.exif as any)?.Orientation;
     console.log('orientation', orientation);
     return ImageResizer.createResizedImage(
       response.path,
-      600,
-      600,
+      response.width,
+      response.height,
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
       100,
       0,
     ).then(r => {
+      console.log(r, 'resized');
       console.log(r.uri, r.name);
       setImage({
         uri: r.uri,
@@ -73,7 +76,10 @@ function ReceiptRegister(props) {
         formData.append('receipt', image);
         try {
           const axios = fileApiInstance();
-          const res = await axios.post('/item/receipt', formData);
+          const res = await axios.post(
+            `/item/receipt${route.params.service === 'clova' ? '/clova' : ''}`,
+            formData,
+          );
           console.log(res);
           console.log(new Date().getTime() - start_time.getTime());
           navigation.navigate('RegisterList', res.data.data);

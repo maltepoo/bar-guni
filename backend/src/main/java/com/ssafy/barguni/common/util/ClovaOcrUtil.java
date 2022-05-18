@@ -3,7 +3,10 @@ package com.ssafy.barguni.common.util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.http.HttpClient;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -13,16 +16,12 @@ import lombok.RequiredArgsConstructor;
 //import org.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.json.JSONException;
 
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +47,7 @@ public class ClovaOcrUtil {
     public void setSecretKey(String key) {secretKey = key;}
 
 
-    public String getOcr(MultipartFile multipartFile) {
+    public String getOcrByClova(MultipartFile multipartFile) {
         try {
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -120,6 +119,29 @@ public class ClovaOcrUtil {
             System.out.println("ocr 실패");
             return null;
         }
+    }
+
+    public String getOcrByFlask(MultipartFile multipartFile) throws IOException {
+        try {
+            Map<String, String> headers = new HashMap<>();
+            HttpPostMultipart multipart = new HttpPostMultipart("https://k6b202.p.ssafy.io:5000/", "utf-8", headers);
+
+            // multipartfile을 그냥 파일로 변환
+            String pathName = uploadFolder + multipartFile.getOriginalFilename();
+            File tmp = new File(pathName);
+            tmp.createNewFile();
+            FileOutputStream fos = new FileOutputStream(tmp);
+            fos.write(multipartFile.getBytes());
+            fos.close();
+
+            multipart.addFilePart("receipt", tmp);
+            String response = multipart.finish();
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

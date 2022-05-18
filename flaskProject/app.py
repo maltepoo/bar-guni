@@ -18,12 +18,13 @@ app.config['UPLOAD_FOLDER'] = './receipts'
 # filter_words = ["커피", "우유", "비빔면", "햄버거", "라면", "상추", "술", "포도", "돈까스", "김밥", "어니언", "초코", "사과", "카페", "치킨", "돈까스"]
 filter_word_set = get_filter_word_set()
 root = TrieNode()
+rvs_root = TrieNode()
 for word in filter_word_set:
     # 1글자 이상만 포함
     if(len(word) == 1):
         continue
     root.add(word,0)
-    root.add(word[::-1],0)
+    rvs_root.add(word[::-1],0)
 
 # 문자 or 숫자 or 공백 만 True
 def alnumOrSpace(c):
@@ -65,7 +66,7 @@ def barcode():  # put application's code here
         # 역순으로 검사
         r_word = word[::-1]
         while st_idx < len(r_word) and check == False:
-            check = root.search(r_word, st_idx)
+            check = rvs_root.search(r_word, st_idx)
 
         if(check == False):
             continue
@@ -133,7 +134,7 @@ def crop():  # put application's code here
             # 역순으로 검사
             r_word = word[::-1]
             while st_idx < len(r_word) and check == False:
-                check = root.search(r_word, st_idx)
+                check = rvs_root.search(r_word, st_idx)
 
             if(check == False):
                 continue
