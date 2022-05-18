@@ -46,4 +46,5 @@ public class AlertService {
     public void createAlertAfterExpiry(Item item) {
         alertRepository.save(new Alert(item, "의 유통기한이 지났습니다."));
     }
+
 }
