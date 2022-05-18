@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import HomeItems from '../components/HomeItems';
 import {Picker} from '@react-native-picker/picker';
 import {
+  Alert,
   FlatList,
   Pressable,
   ScrollView,
@@ -144,23 +145,34 @@ function ItemList() {
     init();
   }, [dispatch, isFocused, render, selectedBasket]);
   const addBasket = useCallback(async () => {
-    try {
-      await registerBasket(basketName);
-      const res = await getBaskets();
-      setBasket(res);
-      setBasketName('');
-      setBasketDialog(false);
-    } catch (e) {}
+    if (basketName) {
+      try {
+        await registerBasket(basketName);
+        const res = await getBaskets();
+        setBasket(res);
+        setBasketName('');
+        setBasketDialog(false);
+      } catch (e) {}
+    } else {
+      Alert.alert('바구니 생성 실패', '바구니 이름은 공백이 될 수 없습니다!');
+    }
   }, [basketName]);
 
   const addCategory = useCallback(async () => {
-    try {
-      await registerCategory(selectedBasket.bkt_id, categoryName);
-      const res = await getCategory(selectedBasket.bkt_id);
-      setCategory([{cateId: -1, name: '전체'}, ...res]);
-      setCategoryDialog(false);
-      setCategoryName('');
-    } catch (e) {}
+    if (categoryName) {
+      try {
+        await registerCategory(selectedBasket.bkt_id, categoryName);
+        const res = await getCategory(selectedBasket.bkt_id);
+        setCategory([{cateId: -1, name: '전체'}, ...res]);
+        setCategoryDialog(false);
+        setCategoryName('');
+      } catch (e) {}
+    } else {
+      Alert.alert(
+        '카테고리 생성실패',
+        '카테고리 이름은 공백이 될 수 없습니다!',
+      );
+    }
   }, [selectedBasket.bkt_id, categoryName, setCategory]);
 
   const changeBasket = useCallback(
@@ -226,12 +238,17 @@ function ItemList() {
           <View style={Style.buttonBox}>
             <Button
               title="삭제"
+              titleStyle={{color: '#A09F9F'}}
               onPress={removeItem}
               buttonStyle={Style.buttonBox2}
             />
           </View>
           <View style={Style.buttonBox}>
-            <Button title="취소" onPress={toggleDeleteDialog} />
+            <Button
+              title="취소"
+              onPress={toggleDeleteDialog}
+              buttonStyle={{backgroundColor: '#32A3F5'}}
+            />
           </View>
         </View>
       </Dialog>
@@ -268,8 +285,8 @@ function ItemList() {
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
         <Text style={Style.topText}>
-          <Text style={{color: count > 0 ? '#0094FF' : ''}}>{count}</Text>개가
-          있어요
+          <Text style={{color: count > 0 ? '#0094FF' : 'black'}}>{count}</Text>
+          개가 있어요
         </Text>
       </View>
       <Picker
@@ -347,23 +364,37 @@ function ItemList() {
             basket.map((item, index) => (
               <View style={Style.row} key={item.bkt_id}>
                 <Text style={Style.text}>{item.bkt_name}</Text>
-                <Pressable
-                  style={{maginRight: 6}}
-                  onPress={() => {
-                    setDefaultBasket(item.bkt_id).then();
-                  }}>
-                  {item.bkt_name === user.defaultBasket.name ? (
-                    <AntDesign name="star" size={18} />
-                  ) : (
-                    <AntDesign name="staro" size={18} />
-                  )}
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    showDeleteDialog(index, 'basket');
-                  }}>
-                  <AntDesign name={'delete'} size={18} />
-                </Pressable>
+                <View style={{flexDirection: 'row'}}>
+                  <Pressable
+                    style={{marginRight: 3}}
+                    onPress={() => {
+                      setDefaultBasket(item.bkt_id).then();
+                    }}>
+                    {item.bkt_name === user.defaultBasket.name ? (
+                      <AntDesign
+                        name="star"
+                        size={20}
+                        style={{color: '#FFE600'}}
+                      />
+                    ) : (
+                      <AntDesign
+                        name="staro"
+                        size={20}
+                        style={{color: '#989797'}}
+                      />
+                    )}
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      showDeleteDialog(index, 'basket');
+                    }}>
+                    <AntDesign
+                      name={'delete'}
+                      size={20}
+                      style={{color: '#989797'}}
+                    />
+                  </Pressable>
+                </View>
               </View>
             ))
           ) : (
@@ -375,8 +406,13 @@ function ItemList() {
           onChangeText={onChangeBasketName}
           style={Style.newBasketInput}
           placeholder="생성할 바구니 이름을 입력하세요"
+          placeholderTextColor="#989797"
         />
-        <Button onPress={addBasket} title="완료" />
+        <Button
+          onPress={addBasket}
+          title="완료"
+          buttonStyle={{backgroundColor: '#32A3F5'}}
+        />
         <DeleteConfirm />
       </Dialog>
 
@@ -392,7 +428,11 @@ function ItemList() {
                     onPress={() => {
                       showDeleteDialog(index, 'category');
                     }}>
-                    <AntDesign name={'delete'} size={18} />
+                    <AntDesign
+                      name={'delete'}
+                      size={18}
+                      style={{color: '#989797'}}
+                    />
                   </Pressable>
                 </View>
               ) : (
@@ -409,7 +449,11 @@ function ItemList() {
           placeholder="카테고리 이름을 입력하세요"
           style={Style.newBasketInput}
         />
-        <Button onPress={addCategory} title="완료" />
+        <Button
+          onPress={addCategory}
+          title="완료"
+          buttonStyle={{backgroundColor: '#32A3F5'}}
+        />
         <DeleteConfirm />
       </Dialog>
     </View>
@@ -419,15 +463,17 @@ function ItemList() {
 const Style = StyleSheet.create({
   fontStyle: {
     fontFamily: 'Pretendard-Black',
+    color: 'black',
   },
   modal: {
-    position: 'absolute',
-    flex: 0.1,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    height: '160%',
-    alignItems: 'center',
+    // position: 'absolute',
+    // flex: 0.1,
+    // left: 0,
+    // right: 0,
+    // flexDirection: 'row',
+    // height: '160%',
+    // alignItems: 'center',
+    // backgroundColor: 'yellow',
   },
   topText: {
     marginLeft: 12,
@@ -498,12 +544,12 @@ const Style = StyleSheet.create({
     height: 100,
   },
   row: {
-    display: 'flex',
     flexDirection: 'row',
     marginBottom: 10,
+    justifyContent: 'space-between',
   },
   text: {
-    width: '80%',
+    color: 'black',
   },
   buttonBox: {
     marginRight: 20,
@@ -512,13 +558,14 @@ const Style = StyleSheet.create({
   buttonBox2: {
     marginRight: 20,
     width: '100%',
-    backgroundColor: 'red',
+    backgroundColor: '#F5F4F4',
   },
   newBasketInput: {
     backgroundColor: '#F5F4F4',
     borderRadius: 100,
     paddingLeft: 20,
     marginVertical: 16,
+    color: 'black',
   },
 });
 

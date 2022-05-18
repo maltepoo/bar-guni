@@ -12,7 +12,7 @@ function Manual() {
   return (
     <View style={Style.background}>
       <View style={Style.headerBox}>
-        <Text style={Style.header}>유통기한 임박 상품</Text>
+        <Text style={Style.header}>유통기한 임박 상품에 대한</Text>
         <Text style={Style.header}>알림을 보내드려요</Text>
       </View>
       <View style={Style.contentBox}>
@@ -20,9 +20,8 @@ function Manual() {
           깜빡 잊고 유통기한을 넘겨 물건을 버린 적이 있나요?
         </Text>
         <Text style={Style.content}>
-          바구니에서는 유통기한이 임박한 상품에 대해
+          바구니에서는 유통기한 임박상품 알림으로 까먹지 않게 도와줘요
         </Text>
-        <Text style={Style.content}>알림을 보내드려요</Text>
       </View>
       <View style={Style.imageBox}>
         <Image style={Style.image} source={require('../assets/expired.png')} />
@@ -40,23 +39,25 @@ const Style = StyleSheet.create({
   background: {
     backgroundColor: 'white',
     flex: 1,
-  },
-  headerBox: {
-    flex: 1,
-    alignItems: 'center',
-    marginTop: '20%',
-  },
-  header: {
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 30,
-    fontWeight: 'bold',
+    justifyContent: 'space-between',
   },
   button: {
     backgroundColor: '#32A3F5',
   },
+  headerBox: {
+    flex: 1,
+    marginLeft: 20,
+    marginTop: 60,
+  },
+  header: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 30,
+    flex: 1,
+  },
   contentBox: {
     flex: 1,
-    marginLeft: '5%',
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   content: {
     fontFamily: 'Pretendard-Light',
