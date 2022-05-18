@@ -14,8 +14,8 @@ function App() {
   const createChannels = () => {
     PushNotification.createChannel(
       {
-        channelId: 'test',
-        channelName: 'test',
+        channelId: 'fcm_fallback_notification_channel',
+        channelName: 'fcm_fallback_notification_channel',
       },
       () => {
         console.log('channelCreate');

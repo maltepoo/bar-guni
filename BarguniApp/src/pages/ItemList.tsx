@@ -38,6 +38,7 @@ import {useIsFocused} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import PushNotification from 'react-native-push-notification';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {LoginApiInstance} from '../api/instance';
 
 function ItemList() {
   const user = useSelector((state: RootState) => state.user);
