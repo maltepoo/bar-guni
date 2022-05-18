@@ -92,7 +92,7 @@ public class AlertScheduler {
     }
 
 
-    @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분30초) 동작
+    @Scheduled(cron="30 0 * * * ?") // 매 시각마다(*시0분30초) 동작
     @Async
     public void sendAlert() {
         // 시간이 서울로 지정된 도커 컨테이너에서만 실행
