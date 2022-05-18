@@ -141,7 +141,7 @@ function BasketSettingDetail({route}) {
             <TouchableOpacity
               style={style.picture}
               onPress={() => setChecked(false)}>
-              <FontAwesome5Icon name="pen" size={18} />
+              <FontAwesome5Icon name="pen" color={'#757575'} size={18} />
             </TouchableOpacity>
           </View>
         ) : (

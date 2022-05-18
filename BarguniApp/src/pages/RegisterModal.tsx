@@ -36,7 +36,7 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{...styles.button, backgroundColor: '#c4c4c4', marginTop: '55%'}}
+        style={{...styles.button, backgroundColor: '#c4c4c4', marginTop: '30%'}}
         onPress={byFreeReceipt}>
         <Text>영수증 등록(무료)</Text>
       </TouchableOpacity>

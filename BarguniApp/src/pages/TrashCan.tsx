@@ -73,6 +73,7 @@ function TrashCan({navigation}: TrashCanScreenProps) {
       <View style={Style.header}>
         <Checkbox
           color="#0094FF"
+          uncheckedColor={'#757575'}
           status={checked ? 'checked' : 'unchecked'}
           onPress={() => {
             setChecked(!checked);

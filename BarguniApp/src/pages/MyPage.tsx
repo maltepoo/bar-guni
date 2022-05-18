@@ -69,13 +69,19 @@ function MyPage() {
           size={64}
           rounded
           title={`${userInfo.name.charAt(0)}`}
-          containerStyle={{backgroundColor: '#3d4db7', marginVertical: 20}}
+          containerStyle={{
+            backgroundColor: '#3d4db7',
+            marginVertical: 20,
+            marginTop: '10%',
+          }}
         />
         <Text style={Style.nameText}>{userInfo.name}</Text>
         <Text style={Style.emailText}>{userInfo.email}</Text>
 
         <TouchableOpacity style={{marginTop: 50}}>
-          <Text onPress={handleChangeForm}>닉네임변경</Text>
+          <Text onPress={handleChangeForm} style={{color: 'black'}}>
+            닉네임 변경
+          </Text>
         </TouchableOpacity>
         {isOpenName ? (
           <View style={{alignItems: 'center'}}>
@@ -92,8 +98,10 @@ function MyPage() {
             </TouchableOpacity>
           </View>
         ) : null}
-        <TouchableOpacity style={{marginTop: 10}}>
-          <Text onPress={handleSignOut}>탈퇴하기</Text>
+        <TouchableOpacity style={{marginTop: 30}}>
+          <Text onPress={handleSignOut} style={{color: 'red'}}>
+            탈퇴하기
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -145,9 +153,10 @@ const Style = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
   },
   emailText: {
+    marginTop: '1%',
     fontSize: 16,
     marginHorizontal: 20,
-    color: 'gray',
+    color: 'black',
     fontFamily: 'Pretendard-Regular',
   },
   text: {

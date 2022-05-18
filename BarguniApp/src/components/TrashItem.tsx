@@ -23,6 +23,7 @@ function TrashItem(props: TrashItem) {
       <View style={Style.checkbox}>
         <Checkbox
           color="#0094FF"
+          uncheckedColor={'#757575'}
           status={checked || props.allSelect ? 'checked' : 'unchecked'}
           onPress={() => {
             props.select(item.itemId, checked);
