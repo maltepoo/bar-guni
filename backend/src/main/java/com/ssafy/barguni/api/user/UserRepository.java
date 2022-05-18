@@ -25,4 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
     @Modifying
     @Query("UPDATE User u SET u.defaultBasket = :defaultBasket WHERE u.id = :userId")
     void modifyDefault(Long userId, Basket defaultBasket);
+
 }

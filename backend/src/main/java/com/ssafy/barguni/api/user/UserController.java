@@ -231,14 +231,14 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<ResVO<UserRes>> updateUser(
-            @RequestParam @Parameter(description = "유저 입력 폼") String name) {
+            @RequestParam(required = false) String name, @RequestParam(required = false) Integer alertTime) {
 
         ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        User user = userService.changeUser(userDetails.getUserId(), name).get();
+        User user = userService.changeUser(userDetails.getUserId(), name, alertTime).get();
         result.setData(UserRes.convertTo(user));
         result.setMessage("유저 정보 수정 성공");
         status = HttpStatus.OK;
@@ -382,6 +382,29 @@ public class UserController {
         userService.modifyDefault(userDetails.getUserId(), defaultBasket);
         status = HttpStatus.OK;
         result.setMessage("기본 바구니 변경 성공");
+        result.setData(true);
+
+        return new ResponseEntity<ResVO<Boolean>>(result, status);
+    }
+
+
+    @PostMapping("/alert/key")
+    @Operation(summary = "사용자 알림api키 등록", description = "사용자의 알림 api키를 등록/변경한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public ResponseEntity<ResVO<Boolean>> setAlertApiKey(@RequestParam String alertApiKey){
+        ResVO<Boolean> result = new ResVO<>();
+        HttpStatus status = null;
+
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        userService.setAlertApiKey(userDetails.getUserId(), alertApiKey);
+
+        status = HttpStatus.OK;
+        result.setMessage("알람 api키 변경 성공");
         result.setData(true);
 
         return new ResponseEntity<ResVO<Boolean>>(result, status);

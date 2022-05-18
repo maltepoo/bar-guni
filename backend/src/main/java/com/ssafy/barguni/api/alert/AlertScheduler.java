@@ -1,7 +1,13 @@
 package com.ssafy.barguni.api.alert;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.item.AlertBy;
+import com.ssafy.barguni.api.item.Item;
 import com.ssafy.barguni.api.item.ItemService;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserBasket;
+import com.ssafy.barguni.api.user.UserBasketRepository;
+import com.ssafy.barguni.api.user.UserBasketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +17,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
 @Component
 @RequiredArgsConstructor
@@ -20,16 +32,21 @@ import java.time.LocalDate;
 @EnableAsync
 public class AlertScheduler {
     private final static Integer EXPIRATION_ALERT_PERIOD = 7;
+    private final UserBasketService userBasketService;
     private final AlertService alertService;
     private final ItemService itemService;
 
     // (초 분 시 일 월)
 //    @Scheduled(cron="${schedular.alert.time}")
-    @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
+    @Scheduled(cron="0 0 0 * * ?") // 매일 오전 00시에 동작
     @Async
     public void createAlert(){
+        //시간이 서울로 지정된 도커 컨테이너에서만 실행
+        String tz = Calendar.getInstance().getTimeZone().getID();
+        if (!tz.equals("Asia/Seoul")) return;
+
         long start = System.currentTimeMillis();
-/*
+
         itemService.findAll().forEach((item)->{
             // 이미 사용한 경우는 제외
             if(item.getUsed())
@@ -68,8 +85,36 @@ public class AlertScheduler {
             ) alertService.createAlertBeforeExpiry(item);
 
         });
-*/
+
+
         long end = System.currentTimeMillis();
         log.debug("총 걸린 시간: " + (end - start) + " ms");
     }
+
+
+    @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분30초) 동작
+    @Async
+    public void sendAlert() {
+        // 시간이 서울로 지정된 도커 컨테이너에서만 실행
+        String tz = Calendar.getInstance().getTimeZone().getID();
+        System.out.println(tz);
+        if (!tz.equals("Asia/Seoul")) return;
+
+        // 현재 시간에 알림설정한 유저의 ub만 가져옴
+        Integer hour = LocalDateTime.now().getHour();
+        List<UserBasket> ubs = userBasketService.getListByAlertTime(hour);
+        // 가져온 ub에 보낼 알림이 있으면 알림을 보냄
+        for (UserBasket ub: ubs) {
+            User user = ub.getUser();
+            Basket basket = ub.getBasket();
+            Integer result = alertService.countAllCreatedTodayByBasket(basket);
+            if (result == 0) continue;
+            try {
+                alertService.sendAlert(user.getAlertApiKey(), result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

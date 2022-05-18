@@ -52,11 +52,14 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> changeUser(Long userId, String newName) {
+    public Optional<User> changeUser(Long userId, String newName, Integer alertTime) {
         User user = userRepository.findById(userId).get();
 
         if (newName != null) {
             user.setName(newName);
+        }
+        if (alertTime != null){
+            user.setAlertTime(alertTime);
         }
 
         return Optional.ofNullable(user);
@@ -94,5 +97,12 @@ public class UserService {
         user.setDefaultBasket(basket);
         userRepository.save(user);
         return user;
+    }
+
+    public void setAlertApiKey(Long userId, String key) {
+        User user = userRepository.getById(userId);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        user.setAlertApiKey(key);
     }
 }
