@@ -92,12 +92,12 @@ public class AlertScheduler {
     }
 
 
-//    @Scheduled(cron="30 0 * * * ?") // 매 시각마다(*시0분3초) 동작
-    @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분3초) 동작
+    @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분30초) 동작
     @Async
     public void sendAlert() {
         // 시간이 서울로 지정된 도커 컨테이너에서만 실행
         String tz = Calendar.getInstance().getTimeZone().getID();
+        System.out.println(tz);
         if (!tz.equals("Asia/Seoul")) return;
 
         // 현재 시간에 알림설정한 유저의 ub만 가져옴
