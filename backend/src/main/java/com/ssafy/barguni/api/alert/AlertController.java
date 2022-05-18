@@ -2,6 +2,8 @@ package com.ssafy.barguni.api.alert;
 
 import com.ssafy.barguni.api.alert.vo.AlertRes;
 import com.ssafy.barguni.api.common.ResVO;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserService;
 import com.ssafy.barguni.common.auth.AccountUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @Tag(name = "basket controller", description = "바구니 관련 컨트롤러")
 public class AlertController {
     private final AlertService alertService;
+    private final UserService userService;
+    private final FirebaseAlertService firebaseAlertService;
 
     @GetMapping("")
     @Operation(summary = "알림 조회", description = "알림을 조회한다.")
@@ -85,5 +89,25 @@ public class AlertController {
         status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Null>>(result, status);
+    }
+
+    @GetMapping("/test")
+    @Operation(summary = "알림 테스트", description = "알림 테스트")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public void test(){
+
+        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        User user = userService.findById(userDetails.getUserId());
+        try {
+            firebaseAlertService.sendMessageTo(user.getAlertApiKey(), "안녕하세요", "알람테스트");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

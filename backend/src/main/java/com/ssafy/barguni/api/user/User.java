@@ -19,6 +19,7 @@ public class User {
     private String email;
 
     private String name;
+    private String alertApiKey;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="default_bkt")

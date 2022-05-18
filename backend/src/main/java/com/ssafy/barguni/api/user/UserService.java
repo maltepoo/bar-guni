@@ -95,4 +95,11 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
+    public void setAlertApiKey(Long userId, String key) {
+        User user = userRepository.getById(userId);
+        if(user == null)
+            throw new UsersException(new ErrorResVO(USER_NOT_FOUNDED));
+        user.setAlertApiKey(key);
+    }
 }

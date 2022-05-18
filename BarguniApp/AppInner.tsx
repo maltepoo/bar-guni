@@ -55,6 +55,7 @@ import ItemModify from './src/pages/ItemModify';
 import ReceiptRegister from './src/pages/ReceiptRegister';
 import RegisterList from './src/pages/RegisterList';
 import {getProfile} from './src/api/user';
+import messaging from '@react-native-firebase/messaging';
 
 export type RootStackParamList = {
   SignIn: undefined;
@@ -119,6 +120,21 @@ function AppInner() {
     };
     init();
   }, [dispatch, navigation]);
+
+  useEffect(() => {
+    async function getToken() {
+      try {
+        if (!messaging().isDeviceRegisteredForRemoteMessages) {
+          await messaging().registerDeviceForRemoteMessages();
+        }
+        const token = await messaging().getToken();
+        console.log('phone token', token);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getToken();
+  }, []);
 
   function BottomTab() {
     return (
