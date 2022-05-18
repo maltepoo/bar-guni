@@ -10,7 +10,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-function NewSearchBar({navigation, passedValue}) {
+function NewSearchBar({navigation, passedValue}: any) {
   const [text, setText] = useState('');
 
   const handleText = useCallback(txt => {
@@ -44,13 +44,14 @@ function NewSearchBar({navigation, passedValue}) {
         marginBottom: 10,
       }}>
       <Pressable
-        style={{position: 'absolute', zIndex: 9, top: '22%', left: '3%'}}>
+        style={{position: 'absolute', zIndex: 9, top: '30%', left: '3%'}}>
         <AntDesign name="search1" size={18} color="rgba(0,0,0,0.4)" />
       </Pressable>
       <TextInput
         placeholder="검색할 바구니, 물건을 입력해 주세요"
-        style={styles.textINput}
+        style={styles.textInput}
         value={text}
+        placeholderTextColor={'rgba(0,0,0,0.4)'}
         onChangeText={handleText}
         onSubmitEditing={() => {
           goToSearch(text);
@@ -74,12 +75,13 @@ const styles = StyleSheet.create({
   itemText: {
     color: 'black',
   },
-  textINput: {
+  textInput: {
     width: '100%',
-    height: 36,
+    height: 45,
     backgroundColor: '#F5F4F4',
     borderRadius: 100,
     paddingHorizontal: 20,
+    paddingVertical: 10,
     paddingLeft: 40,
   },
   cancelBtn: {

@@ -152,7 +152,7 @@ function AppInner() {
               <AntDesign
                 name="home"
                 size={20}
-                style={{color: focused ? '#0094FF' : ''}}
+                style={{color: focused ? '#0094FF' : '#757575'}}
               />
             ),
           }}
@@ -168,7 +168,7 @@ function AppInner() {
               <AntDesign
                 name="bells"
                 size={20}
-                style={{color: focused ? '#0094FF' : ''}}
+                style={{color: focused ? '#0094FF' : '#757575'}}
               />
             ),
           }}
@@ -184,7 +184,7 @@ function AppInner() {
               <AntDesign
                 name="inbox"
                 size={20}
-                style={{color: focused ? '#0094FF' : ''}}
+                style={{color: focused ? '#0094FF' : '#757575'}}
               />
             ),
           }}
@@ -200,7 +200,7 @@ function AppInner() {
               <AntDesign
                 name="search1"
                 size={20}
-                style={{color: focused ? '#0094FF' : ''}}
+                style={{color: focused ? '#0094FF' : '#757575'}}
               />
             ),
           }}
@@ -216,7 +216,7 @@ function AppInner() {
               <AntDesign
                 name="ellipsis1"
                 size={20}
-                style={{color: focused ? '#0094FF' : ''}}
+                style={{color: focused ? '#0094FF' : '#757575'}}
               />
             ),
           }}

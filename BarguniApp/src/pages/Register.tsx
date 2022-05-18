@@ -166,49 +166,78 @@ function Register({navigation}: RegisterScreenProps) {
 
   return (
     <ScrollView style={Style.background}>
+      <View style={Style.preview}>
+        {!preview ? (
+          <Text style={{color: '#989797'}}>
+            아직 이미지가 업로드 되지 않았습니다
+          </Text>
+        ) : null}
+        {preview && <Image style={Style.previewImage} source={preview} />}
+      </View>
       <View style={Style.cont}>
-        <Text style={{color: 'black'}}>제품명 :</Text>
+        {/* <Text style={{color: 'black'}}>제품명 :</Text> */}
         <TextInput
           style={Style.textInput}
           value={name}
           onChangeText={changeName}
-          placeholder="제품명 입력"
+          placeholder="제품명을 입력해주세요."
+          placeholderTextColor={'#989797'}
         />
       </View>
       <View style={Style.cont}>
-        <Text style={{color: 'black'}}>설명 :</Text>
+        {/* <Text style={{color: 'black'}}>설명 :</Text> */}
         <TextInput
           style={Style.contentInput}
           value={content}
           onChangeText={changeContent}
-          placeholder="설명 입력"
+          placeholder="제품에 대한 설명을 입력해주세요."
+          placeholderTextColor={'#989797'}
         />
       </View>
-      <View style={Style.cont}>
-        <View>
+      <View style={Style.checkCont}>
+        <View style={Style.checkBox}>
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
+            color="#0094ff"
+            uncheckedColor="#757575"
             onPress={() => {
               setChecked(true);
               setShelfLife(regDate);
               setAlertBy('SHELF_LIFE');
             }}
           />
+          <Text
+            onPress={() => {
+              setChecked(true);
+              setShelfLife(regDate);
+              setAlertBy('SHELF_LIFE');
+            }}
+            style={{color: 'black'}}>
+            유효기간으로 관리
+          </Text>
         </View>
-        <Text style={{color: 'black'}}>유효기간 관리</Text>
-        <View>
+        <View style={Style.checkBox}>
           <Checkbox
             status={checked ? 'unchecked' : 'checked'}
+            color="#0094ff"
+            uncheckedColor="#757575"
             onPress={() => {
               setChecked(false);
               setAlertBy('D_DAY');
             }}
           />
+          <Text
+            onPress={() => {
+              setChecked(false);
+              setAlertBy('D_DAY');
+            }}
+            style={{color: 'black'}}>
+            지금부터 관리
+          </Text>
         </View>
-        <Text style={{color: 'black'}}>지금부터 관리</Text>
       </View>
       {checked ? (
-        <View style={{alignItems: 'center'}}>
+        <View style={Style.dateChanger}>
           <Pressable
             onPress={() => {
               setRegOpen(true);
@@ -230,30 +259,44 @@ function Register({navigation}: RegisterScreenProps) {
           />
         </View>
       ) : (
-        <View style={{alignItems: 'center'}}>
-          <View style={Style.cont}>
+        <View style={{alignItems: 'center', marginBottom: 6}}>
+          <View style={{...Style.cont, marginTop: 0}}>
             <TouchableOpacity
               style={Style.daybutton}
               onPress={() => setDay(day - 5)}>
-              <Text>-5</Text>
+              <Text style={Style.dayText}>- 5</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={Style.daybutton}
               onPress={() => setDay(day - 1)}>
-              <Text>-1</Text>
+              <Text style={Style.dayText}>- 1</Text>
             </TouchableOpacity>
-            <Text>D + {day}</Text>
+            <Text
+              style={{
+                flex: 1,
+                marginLeft: 7,
+                marginRight: 7,
+                marginBottom: 16,
+                paddingVertical: 10,
+                borderRadius: 100,
+                textAlign: 'center',
+                alignItems: 'center',
+                backgroundColor: '#0094ff',
+                color: '#fff',
+              }}>
+              D - {day}
+            </Text>
             <TouchableOpacity
               style={Style.daybutton}
               onPress={() => setDay(day + 1)}>
-              <Text>+1</Text>
+              <Text style={Style.dayText}>+ 1</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={Style.daybutton}
               onPress={() => {
                 setDay(day + 5);
               }}>
-              <Text>+5</Text>
+              <Text style={Style.dayText}>+ 5</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -287,10 +330,6 @@ function Register({navigation}: RegisterScreenProps) {
           />
         ))}
       </Picker>
-
-      <View style={Style.preview}>
-        {preview && <Image style={Style.previewImage} source={preview} />}
-      </View>
       <View style={Style.row}>
         <Pressable style={Style.imageButton} onPress={onTakePhoto}>
           <Text style={Style.imageText}>이미지 촬영</Text>
@@ -330,11 +369,16 @@ const Style = StyleSheet.create({
     height: '100%',
   },
   preview: {
-    marginHorizontal: 10,
-    width: Dimensions.get('window').width - 30,
+    flex: 1,
+    marginHorizontal: 20,
+    // width: Dimensions.get('window').width - 30,
     height: Dimensions.get('window').height / 3,
-    backgroundColor: '#D2D2D2',
-    marginBottom: 10,
+    backgroundColor: '#f5f4f4',
+    marginTop: 16,
+    marginBottom: 20,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   previewImage: {
     height: Dimensions.get('window').height / 3,
@@ -345,19 +389,46 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginLeft: '10%',
+    marginHorizontal: 20,
+  },
+  checkCont: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 26,
+  },
+  checkBox: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  dateChanger: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginHorizontal: 20,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
+    marginTop: 6,
+    marginBottom: 16,
   },
   col: {
     flexDirection: 'column',
     flexWrap: 'wrap',
   },
   daybutton: {
-    borderRadius: 10,
-    backgroundColor: '#32A3F5',
-    width: 30,
+    flex: 1,
+    borderRadius: 100,
+    // backgroundColor: '#32A3F5',
+    backgroundColor: '#f5f4f4',
     marginLeft: 7,
     marginRight: 7,
+    marginBottom: 16,
+    paddingVertical: 10,
+    textAlign: 'center',
     alignItems: 'center',
+  },
+  dayText: {
+    color: '#000',
   },
   button: {
     borderRadius: 10,
@@ -373,33 +444,40 @@ const Style = StyleSheet.create({
     top: 20,
   },
   textInput: {
-    fontFamily: 'Pretendard-Bold',
-    padding: 5,
-    marginTop: 5,
-    height: 30,
-    margin: 5,
+    flex: 1,
+    fontFamily: 'Pretendard-Regular',
+    padding: 6,
+    paddingLeft: 16,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
+    // margin: 5,
+    // marginTop: 5,
     // borderWidth: 1,
-    width: '40%',
-    textAlign: 'center',
+    // width: '40%',
+    // textAlign: 'center',
     // borderRadius: 10,
+    // backgroundColor: 'yellow',
   },
   contentInput: {
-    fontFamily: 'Pretendard-Bold',
-    padding: 5,
-    marginTop: 5,
-    height: 30,
-    margin: 5,
+    flex: 1,
+    fontFamily: 'Pretendard-Regular',
+    padding: 6,
+    paddingLeft: 16,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
+    // margin: 5,
+    // marginTop: 5,
     // borderWidth: 1,
-    width: '40%',
-    textAlign: 'center',
+    // width: '40%',
+    // textAlign: 'center',
     // borderRadius: 10,
+    // backgroundColor: 'yellow',
   },
   picture: {
     width: 80,
     height: 80,
   },
-  line: {width: '100%', height: 0.7, backgroundColor: 'gray'},
-
+  line: {width: '100%', height: 0.7, backgroundColor: '#f5f4f4'},
   cancel: {
     marginTop: 10,
     width: 15,

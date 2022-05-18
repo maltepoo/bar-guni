@@ -23,6 +23,7 @@ function TrashItem(props: TrashItem) {
       <View style={Style.checkbox}>
         <Checkbox
           color="#0094FF"
+          uncheckedColor={'#757575'}
           status={checked || props.allSelect ? 'checked' : 'unchecked'}
           onPress={() => {
             props.select(item.itemId, checked);
@@ -36,11 +37,10 @@ function TrashItem(props: TrashItem) {
           <Text style={Style.title}>{item.name}</Text>
         </View>
         <View style={Style.descriptionView}>
-          <Text style={Style.description}>등록일 : {item.regDate}</Text>
+          <Text style={Style.description}>{item.regDate} 등록</Text>
         </View>
         <View style={Style.container}>
           <Text style={Style.description}>
-            유효 기간:
             {item.shelfLife === null
               ? new Date(
                   shelfLife.setDate(
@@ -49,7 +49,7 @@ function TrashItem(props: TrashItem) {
                 )
                   .toJSON()
                   .substring(0, 10)
-              : item.shelfLife}
+              : item.shelfLife}{' '}
             까지
           </Text>
         </View>
@@ -60,11 +60,11 @@ function TrashItem(props: TrashItem) {
 const Style = StyleSheet.create({
   container: {flexDirection: 'row'},
   descriptionView: {marginTop: 10, fontFamily: 'Pretendard-Light'},
-  checkbox: {marginTop: 50},
-  image: {width: 100, height: 120, borderRadius: 20},
+  checkbox: {justifyContent: 'center'},
+  image: {width: 100, height: 100, borderRadius: 20},
   content: {marginTop: 25, marginLeft: 20},
-  title: {fontSize: 25, color: 'black', fontFamily: 'Pretendard-Bold'},
-  description: {fontSize: 15, fontFamily: 'Pretendard-Light'},
+  title: {fontSize: 22, color: 'black', fontFamily: 'Pretendard-Bold'},
+  description: {fontSize: 14, fontFamily: 'Pretendard-Light'},
 });
 
 export default TrashItem;
