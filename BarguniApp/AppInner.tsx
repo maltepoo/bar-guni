@@ -130,9 +130,6 @@ function AppInner() {
         const token = await messaging().getToken();
         console.log('phone token', token);
         const res = await sendFCMKey(token);
-        console.log(res);
-        const axios = LoginApiInstance();
-        const res2 = axios.get('/alert/test');
       } catch (error) {
         console.error(error);
       }
