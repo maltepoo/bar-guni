@@ -190,7 +190,7 @@ function ItemList() {
         console.log(itemRes);
       } catch (e) {}
     },
-    [basket],
+    [basket, dispatch],
   );
 
   const showDeleteDialog = useCallback(
@@ -346,12 +346,14 @@ function ItemList() {
         <SpeedDial.Action
           icon={{name: 'folder', color: '#fff'}}
           title="카테고리 관리"
+          titleStyle={{color: 'black'}}
           buttonStyle={{backgroundColor: '#32A3F5'}}
           onPress={() => setCategoryDialog(true)}
         />
         <SpeedDial.Action
           icon={{name: 'shopping-basket', color: '#fff'}}
           title="바구니 관리"
+          titleStyle={{color: 'black'}}
           buttonStyle={{backgroundColor: '#32A3F5'}}
           onPress={() => {
             setBasketDialog(true);
@@ -412,6 +414,10 @@ function ItemList() {
         <Button
           onPress={addBasket}
           title="완료"
+<<<<<<< HEAD
+=======
+          titleStyle={{color: 'black'}}
+>>>>>>> develop
           buttonStyle={{backgroundColor: '#32A3F5'}}
         />
         <DeleteConfirm />
@@ -447,12 +453,21 @@ function ItemList() {
         <TextInput
           value={categoryName}
           onChangeText={onChangeCategoryName}
+          placeholderTextColor={'black'}
           placeholder="카테고리 이름을 입력하세요"
           style={Style.newBasketInput}
         />
+<<<<<<< HEAD
         <Button
           onPress={addCategory}
           title="완료"
+=======
+        <Button onPress={addCategory} title="완료" />
+        <Button
+          onPress={addCategory}
+          title="완료"
+          titleStyle={{color: 'black'}}
+>>>>>>> develop
           buttonStyle={{backgroundColor: '#32A3F5'}}
         />
         <DeleteConfirm />
@@ -487,6 +502,7 @@ const Style = StyleSheet.create({
     marginTop: 20,
     marginBottom: 6,
     color: 'black',
+    backgroundColor: 'transparent',
     marginHorizontal: 6,
   },
   dropdownItem: {
@@ -550,7 +566,16 @@ const Style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
+<<<<<<< HEAD
     color: 'black',
+=======
+<<<<<<< Updated upstream
+    width: '80%',
+=======
+    color: 'black',
+    fontFamily: 'Pretendard-Light',
+>>>>>>> Stashed changes
+>>>>>>> develop
   },
   buttonBox: {
     marginRight: 20,

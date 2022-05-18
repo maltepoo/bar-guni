@@ -18,6 +18,8 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
+import {Picker} from '@react-native-picker/picker';
+import {changeAlaramTime, getProfile} from '../api/user';
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -29,6 +31,35 @@ function Settings({navigation}: SettingsScreenProps) {
   const [alarmOn, setAlarmOn] = useState(false);
   const [alarmTime, setAlarmTime] = useState({hour: 0, min: 0});
   const dispatch = useAppDispatch();
+  const selectedTimes = [
+    {time: -1},
+    {time: 0},
+    {time: 1},
+    {time: 2},
+    {time: 3},
+    {time: 4},
+    {time: 5},
+    {time: 6},
+    {time: 7},
+    {time: 8},
+    {time: 9},
+    {time: 10},
+    {time: 11},
+    {time: 12},
+    {time: 13},
+    {time: 14},
+    {time: 15},
+    {time: 16},
+    {time: 17},
+    {time: 18},
+    {time: 19},
+    {time: 20},
+    {time: 21},
+    {time: 22},
+    {time: 23},
+    {time: 24},
+  ];
+  const [selectTime, setSelectTime] = useState({time: 12});
   const goAlarm = useCallback(() => {
     navigation.navigate('AlarmSetting');
   }, [navigation]);
@@ -68,12 +99,35 @@ function Settings({navigation}: SettingsScreenProps) {
     setAlarmOn(false);
   }, []);
 
+  const alramOnOff = useCallback(async () => {
+    if (!on) {
+      try {
+        await changeAlaramTime(12);
+        setOn(true);
+        setSelectTime({time: 12});
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      try {
+        await changeAlaramTime(-1);
+        setOn(false);
+        setSelectTime({time: -1});
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [on, selectTime.time]);
+
   useEffect(() => {
     const init = async () => {
-      const hour = await EncryptedStorage.getItem('hour');
-      const min = await EncryptedStorage.getItem('min');
-      console.log(hour, min);
-      setAlarmTime({hour: Number(hour), min: Number(min)});
+      const res = await getProfile();
+      setSelectTime({time: res.alertTime});
+      if (res.alertTime < 0) {
+        setOn(false);
+      } else {
+        setOn(true);
+      }
     };
     init();
   }, []);
@@ -87,20 +141,56 @@ function Settings({navigation}: SettingsScreenProps) {
         paddingTop: 10,
       }}>
       <Text style={style.title}>알림</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={style.content}>알림시간 설정</Text>
+        <Text style={style.content2} onPress={handleAlarmOn}>
+          {alarmTime.hour}시 {alarmTime.min}분
+        </Text>
+        <DateTimePicker
+          mode="time"
+          isVisible={alarmOn}
+          onConfirm={time => {
+            confirmAlarm(time);
+          }}
+          onCancel={() => {
+            setAlarmOn(false);
+          }}
+        />
+      </View>
+      <Picker
+        selectedValue={selectTime.time}
+        style={style.dropdownItem}
+        onValueChange={async itemValue => {
+          await changeAlaramTime(itemValue);
+          setSelectTime({time: itemValue});
+        }}>
+        {selectedTimes.map(item => (
+          <Picker.Item
+            key={item.time}
+            label={
+              item.time < 0
+                ? '알림이 꺼져있습니다'
+                : item.time.toString() + '시로 알림 설정'
+            }
+            value={item.time}
+            style={style.dropdownItem}
+          />
+        ))}
+      </Picker>
       <View style={style.imageBox}>
         <Text style={style.content}>
           알림 (유통기한 및 초대 알림을 받습니다)
         </Text>
         <Text style={style.content2}>
-          <Switch value={on} onValueChange={value => setOn(value)} />
+          <Switch value={on} onValueChange={alramOnOff} />
         </Text>
       </View>
-      <View style={style.line}></View>
+      <View style={style.line} />
       <Text style={style.title}>바구니</Text>
       <Pressable onPress={goBasketSetting}>
         <Text style={style.content}>바구니 관리</Text>
       </Pressable>
-      <View style={style.line}></View>
+      <View style={style.line} />
       <Text style={style.title}>기타</Text>
       <Pressable onPress={goTrashCan}>
         <Text style={style.content}>휴지통</Text>
@@ -156,6 +246,18 @@ const style = StyleSheet.create({
     // backgroundColor: 'yellow',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  dropdownItem: {
+    fontSize: 16,
+    color: 'black',
+    fontFamily: 'Pretendard-Bold',
+  },
+  dropdown: {
+    marginTop: 20,
+    marginBottom: 6,
+    color: 'black',
+    backgroundColor: 'transparent',
+    marginHorizontal: 6,
   },
 });
 
