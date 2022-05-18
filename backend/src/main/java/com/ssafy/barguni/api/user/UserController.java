@@ -231,14 +231,14 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<ResVO<UserRes>> updateUser(
-            @RequestParam @Parameter(description = "유저 입력 폼") String name) {
+            @RequestParam(required = false) String name, @RequestParam(required = false) Integer alertTime) {
 
         ResVO<UserRes> result = new ResVO<>();
         HttpStatus status = null;
 
         AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        User user = userService.changeUser(userDetails.getUserId(), name).get();
+        User user = userService.changeUser(userDetails.getUserId(), name, alertTime).get();
         result.setData(UserRes.convertTo(user));
         result.setMessage("유저 정보 수정 성공");
         status = HttpStatus.OK;

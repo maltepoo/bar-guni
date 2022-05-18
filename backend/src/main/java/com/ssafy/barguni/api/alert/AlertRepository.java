@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AlertRepository extends JpaRepository<Alert, Long> {
@@ -14,6 +15,9 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             " join ub.basket b " +
             " where u.id = :id")
     List<Alert> findAllByUserId(Long id);
+
+    @Query("select a from Alert a join fetch a.basket b where b.id =:bktId and a.createdAt=:created")
+    List<Alert> findAlertsByBasket_IdAAndCreatedAt(Long bktId, LocalDate created);
 
     @Query("delete From Alert a " +
             "WHERE a.item.id = :id")
