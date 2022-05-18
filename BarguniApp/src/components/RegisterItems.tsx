@@ -53,8 +53,8 @@ function RegisterItems(props: any) {
     (text: string) => {
       setName(text);
       const propsName = [...props.names];
-      propsName[index] = text;
-      props.setContent(propsName);
+      propsName[index].name = text;
+      props.setName(propsName);
     },
     [index, props],
   );
@@ -70,7 +70,7 @@ function RegisterItems(props: any) {
   const changeDay = useCallback(() => {
     setChecked(false);
     const propsAlertBy = [...props.alertBy];
-    propsAlertBy[index] = "D_DAY'";
+    propsAlertBy[index] = 'D_DAY';
     props.setAlertBy(propsAlertBy);
     setAlertBy('D_DAY');
   }, [index, props]);
@@ -85,6 +85,16 @@ function RegisterItems(props: any) {
     [day, index, props],
   );
 
+  // const settingRegDay = useCallback(
+  //   (value: Date) => {
+  //     setRegDate(value);
+  //     const propsRegDay = [...props.shelfLifes];
+  //     propsRegDay[index] = value;
+  //     props.setShelfLifes(propsRegDay);
+  //   },
+  //   [index, props],
+  // );
+
   useEffect(() => {
     async function init(): Promise<void> {
       const basketRes = await getBaskets();
@@ -98,28 +108,24 @@ function RegisterItems(props: any) {
   return (
     <View>
       <View style={Style.cont}>
-        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
-          제품명 :
-        </Text>
         <TextInput
           style={Style.textInput}
           value={name}
           onChangeText={changeName}
-          placeholder="제품명 입력"
+          placeholder="제품명을 입력해주세요."
+          placeholderTextColor={'#989797'}
         />
       </View>
       <View style={Style.cont}>
-        <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
-          설명 :
-        </Text>
         <TextInput
           style={Style.contentInput}
           value={content}
           onChangeText={changeContent}
-          placeholder="설명 입력"
+          placeholder="제품에 대한 설명을 입력해주세요."
+          placeholderTextColor={'#989797'}
         />
       </View>
-      <View style={Style.cont2}>
+      {/* <View style={Style.cont2}>
         <View style={{marginHorizontal: 15}}>
           <Checkbox
             status={checked ? 'checked' : 'unchecked'}
@@ -138,8 +144,32 @@ function RegisterItems(props: any) {
         <Text style={{color: 'black', fontFamily: 'Pretendard-Light'}}>
           지금부터 관리
         </Text>
+      </View> */}
+      <View style={Style.checkCont}>
+        <View style={Style.checkBox}>
+          <Checkbox
+            status={checked ? 'checked' : 'unchecked'}
+            color="#0094ff"
+            uncheckedColor="#757575"
+            onPress={changeShelfLife}
+          />
+          <Text onPress={changeShelfLife} style={{color: 'black'}}>
+            유효기간으로 관리
+          </Text>
+        </View>
+        <View style={Style.checkBox}>
+          <Checkbox
+            status={checked ? 'unchecked' : 'checked'}
+            color="#0094ff"
+            uncheckedColor="#757575"
+            onPress={changeDay}
+          />
+          <Text onPress={changeDay} style={{color: 'black'}}>
+            지금부터 관리
+          </Text>
+        </View>
       </View>
-      {checked ? (
+      {/* {checked ? (
         <View style={Style.cont}>
           <Pressable
             onPress={() => {
@@ -198,6 +228,74 @@ function RegisterItems(props: any) {
             </TouchableOpacity>
           </View>
         </View>
+      )} */}
+      {checked ? (
+        <View style={Style.dateChanger}>
+          <Pressable
+            onPress={() => {
+              setRegOpen(true);
+            }}>
+            <Text style={{color: 'black'}}>
+              설정된 유효기간 : {regDate.toJSON().substring(0, 10)}
+            </Text>
+          </Pressable>
+          <DateTimePicker
+            isVisible={regOpen}
+            mode="date"
+            onConfirm={date => {
+              setRegDate(date);
+              setRegOpen(false);
+              const propsShelfLifes = [...props.shelfLifes];
+              propsShelfLifes[index] = date;
+              props.setShelfLifes(propsShelfLifes);
+            }}
+            onCancel={() => {
+              setRegOpen(false);
+            }}
+          />
+        </View>
+      ) : (
+        <View style={{alignItems: 'center', marginBottom: 6}}>
+          <View style={{...Style.cont, marginTop: 0}}>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => settingDay(-5)}>
+              <Text style={Style.dayText}>- 5</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => settingDay(-1)}>
+              <Text style={Style.dayText}>- 1</Text>
+            </TouchableOpacity>
+            <Text
+              style={{
+                flex: 1,
+                marginLeft: 7,
+                marginRight: 7,
+                marginBottom: 16,
+                paddingVertical: 10,
+                borderRadius: 100,
+                textAlign: 'center',
+                alignItems: 'center',
+                backgroundColor: '#0094ff',
+                color: '#fff',
+              }}>
+              D - {day}
+            </Text>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => settingDay(1)}>
+              <Text style={Style.dayText}>+ 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={Style.daybutton}
+              onPress={() => {
+                settingDay(5);
+              }}>
+              <Text style={Style.dayText}>+ 5</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       )}
       <Picker
         selectedValue={selectedBasket}
@@ -238,7 +336,7 @@ function RegisterItems(props: any) {
           />
         ))}
       </Picker>
-      <Divider width={2} />
+      <Divider width={2} color="#f5f4f4" style={{marginVertical: 20}} />
     </View>
   );
 }
@@ -280,7 +378,6 @@ const Style = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    width: Dimensions.get('window').width - 20,
     marginHorizontal: 20,
   },
   cont2: {
@@ -291,16 +388,30 @@ const Style = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 10,
   },
+  checkCont: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 26,
+  },
+  checkBox: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
   col: {
     flexDirection: 'column',
     flexWrap: 'wrap',
   },
   daybutton: {
-    borderRadius: 10,
-    backgroundColor: '#32A3F5',
-    width: 30,
+    flex: 1,
+    borderRadius: 100,
+    // backgroundColor: '#32A3F5',
+    backgroundColor: '#f5f4f4',
     marginLeft: 7,
     marginRight: 7,
+    marginBottom: 16,
+    paddingVertical: 10,
+    textAlign: 'center',
     alignItems: 'center',
   },
   button: {
@@ -317,32 +428,38 @@ const Style = StyleSheet.create({
     top: 20,
   },
   textInput: {
-    padding: 5,
-    marginTop: 5,
-    height: 30,
-    margin: 5,
-    // borderWidth: 1,
-    width: '40%',
-    textAlign: 'center',
-    // borderRadius: 10,
-    fontFamily: 'Pretendard-Bold',
+    flex: 1,
+    fontFamily: 'Pretendard-Regular',
+    padding: 6,
+    paddingLeft: 16,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
   },
   contentInput: {
-    padding: 5,
-    marginTop: 5,
-    height: 30,
-    margin: 5,
-    // borderWidth: 1,
-    width: '40%',
-    textAlign: 'center',
-    // borderRadius: 10,
-    fontFamily: 'Pretendard-Light',
+    flex: 1,
+    fontFamily: 'Pretendard-Regular',
+    padding: 6,
+    paddingLeft: 16,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
   },
-
   cancel: {
     marginTop: 10,
     width: 15,
     height: 15,
+  },
+  dateChanger: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginHorizontal: 20,
+    backgroundColor: '#f5f4f4',
+    borderRadius: 100,
+    marginTop: 6,
+    marginBottom: 16,
+  },
+  dayText: {
+    color: '#000',
   },
 });
 export default RegisterItems;

@@ -21,6 +21,7 @@ function RegisterList({route}: any) {
   const [categoryData, setCategoryData] = useState([] as Category[]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const onSubmit = useCallback(async () => {
+    console.log(names);
     for (let i = 0; i < names.length; i++) {
       const item: ItemReq = {
         bktId: baskets[i],
@@ -32,13 +33,14 @@ function RegisterList({route}: any) {
         picId: null,
         dday: ddays[0],
       };
-      try {
-        await registerItem(item);
-      } catch (e) {
-        console.log(e);
-      }
+      console.log(item);
+      //   try {
+      //     await registerItem(item);
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
     }
-    navigation.navigate('ItemList');
+    // navigation.navigate('ItemList');
   }, [
     alertBy,
     baskets,
