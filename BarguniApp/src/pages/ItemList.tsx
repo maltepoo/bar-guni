@@ -178,7 +178,7 @@ function ItemList() {
         console.log(itemRes);
       } catch (e) {}
     },
-    [basket],
+    [basket, dispatch],
   );
 
   const showDeleteDialog = useCallback(
