@@ -414,10 +414,7 @@ function ItemList() {
         <Button
           onPress={addBasket}
           title="완료"
-<<<<<<< HEAD
-=======
           titleStyle={{color: 'black'}}
->>>>>>> develop
           buttonStyle={{backgroundColor: '#32A3F5'}}
         />
         <DeleteConfirm />
@@ -457,17 +454,11 @@ function ItemList() {
           placeholder="카테고리 이름을 입력하세요"
           style={Style.newBasketInput}
         />
-<<<<<<< HEAD
-        <Button
-          onPress={addCategory}
-          title="완료"
-=======
         <Button onPress={addCategory} title="완료" />
         <Button
           onPress={addCategory}
           title="완료"
           titleStyle={{color: 'black'}}
->>>>>>> develop
           buttonStyle={{backgroundColor: '#32A3F5'}}
         />
         <DeleteConfirm />
@@ -566,16 +557,9 @@ const Style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-<<<<<<< HEAD
-    color: 'black',
-=======
-<<<<<<< Updated upstream
     width: '80%',
-=======
     color: 'black',
     fontFamily: 'Pretendard-Light',
->>>>>>> Stashed changes
->>>>>>> develop
   },
   buttonBox: {
     marginRight: 20,
