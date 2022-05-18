@@ -84,6 +84,8 @@ function BasketSetting() {
           margin: 20,
           borderRadius: 8,
           backgroundColor: '#fff',
+          // borderWidth: 0.7,
+          // borderColor: '#F5F4F4',
           shadowColor: 'rgba(0,0,0,0.4)',
           shadowOffset: {
             width: 0,
@@ -96,7 +98,11 @@ function BasketSetting() {
         <TextInput
           value={inviteCode}
           onChangeText={handleInputChange}
-          style={{textAlign: 'center', fontFamily: 'Pretendard-Bold'}}
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Pretendard-Regular',
+            color: '#9E9E9E',
+          }}
           placeholder="초대코드를 입력해서 바구니에 참여해보세요"
         />
         <TouchableOpacity

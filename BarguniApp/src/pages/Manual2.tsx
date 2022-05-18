@@ -42,23 +42,25 @@ const Style = StyleSheet.create({
   background: {
     backgroundColor: 'white',
     flex: 1,
-  },
-  headerBox: {
-    flex: 1,
-    alignItems: 'center',
-    marginTop: '20%',
-  },
-  header: {
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 30,
-    fontWeight: 'bold',
+    justifyContent: 'space-between',
   },
   button: {
     backgroundColor: '#32A3F5',
   },
+  headerBox: {
+    flex: 1,
+    marginHorizontal: 20,
+    marginTop: 60,
+  },
+  header: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 30,
+    flex: 1,
+  },
   contentBox: {
     flex: 1,
-    marginLeft: '5%',
+    marginHorizontal: 20,
+    marginTop: 20,
   },
   content: {
     fontFamily: 'Pretendard-Light',
