@@ -66,6 +66,11 @@ dependencies {
     // google login api
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+	// firebase sdk
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	//okHttp
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
