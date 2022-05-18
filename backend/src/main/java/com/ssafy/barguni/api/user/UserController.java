@@ -389,7 +389,7 @@ public class UserController {
 
 
     @PostMapping("/alert/key")
-    @Operation(summary = "사용자 기본 바구니 변경", description = "사용자의 기본 바구니를 변경한다.(로그인필요)")
+    @Operation(summary = "사용자 알림api키 등록", description = "사용자의 알림 api키를 등록/변경한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
