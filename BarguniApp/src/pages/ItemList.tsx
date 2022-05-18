@@ -268,8 +268,8 @@ function ItemList() {
         <Text style={Style.topText}>{user.name}님! </Text>
         <Text style={Style.topText}>유통기한이 지난 상품이</Text>
         <Text style={Style.topText}>
-          <Text style={{color: count > 0 ? '#0094FF' : ''}}>{count}</Text>개가
-          있어요
+          <Text style={{color: count > 0 ? '#0094FF' : 'black'}}>{count}</Text>
+          개가 있어요
         </Text>
       </View>
       <Picker
@@ -421,13 +421,14 @@ const Style = StyleSheet.create({
     fontFamily: 'Pretendard-Black',
   },
   modal: {
-    position: 'absolute',
-    flex: 0.1,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    height: '160%',
-    alignItems: 'center',
+    // position: 'absolute',
+    // flex: 0.1,
+    // left: 0,
+    // right: 0,
+    // flexDirection: 'row',
+    // height: '160%',
+    // alignItems: 'center',
+    // backgroundColor: 'yellow',
   },
   topText: {
     marginLeft: 12,
