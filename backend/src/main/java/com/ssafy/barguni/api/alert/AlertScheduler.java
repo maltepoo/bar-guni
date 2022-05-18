@@ -20,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +41,10 @@ public class AlertScheduler {
     @Scheduled(cron="0 0 0 * * ?") // 매일 오전 00시에 동작
     @Async
     public void createAlert(){
+        //시간이 서울로 지정된 도커 컨테이너에서만 실행
+        String tz = Calendar.getInstance().getTimeZone().getID();
+        if (!tz.equals("Asia/Seoul")) return;
+
         long start = System.currentTimeMillis();
 
         itemService.findAll().forEach((item)->{
@@ -89,9 +96,14 @@ public class AlertScheduler {
     @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분3초) 동작
     @Async
     public void sendAlert() {
+        // 시간이 서울로 지정된 도커 컨테이너에서만 실행
+        String tz = Calendar.getInstance().getTimeZone().getID();
+        if (!tz.equals("Asia/Seoul")) return;
+
+        // 현재 시간에 알림설정한 유저의 ub만 가져옴
         Integer hour = LocalDateTime.now().getHour();
         List<UserBasket> ubs = userBasketService.getListByAlertTime(hour);
-        // 알러트를 가져오고 유저-아림
+        // 가져온 ub에 보낼 알림이 있으면 알림을 보냄
         for (UserBasket ub: ubs) {
             User user = ub.getUser();
             Basket basket = ub.getBasket();
