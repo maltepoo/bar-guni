@@ -17,11 +17,11 @@
 
     - 적절한 threshold 선정
 
-      <img src="README_Receipt_OCR.assets/threshold.png">
+      <img src="README_Receipt_OCR.assets/threshold.PNG">
 
     - 가장 큰 rectangle 갖는 contour 탐색
 
-      <img src="README_Receipt_OCR.assets/rectangle.png">
+      <img src="README_Receipt_OCR.assets/rectangle.PNG">
 
 2.  Scene Text Detection 모델 이용
 
