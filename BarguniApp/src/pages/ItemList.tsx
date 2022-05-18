@@ -414,7 +414,6 @@ function ItemList() {
         <Button
           onPress={addBasket}
           title="완료"
-          titleStyle={{color: 'black'}}
           buttonStyle={{backgroundColor: '#32A3F5'}}
         />
         <DeleteConfirm />
@@ -455,12 +454,6 @@ function ItemList() {
           style={Style.newBasketInput}
         />
         <Button onPress={addCategory} title="완료" />
-        <Button
-          onPress={addCategory}
-          title="완료"
-          titleStyle={{color: 'black'}}
-          buttonStyle={{backgroundColor: '#32A3F5'}}
-        />
         <DeleteConfirm />
       </Dialog>
     </View>

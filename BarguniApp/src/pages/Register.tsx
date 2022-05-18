@@ -45,7 +45,7 @@ function Register({navigation}: RegisterScreenProps) {
   const [category, setCategory] = useState([] as Category[]);
   const [selectedBasket, setSelectedBasket] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = useState(true);
   const [day, setDay] = useState(0);
   const [alertBy, setAlertBy] = useState('SHELF_LIFE');
   const [regDate, setRegDate] = useState(new Date());
@@ -59,27 +59,32 @@ function Register({navigation}: RegisterScreenProps) {
   }>();
   const [preview, setPreview] = useState<{uri: string}>();
 
-  const onResponse = useCallback(async response => {
-    console.log(response.width, response.height, response.exif);
-    setPreview({uri: `data:${response.mime};base64,${response.data}`});
-    const orientation = (response.exif as any)?.Orientation;
-    console.log('orientation', orientation);
-    return ImageResizer.createResizedImage(
-      response.path,
-      600,
-      600,
-      response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
-      100,
-      0,
-    ).then(r => {
-      console.log(r.uri, r.name);
-      setImage({
-        uri: r.uri,
-        name: r.name,
-        type: response.mime,
+  const onResponse = useCallback(
+    async response => {
+      console.log(response.mime, response.data);
+      setPreview({uri: `data:${response.mime};base64,${response.data}`});
+
+      const orientation = (response.exif as any)?.Orientation;
+      console.log('orientation', orientation);
+      console.log('preview', preview);
+      return ImageResizer.createResizedImage(
+        response.path,
+        response.width,
+        response.height,
+        response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
+        100,
+        0,
+      ).then(r => {
+        console.log(r.uri, r.name);
+        setImage({
+          uri: r.uri,
+          name: r.name,
+          type: response.mime,
+        });
       });
-    });
-  }, []);
+    },
+    [preview],
+  );
   const onTakePhoto = useCallback(() => {
     return ImagePicker.openCamera({
       includeBase64: true,
@@ -158,8 +163,10 @@ function Register({navigation}: RegisterScreenProps) {
       const categoryRes = await getCategory(basketRes[0].bkt_id);
       console.log(categoryRes, 'categoryRes');
       setCategory(categoryRes);
-      setPreview({uri: Config.BASE_URL + route.params.pictureUrl});
-      setName(route.params.name);
+      if (route.params !== undefined) {
+        setPreview({uri: Config.BASE_URL + route.params.pictureUrl});
+        setName(route.params.name);
+      }
     }
     init();
   }, [route.params]);
@@ -168,11 +175,17 @@ function Register({navigation}: RegisterScreenProps) {
     <ScrollView style={Style.background}>
       <View style={Style.preview}>
         {!preview ? (
-          <Text style={{color: '#989797'}}>
+          <Text
+            style={{
+              color: '#989797',
+              marginHorizontal: 50,
+              marginVertical: 130,
+            }}>
             아직 이미지가 업로드 되지 않았습니다
           </Text>
-        ) : null}
-        {preview && <Image style={Style.previewImage} source={preview} />}
+        ) : (
+          <Image style={Style.previewImage} source={preview} />
+        )}
       </View>
       <View style={Style.cont}>
         {/* <Text style={{color: 'black'}}>제품명 :</Text> */}
@@ -366,23 +379,21 @@ const Style = StyleSheet.create({
   },
   background: {
     backgroundColor: 'white',
-    height: '100%',
+    flex: 1,
   },
   preview: {
-    flex: 1,
-    marginHorizontal: 20,
-    // width: Dimensions.get('window').width - 30,
+    marginHorizontal: 10,
+    width: Dimensions.get('window').width - 20,
     height: Dimensions.get('window').height / 3,
-    backgroundColor: '#f5f4f4',
-    marginTop: 16,
-    marginBottom: 20,
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#D2D2D2',
+    marginTop: 15,
+    marginBottom: 10,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   previewImage: {
     height: Dimensions.get('window').height / 3,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   cont: {
     marginTop: 10,

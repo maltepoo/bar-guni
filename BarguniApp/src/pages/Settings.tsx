@@ -142,10 +142,6 @@ function Settings({navigation}: SettingsScreenProps) {
       }}>
       <Text style={style.title}>알림</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={style.content}>알림시간 설정</Text>
-        <Text style={style.content2} onPress={handleAlarmOn}>
-          {alarmTime.hour}시 {alarmTime.min}분
-        </Text>
         <DateTimePicker
           mode="time"
           isVisible={alarmOn}
@@ -169,7 +165,7 @@ function Settings({navigation}: SettingsScreenProps) {
             key={item.time}
             label={
               item.time < 0
-                ? '알림이 꺼져있습니다'
+                ? '알림 비활성화'
                 : item.time.toString() + '시로 알림 설정'
             }
             value={item.time}
