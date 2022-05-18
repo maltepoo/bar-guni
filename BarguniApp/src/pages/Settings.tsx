@@ -87,22 +87,6 @@ function Settings({navigation}: SettingsScreenProps) {
         paddingTop: 10,
       }}>
       <Text style={style.title}>알림</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={style.content}>알림시간 설정</Text>
-        <Text style={style.content2} onPress={handleAlarmOn}>
-          {alarmTime.hour}시 {alarmTime.min}분
-        </Text>
-        <DateTimePicker
-          mode="time"
-          isVisible={alarmOn}
-          onConfirm={time => {
-            confirmAlarm(time);
-          }}
-          onCancel={() => {
-            setAlarmOn(false);
-          }}
-        />
-      </View>
       <View style={style.imageBox}>
         <Text style={style.content}>
           알림 (유통기한 및 초대 알림을 받습니다)
