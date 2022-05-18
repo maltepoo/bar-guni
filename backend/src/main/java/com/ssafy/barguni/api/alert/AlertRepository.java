@@ -16,8 +16,8 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             " where u.id = :id")
     List<Alert> findAllByUserId(Long id);
 
-    @Query("select a from Alert a join fetch a.basket b where b.id =:bktId and a.createdAt=:created")
-    List<Alert> findAlertsByBasket_IdAAndCreatedAt(Long bktId, LocalDate created);
+    @Query("select count(a.id) from Alert a where a.basket.id =:bktId and a.createdAt=:created")
+    Integer countAlertsByBasket_IdAAndCreatedAt(Long bktId, LocalDate created);
 
     @Query("delete From Alert a " +
             "WHERE a.item.id = :id")

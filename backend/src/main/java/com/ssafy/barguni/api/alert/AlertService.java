@@ -34,8 +34,8 @@ public class AlertService {
         return alerts;
     }
 
-    public List<Alert> findAllByBasket(Basket basket){
-        return alertRepository.findAlertsByBasket_IdAAndCreatedAt(basket.getId(), LocalDate.now());
+    public Integer countAllCreatedTodayByBasket(Basket basket){
+        return alertRepository.countAlertsByBasket_IdAAndCreatedAt(basket.getId(), LocalDate.now());
     }
 
     @Transactional
@@ -59,10 +59,10 @@ public class AlertService {
         alertRepository.save(new Alert(item, "의 유통기한이 지났습니다."));
     }
 
-    public void sendAlert(String token, Alert alert) throws IOException {
-        String title = alert.getTitle();
-        String body = alert.getContent();
-        System.out.println(alert.getContent());
+    public void sendAlert(String token, Integer alertCount) throws IOException {
+        String title = "유통기한이 얼마 남지 않은 상품이 있어요.";
+        String body = alertCount + "개의 상품의 유통기한이 임박합니다.";
+        System.out.println(body);
         firebaseAlertService.sendMessageTo(token, title, body);
     }
 }

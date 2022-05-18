@@ -91,18 +91,17 @@ public class AlertScheduler {
     public void sendAlert() {
         Integer hour = LocalDateTime.now().getHour();
         List<UserBasket> ubs = userBasketService.getListByAlertTime(hour);
+        // 알러트를 가져오고 유저-아림
         for (UserBasket ub: ubs) {
             User user = ub.getUser();
             Basket basket = ub.getBasket();
-            List<Alert> alerts = alertService.findAllByBasket(basket);
-
-            alerts.forEach((alert -> {
-                try {
-                    alertService.sendAlert(user.getAlertApiKey(), alert);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }));
+            Integer result = alertService.countAllCreatedTodayByBasket(basket);
+            if (result == 0) continue;
+            try {
+                alertService.sendAlert(user.getAlertApiKey(), result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
