@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TrashItem from '../components/TrashItem';
 import {Checkbox} from 'react-native-paper';
 import {Button} from '@rneui/base';
@@ -71,27 +71,24 @@ function TrashCan({navigation}: TrashCanScreenProps) {
   return (
     <View style={Style.container}>
       <View style={Style.header}>
-        <Checkbox
-          color="#0094FF"
-          uncheckedColor={'#757575'}
-          status={checked ? 'checked' : 'unchecked'}
-          onPress={() => {
-            setChecked(!checked);
-          }}
-        />
-        <Text style={Style.headerText}>전체 선택</Text>
-        <Button
-          title={'복원'}
-          titleStyle={Style.buttonText}
-          buttonStyle={Style.restore}
-          onPress={restore}
-        />
-        <Button
-          title={'삭제'}
-          titleStyle={Style.buttonText}
-          buttonStyle={Style.remove}
-          onPress={remove}
-        />
+        <View style={{flexDirection: 'row'}}>
+          <Checkbox
+            color="#0094FF"
+            uncheckedColor={'#757575'}
+            status={checked ? 'checked' : 'unchecked'}
+            onPress={() => {
+              setChecked(!checked);
+            }}></Checkbox>
+          <Text style={Style.headerText}>전체 선택</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity onPress={restore}>
+            <Text style={Style.buttonText}>복원</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={remove}>
+            <Text style={Style.buttonText}>삭제</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <FlatList data={items} renderItem={renderItem} style={Style.list} />
     </View>
@@ -105,8 +102,9 @@ const Style = StyleSheet.create({
     backgroundColor: 'red',
   },
   buttonText: {
-    fontSize: 10,
-    fontFamily: 'Pretendard-Bold',
+    marginRight: 10,
+    color: 'black',
+    fontFamily: 'Pretendard-Regular',
   },
   list: {
     height: '91%',
@@ -115,9 +113,9 @@ const Style = StyleSheet.create({
   headerText: {
     color: 'black',
     marginTop: 7,
-    width: '65%',
-    fontFamily: 'Pretendard-Bold',
+    fontFamily: 'Pretendard-Regular',
     marginLeft: 10,
+    fontSize: 16,
   },
   title: {
     fontSize: 30,
@@ -125,7 +123,12 @@ const Style = StyleSheet.create({
     marginTop: 10,
     fontFamily: 'Pretendard-Bold',
   },
-  header: {flexDirection: 'row', marginTop: 10},
+  header: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   line: {width: '100%', height: 0.7, backgroundColor: 'gray'},
 });
 export default TrashCan;
