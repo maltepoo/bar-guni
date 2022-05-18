@@ -103,4 +103,8 @@ public class UserBasketService {
     public List<Long> getUsedBasketIds(){
         return userBasketRepository.getUsedBasketIds();
     }
+
+    public List<UserBasket> getListByAlertTime(Integer hour) {
+        return userBasketRepository.findUserBasketsByUserAlertTime(hour);
+    }
 }

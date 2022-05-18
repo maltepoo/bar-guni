@@ -3,9 +3,12 @@ package com.ssafy.barguni.api.user;
 import com.ssafy.barguni.api.basket.entity.Basket;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Getter @Setter
@@ -24,6 +27,11 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="default_bkt")
     private Basket defaultBasket;
+
+
+    @Min(value = 0)
+    @Max(value = 23)
+    private Integer alertTime;
 
     public User(){}
 

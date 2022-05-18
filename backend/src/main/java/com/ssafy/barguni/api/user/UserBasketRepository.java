@@ -30,4 +30,8 @@ public interface UserBasketRepository extends JpaRepository<UserBasket, Long>, C
 
     @Query("select distinct ub.basket.id from UserBasket ub")
     List<Long> getUsedBasketIds();
+
+    @Query("select ub from UserBasket ub join fetch ub.basket join fetch ub.user " +
+            "where ub.user.alertTime =:hour")
+    List<UserBasket> findUserBasketsByUserAlertTime(Integer hour);
 }

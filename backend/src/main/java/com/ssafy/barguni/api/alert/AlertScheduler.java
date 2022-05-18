@@ -1,7 +1,13 @@
 package com.ssafy.barguni.api.alert;
 
+import com.ssafy.barguni.api.basket.entity.Basket;
 import com.ssafy.barguni.api.item.AlertBy;
+import com.ssafy.barguni.api.item.Item;
 import com.ssafy.barguni.api.item.ItemService;
+import com.ssafy.barguni.api.user.User;
+import com.ssafy.barguni.api.user.UserBasket;
+import com.ssafy.barguni.api.user.UserBasketRepository;
+import com.ssafy.barguni.api.user.UserBasketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +17,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -20,16 +29,17 @@ import java.time.LocalDate;
 @EnableAsync
 public class AlertScheduler {
     private final static Integer EXPIRATION_ALERT_PERIOD = 7;
+    private final UserBasketService userBasketService;
     private final AlertService alertService;
     private final ItemService itemService;
 
     // (초 분 시 일 월)
 //    @Scheduled(cron="${schedular.alert.time}")
-    @Scheduled(cron="0 0 1 * * ?") // 매일 오전 1시에 동작
+    @Scheduled(cron="0 0 0 * * ?") // 매일 오전 00시에 동작
     @Async
     public void createAlert(){
         long start = System.currentTimeMillis();
-/*
+
         itemService.findAll().forEach((item)->{
             // 이미 사용한 경우는 제외
             if(item.getUsed())
@@ -68,8 +78,32 @@ public class AlertScheduler {
             ) alertService.createAlertBeforeExpiry(item);
 
         });
-*/
+
+
         long end = System.currentTimeMillis();
         log.debug("총 걸린 시간: " + (end - start) + " ms");
     }
+
+
+//    @Scheduled(cron="30 0 * * * ?") // 매 시각마다(*시0분3초) 동작
+    @Scheduled(cron="30 * * * * ?") // 매 시각마다(*시0분3초) 동작
+    @Async
+    public void sendAlert() {
+        Integer hour = LocalDateTime.now().getHour();
+        List<UserBasket> ubs = userBasketService.getListByAlertTime(hour);
+        for (UserBasket ub: ubs) {
+            User user = ub.getUser();
+            Basket basket = ub.getBasket();
+            List<Alert> alerts = alertService.findAllByBasket(basket);
+
+            alerts.forEach((alert -> {
+                try {
+                    alertService.sendAlert(user.getAlertApiKey(), alert);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
+        }
+    }
+
 }
