@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Tag(name = "basket controller", description = "바구니 관련 컨트롤러")
 public class AlertController {
     private final AlertService alertService;
+    private final FirebaseAlertService firebaseAlertService;
 
     @GetMapping("")
     @Operation(summary = "알림 조회", description = "알림을 조회한다.")
@@ -85,5 +86,23 @@ public class AlertController {
         status = HttpStatus.OK;
 
         return new ResponseEntity<ResVO<Null>>(result, status);
+    }
+
+    @GetMapping("/test")
+    @Operation(summary = "알림 테스트", description = "알림 테스트")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public void test(){
+        String accessToken = "c5TqHf6zRLiwLhB8HkMa7G:APA91bGR15Y4PtL-HVhtUby1DMVf9Zn1RhgAogWd6WN9jwEhB8yGonEfI9b4JVu72BCnxpY_HDF7JUaQwPaQBfTqDkerKMQ6HyHNLfTHSjtQfTQ9LJYcTJUCBH7f4vNVG-J1upg_NyNr";
+        try {
+            firebaseAlertService.sendMessageTo(accessToken, "안녕하세요", "알람테스트");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
