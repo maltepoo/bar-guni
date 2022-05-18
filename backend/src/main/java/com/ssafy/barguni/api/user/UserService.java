@@ -52,11 +52,14 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> changeUser(Long userId, String newName) {
+    public Optional<User> changeUser(Long userId, String newName, Integer alertTime) {
         User user = userRepository.findById(userId).get();
 
         if (newName != null) {
             user.setName(newName);
+        }
+        if (alertTime != null){
+            user.setAlertTime(alertTime);
         }
 
         return Optional.ofNullable(user);

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -29,8 +30,9 @@ public class User {
     private Basket defaultBasket;
 
 
-    @Min(value = 0)
+    @Min(value = -1)
     @Max(value = 23)
+    @ColumnDefault("12")
     private Integer alertTime;
 
     public User(){}
@@ -39,6 +41,7 @@ public class User {
     public User(String email, String name) {
         this.email = email;
         this.name = name;
+        this.alertTime = 12;
     }
 
 }
