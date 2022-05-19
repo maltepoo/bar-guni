@@ -3,6 +3,7 @@ import {FlatList, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import NewSearchBar from '../components/NewSearchBar';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {getItems} from '../api/item';
+import Config from 'react-native-config';
 
 function SearchResult({route, navigation}) {
   const {searchText} = route.params;
@@ -34,7 +35,7 @@ function SearchResult({route, navigation}) {
       <View key={item.itemId} style={styles.resultContainer}>
         <Pressable style={{display: 'flex', flexDirection: 'row'}}>
           <Image
-            source={{uri: `http://k6b202.p.ssafy.io:8000${item.pictureUrl}`}}
+            source={{uri: Config.BASE_URL + item.pictureUrl}}
             style={{width: 100, height: 100, borderRadius: 8}}
             resizeMode="cover"
           />
