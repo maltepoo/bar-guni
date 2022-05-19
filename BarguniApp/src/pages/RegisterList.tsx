@@ -33,14 +33,13 @@ function RegisterList({route}: any) {
         picId: null,
         dday: ddays[0],
       };
-      console.log(item);
-      //   try {
-      //     await registerItem(item);
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
+      try {
+        await registerItem(item);
+      } catch (e) {
+        console.log(e);
+      }
     }
-    // navigation.navigate('ItemList');
+    navigation.navigate('ItemList');
   }, [
     alertBy,
     baskets,

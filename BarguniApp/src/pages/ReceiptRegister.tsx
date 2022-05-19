@@ -40,12 +40,13 @@ function ReceiptRegister({route}) {
       100,
       0,
     ).then(r => {
-      console.log(r.uri, r.name);
+      setIsShown(true);
       setImage({
         uri: r.uri,
         name: r.name,
         type: response.mime,
       });
+      setIsShown(false);
     });
   }, []);
   const onTakePhoto = useCallback(() => {
@@ -74,10 +75,10 @@ function ReceiptRegister({route}) {
       if (image) {
         const formData = new FormData();
         // console.log('clova start');
+        setIsShown(true);
         formData.append('receipt', image);
         try {
           const axios = fileApiInstance();
-          setIsShown(true);
           const res = await axios.post('/item/receipt', formData);
           setIsShown(false);
           // console.log(res);
@@ -120,10 +121,8 @@ function ReceiptRegister({route}) {
         </Pressable>
       </View>
       <View style={{alignItems: 'center'}}>
-        <TouchableOpacity style={Style.imageButton}>
-          <Text style={Style.imageText} onPress={onSubmit}>
-            등록
-          </Text>
+        <TouchableOpacity style={Style.imageButton} onPress={onSubmit}>
+          <Text style={Style.imageText}>등록</Text>
         </TouchableOpacity>
       </View>
     </View>

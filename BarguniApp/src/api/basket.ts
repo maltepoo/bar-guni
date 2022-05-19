@@ -53,7 +53,7 @@ async function updateBasketName(basketId: number, basketName: string) {
 
 async function deleteBasket(basketId: number) {
   const axios = LoginApiInstance();
-  return (await axios.delete(`/basket/${basketId}`)).data.data;
+  return (await axios.delete(`/user/basket/${basketId}`)).data.data;
 }
 
 async function getBasketMembers(basketId: number) {
