@@ -66,8 +66,10 @@ public class AlertService {
         firebaseAlertService.sendMessageTo(token, title, body);
     }
 
+    @Transactional
     public void createTestAlert(Long itemId){
         Item item = itemRepository.getById(itemId);
         createAlertBeforeExpiry(item);
+
     }
 }
