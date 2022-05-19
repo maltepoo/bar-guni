@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -16,6 +17,7 @@ import {
 import {RootStackParamList} from '../../AppInner';
 import {changeItemStatus, Item} from '../api/item';
 import Config from 'react-native-config';
+import ImageModal from 'react-native-image-modal';
 
 function ItemDetail() {
   const route = useRoute<RouteProp<RootStackParamList>>();
@@ -37,8 +39,15 @@ function ItemDetail() {
     <View style={Style.background}>
       <ScrollView>
         <View style={Style.imageBox}>
-          <Image
-            style={Style.image}
+          {/*<Image*/}
+          {/*  style={Style.image}*/}
+          {/*  source={{uri: Config.BASE_URL + item.pictureUrl}}*/}
+          {/*/>*/}
+          <ImageModal
+            swipeToDismiss={true}
+            resizeMode="contain"
+            imageBackgroundColor="white"
+            style={{width: Dimensions.get('window').width, height: '100%'}}
             source={{uri: Config.BASE_URL + item.pictureUrl}}
           />
         </View>
