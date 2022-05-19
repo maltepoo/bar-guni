@@ -1,8 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
+  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -14,6 +16,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {fileApiInstance} from '../api/instance';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../AppInner';
+import {Snackbar} from 'react-native-paper';
 
 function ReceiptRegister({route}) {
   const [image, setImage] = useState<{
@@ -23,9 +26,8 @@ function ReceiptRegister({route}) {
   }>();
   const [preview, setPreview] = useState<{uri: string}>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  console.log(route.params);
+  const [isShown, setIsShown] = useState(false);
   const onResponse = useCallback(async response => {
-    console.log(response);
     console.log(response.width, response.height, response.exif, 'response!!');
     setPreview({uri: `data:${response.mime};base64,${response.data}`});
     const orientation = (response.exif as any)?.Orientation;
@@ -38,7 +40,6 @@ function ReceiptRegister({route}) {
       100,
       0,
     ).then(r => {
-      console.log(r, 'resized');
       console.log(r.uri, r.name);
       setImage({
         uri: r.uri,
@@ -68,20 +69,19 @@ function ReceiptRegister({route}) {
 
   const onSubmit = useCallback(async () => {
     console.log('click');
-    const start_time = new Date();
+    // const start_time = new Date();
     try {
       if (image) {
         const formData = new FormData();
-        console.log('clova strat');
+        // console.log('clova start');
         formData.append('receipt', image);
         try {
           const axios = fileApiInstance();
-          const res = await axios.post(
-            `/item/receipt${route.params.service === 'clova' ? '/clova' : ''}`,
-            formData,
-          );
-          console.log(res);
-          console.log(new Date().getTime() - start_time.getTime());
+          setIsShown(true);
+          const res = await axios.post('/item/receipt', formData);
+          setIsShown(false);
+          // console.log(res);
+          // console.log(new Date().getTime() - start_time.getTime());
           navigation.navigate('RegisterList', res.data.data);
         } catch (e) {
           console.log(e, 'api 에러');
@@ -89,13 +89,27 @@ function ReceiptRegister({route}) {
       } else {
         Alert.alert('사진이 없습니다.', '영수증 사진을 등록해주세요');
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }, [image, navigation]);
 
   return (
     <View style={Style.background}>
+      {isShown ? (
+        <ActivityIndicator
+          size="small"
+          color="#0000ff"
+          style={{marginTop: 5}}
+        />
+      ) : (
+        <></>
+      )}
+
       <View style={Style.preview}>
-        {preview && <Image style={Style.previewImage} source={preview} />}
+        {preview && (
+          <ImageBackground style={Style.previewImage} source={preview} />
+        )}
       </View>
       <View style={Style.row}>
         <Pressable style={Style.imageButton} onPress={onTakePhoto}>
