@@ -1,0 +1,110 @@
+buildscript {
+	dependencies {
+		classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.6.7'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
+
+group = 'com.ssafy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+bootWar.enabled = true
+war.enabled = true
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'com.auth0:java-jwt:3.10.3'
+
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
+
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.5'
+	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.5'
+
+	//	implementation 'io.springfox:springfox-swagger2:3.0.0'
+	//	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'commons-fileupload:commons-fileupload:1.3.3'
+
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	implementation'com.google.code.gson:gson:2.8.7'
+
+	// query dsl
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-apt'
+
+	// JsonParser
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.vaadin.external.google:android-json:0.0.20131108.vaadin1'
+
+	// imageIO -> multipartfile
+	implementation 'org.springframework:spring-test:5.3.2'
+    // google login api
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// firebase sdk
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	//okHttp
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// querydsl 추가
+def querydslDir = 'src/main/generated'
+
+querydsl {
+	library = "com.querydsl:querydsl-apt"
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
