@@ -112,7 +112,7 @@ function ItemList() {
         console.log(init);
         const userRes = await getProfile();
         await dispatch(userSlice.actions.setUserWithoutToken(userRes));
-        console.log(userRes);
+        // console.log(userRes);
         const baskets = await getBaskets();
         const index = baskets.findIndex(
           item => item.bkt_name === userRes.defaultBasket.name,
@@ -120,7 +120,7 @@ function ItemList() {
         baskets.unshift(baskets[index]);
         baskets.splice(index + 1, 1);
         await setBasket(baskets);
-        console.log(baskets[0], '선택 바구니 설정');
+        // console.log(baskets[0], '선택 바구니 설정');
         if (selectedBasket === undefined) {
           await dispatch(userSlice.actions.setSelectBasket(baskets[0]));
         }
@@ -187,7 +187,6 @@ function ItemList() {
         const itemRes = await getItems(id, false);
         setItems(itemRes);
         console.log(id);
-        console.log(itemRes);
       } catch (e) {}
     },
     [basket, dispatch],

@@ -164,6 +164,7 @@ function AppInner() {
             title: '알림',
             tabBarActiveTintColor: '#0094FF',
             headerShown: false,
+            unmountOnBlur: true,
             tabBarIcon: ({focused}) => (
               <AntDesign
                 name="bells"

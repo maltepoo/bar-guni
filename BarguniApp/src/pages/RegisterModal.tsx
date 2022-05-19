@@ -38,7 +38,7 @@ function RegisterModal({navigation}: RegisterModalScreenProps) {
       <TouchableOpacity
         style={{...styles.button, backgroundColor: '#0094FF', marginTop: '30%'}}
         onPress={byFreeReceipt}>
-        <Text>영수증 등록</Text>
+        <Text style={styles.text}>영수증 등록</Text>
       </TouchableOpacity>
       {/*{adminList.includes(email) ? (*/}
       {/*  <TouchableOpacity*/}
