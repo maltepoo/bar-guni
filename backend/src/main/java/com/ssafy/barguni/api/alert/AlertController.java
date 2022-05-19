@@ -92,19 +92,21 @@ public class AlertController {
     }
 
     @GetMapping("/test")
-    @Operation(summary = "알림 테스트", description = "알림 테스트")
+    @Operation(summary = "알림 테스트", description = "특정 아이템 알람을 생성하고 유저에게 바로 보낸다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public void test(){
+    public void test(@RequestParam Long userId, @RequestParam Long itemId){
 
-        AccountUserDetails userDetails = (AccountUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        User user = userService.findById(userDetails.getUserId());
         try {
-            firebaseAlertService.sendMessageTo(user.getAlertApiKey(), "안녕하세요", "알람테스트");
+            User user = userService.findById(userId);
+            alertService.createTestAlert(itemId);
+            String title = "유통기한이 얼마 남지 않은 상품이 있어요.";
+            String content = "1개의 상품의 유통기한이 임박합니다.";
+            firebaseAlertService.sendMessageTo(user.getAlertApiKey(), title, content);
         } catch (Exception e){
             e.printStackTrace();
         }

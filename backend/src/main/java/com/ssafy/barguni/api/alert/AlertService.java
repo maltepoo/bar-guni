@@ -65,4 +65,9 @@ public class AlertService {
         System.out.println(body);
         firebaseAlertService.sendMessageTo(token, title, body);
     }
+
+    public void createTestAlert(Long itemId){
+        Item item = itemRepository.getById(itemId);
+        createAlertBeforeExpiry(item);
+    }
 }
