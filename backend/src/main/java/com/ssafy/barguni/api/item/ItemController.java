@@ -209,7 +209,7 @@ public class ItemController {
     public ResponseEntity<ResVO<String>> deleteUsedItems(@PathVariable @Parameter Long bktId){
         ResVO<String> result = new ResVO<>();
         HttpStatus status = null;
-
+        itemService.deleteUsedItemInBasket(bktId);
         result.setData(basketService.getBasket(bktId).getName() + "의 휴지통을 비웠습니다.");
         result.setMessage("휴지통 비우기 성공");
         status = HttpStatus.OK;
