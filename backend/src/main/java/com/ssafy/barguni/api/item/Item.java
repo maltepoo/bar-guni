@@ -23,7 +23,7 @@ public class Item {
     @JoinColumn(name="bkt_id")
     private Basket basket;
 
-    @OneToOne(fetch =FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="pic_id")
     private Picture picture;
 
