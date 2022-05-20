@@ -1,6 +1,7 @@
 package com.ssafy.barguni.api.item;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.barguni.api.item.vo.ItemSearch;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import static com.ssafy.barguni.api.item.QItem.item;
 public class CustomItemRepositoryImpl implements CustomItemRepository {
     private final EntityManager em;
     private final JPAQueryFactory query;
+    private final BooleanExpression alwaysTrue = Expressions.asBoolean(true).isTrue();
 
     public CustomItemRepositoryImpl(EntityManager em){
         this.em = em;
@@ -84,21 +86,21 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
 
     private BooleanExpression categoryLike(String category) {
         if(!StringUtils.hasText(category)){
-            return null;
+            return alwaysTrue;
         }
         return item.category.name.like("%" + category + "%");
     }
 
     private BooleanExpression nameLike(String name) {
         if(!StringUtils.hasText(name)){
-            return null;
+            return alwaysTrue;
         }
         return item.name.like("%"+name+"%");
     }
 
     private BooleanExpression contentLike(String content) {
         if(!StringUtils.hasText(content)){
-            return null;
+            return alwaysTrue;
         }
         return item.content.like("%" + content + "%");
     }

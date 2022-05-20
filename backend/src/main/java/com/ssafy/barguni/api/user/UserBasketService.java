@@ -33,6 +33,10 @@ public class UserBasketService {
 
         List<UserBasketWithCountRes> userBaskets = userBasketRepository.findAllBasketWithCountByUser(userId);
 
+//        userBaskets.forEach(e-> basketRepository.getById(e.getBkt_id()).getAlerts().size()); // batch size 적용 안됨..
+//        userBaskets.forEach(e-> basketRepository.getById(e.getBkt_id())); // 여기가 batch fetch가 되야 아래가 적용 된다.
+//        userBaskets.forEach(e-> basketRepository.getById(e.getBkt_id()).getAlerts().size());
+
         return userBaskets;
     }
 
